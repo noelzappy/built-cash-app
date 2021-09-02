@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
   },
 })
 
-const Details = ({ route, navigation }) => {
+const Settings = ({ route, navigation }) => {
   const from = route?.params?.from
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>{`Details (from ${from})`}</Text>
+      <Text style={styles.title}>{`Settings (from ${from})`}</Text>
       <Button
         title="Go Back"
         color="white"
@@ -36,7 +36,7 @@ const Details = ({ route, navigation }) => {
   )
 }
 
-Details.propTypes = {
+Settings.propTypes = {
   route: PropTypes.shape({
     params: PropTypes.shape({ from: PropTypes.string }),
   }),
@@ -45,9 +45,9 @@ Details.propTypes = {
   }),
 }
 
-Details.defaultProps = {
+Settings.defaultProps = {
   route: { params: { from: '' } },
   navigation: { goBack: () => null },
 }
 
-export default Details
+export default Settings

@@ -9,26 +9,26 @@ const styles = StyleSheet.create({
   },
 })
 
-const HeaderLeft = ({ navigation }) => (
+const HeaderRight = ({ navigation }) => (
   <FontIcon.Button
-    name="bars"
+    name="cog"
     color="white"
     backgroundColor="transparent"
     onPress={() => {
-      navigation.openDrawer()
+      navigation.navigate('Settings')
     }}
     style={styles.button}
   />
 )
 
-HeaderLeft.propTypes = {
+HeaderRight.propTypes = {
   navigation: PropTypes.shape({
     openDrawer: PropTypes.func,
   }),
 }
 
-HeaderLeft.defaultProps = {
+HeaderRight.defaultProps = {
   navigation: { openDrawer: () => null },
 }
 
-export default HeaderLeft
+export default HeaderRight

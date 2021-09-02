@@ -1,15 +1,13 @@
 import React from 'react'
-import { StyleSheet, Image } from 'react-native'
-import { images } from 'theme'
+import { StyleSheet, Text } from 'react-native'
 
 const styles = StyleSheet.create({
   logo: {
-    width: 32,
-    height: 32,
+    color: '#fff',
   },
 })
 
-const HeaderTitle = () => <Image source={images.logo_sm} style={styles.logo} />
+const HeaderTitle = () => <Text style={styles.logo}>My Company</Text>
 
 HeaderTitle.propTypes = {}
 HeaderTitle.defaultProps = {}
