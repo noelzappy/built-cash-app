@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { globalStyles } from '../../theme'
 
 export default function CashTableCell(props) {
-  const empty = ''
   const { time, cashIn, cashOut } = props
   return (
     <View>
@@ -19,16 +18,12 @@ export default function CashTableCell(props) {
             </DataTable.Cell>
             <DataTable.Cell>
               <View style={globalStyles.cardCashIn}>
-                <Text style={globalStyles.cardCashInText}>
-                  {cashIn != null ? cashIn : empty}
-                </Text>
+                <Text style={globalStyles.cardCashInText}>{cashIn}</Text>
               </View>
             </DataTable.Cell>
             <DataTable.Cell>
               <View style={globalStyles.cardCashOut}>
-                <Text style={globalStyles.cardCashOutText}>
-                  {cashOut != null ? cashOut : empty}
-                </Text>
+                <Text style={globalStyles.cardCashOutText}>{cashOut}</Text>
               </View>
             </DataTable.Cell>
           </DataTable.Row>

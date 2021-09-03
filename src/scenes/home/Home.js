@@ -4,10 +4,10 @@ import { StyleSheet, View, StatusBar } from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
 import en from '../../languages/english'
-import ReportsCard from '../../components/ReportsCard'
 import AllCard from '../../components/AllCard/AllCard'
 import CashTable from '../../components/CashTable/CashTable'
 import ActionButton from '../../components/ActionButton'
+import ReportTable from '../../components/ReportsTable/ReportTable'
 
 const styles = StyleSheet.create({
   root: {
@@ -89,16 +89,14 @@ const Home = () => {
           />
         </View>
       </View>
-      <View>
-        <AllCard />
-      </View>
       {activateCashBook ? (
         <>
+          <AllCard />
           <CashTable time="10:15AM" cashIn={200} />
           <ActionButton />
         </>
       ) : (
-        <ReportsCard />
+        <ReportTable />
       )}
     </View>
   )
