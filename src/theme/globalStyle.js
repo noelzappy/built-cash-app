@@ -29,7 +29,6 @@ const globalStyles = StyleSheet.create({
   },
   cardContainerInner: {
     borderRadius: 5,
-    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -68,11 +67,6 @@ const globalStyles = StyleSheet.create({
   },
   allCardBalanceText: {
     color: colors.darkPurple,
-  },
-  headingCardContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: '10',
   },
 })
 

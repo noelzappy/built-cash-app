@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, StatusBar } from 'react-native'
+import {
+  StyleSheet, View, StatusBar, Text,
+} from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
 import en from '../../languages/english'
 import ReportsCard from '../../components/ReportsCard'
-import CashBookCard from '../../components/CashBookCard'
 import AllCard from '../../components/AllCard/AllCard'
-import HeadingCard from '../../components/HeadingCard'
+import CashTable from '../../components/CashTable/CashTable'
 
 const styles = StyleSheet.create({
   root: {
@@ -93,9 +94,17 @@ const Home = () => {
       <View>
         <View>
           <AllCard />
-          <HeadingCard />
         </View>
-        {activateCashBook ? <CashBookCard /> : <ReportsCard />}
+        <View>
+          {activateCashBook ? (
+            <CashTable time="10:15AM" cashIn={200} />
+          ) : (
+            <ReportsCard />
+          )}
+        </View>
+        <View>
+          <Text>Hello</Text>
+        </View>
       </View>
     </View>
   )
