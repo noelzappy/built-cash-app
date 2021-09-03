@@ -21,7 +21,7 @@ const Button = ({
   color,
   backgroundColor,
   onPress,
-  children,
+  icon,
   textStyle,
   style,
 }) => {
@@ -29,8 +29,8 @@ const Button = ({
   const txtStyle = [styles.text, { color }, textStyle]
   return (
     <TouchableOpacity onPress={onPress} style={btnStyle}>
+      {icon}
       {title && <Text style={txtStyle}>{title}</Text>}
-      {children}
     </TouchableOpacity>
   )
 }
@@ -42,7 +42,7 @@ Button.propTypes = {
   color: PropTypes.string,
   backgroundColor: PropTypes.string,
   onPress: PropTypes.func,
-  children: PropTypes.string,
+  icon: PropTypes.string,
   textStyle: PropTypes.shape({}),
   style: PropTypes.shape({}),
 }
@@ -54,7 +54,7 @@ Button.defaultProps = {
   color: 'black',
   backgroundColor: '#cacaca',
   onPress: () => {},
-  children: null,
+  icon: null,
   textStyle: {},
   style: {},
 }

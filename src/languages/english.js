@@ -10,6 +10,8 @@ const en = {
   TODAYS_ENTRIES: "Today's Entries",
   TOTAL_IN: 'Total IN',
   TOTAL_OUT: 'Total OUT',
+  IN: 'IN',
+  OUT: 'OUT',
 }
 
 export default en
