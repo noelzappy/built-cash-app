@@ -28,7 +28,7 @@ const Button = ({
   const btnStyle = [styles.root, { width, height, backgroundColor }, style]
   const txtStyle = [styles.text, { color }, textStyle]
   return (
-    <TouchableOpacity onPress={onPress} style={btnStyle}>
+    <TouchableOpacity onPress={onPress} style={btnStyle} activeOpacity={0.7}>
       {icon}
       {title && <Text style={txtStyle}>{title}</Text>}
     </TouchableOpacity>
