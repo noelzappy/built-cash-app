@@ -30,8 +30,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signs: {
-    paddingVertical: 'auto',
+    paddingVertical: 10,
     paddingHorizontal: 10,
+    flexGrow: 70,
   },
 })
 
@@ -44,10 +45,9 @@ export default function ReportHeader(props) {
         <Text style={styles.figures_in}>{totalIn}</Text>
       </View>
 
-      <View style={{ flexGrow: 70 }}>
-        <Text style={styles.signs}>
-          <FontAwesome5 name="minus" size={18} color={colors.darkPurple} />
-        </Text>
+      <View style={styles.signs}>
+        <Text />
+        <FontAwesome5 name="minus" size={18} color={colors.darkPurple} />
       </View>
 
       <View style={{ flexGrow: 100 }}>
@@ -55,10 +55,9 @@ export default function ReportHeader(props) {
         <Text style={styles.figures_out}>{totalOut}</Text>
       </View>
 
-      <View style={{ flexGrow: 70 }}>
-        <Text style={styles.signs}>
-          <FontAwesome5 name="equals" size={18} color={colors.darkPurple} />
-        </Text>
+      <View style={styles.signs}>
+        <Text />
+        <FontAwesome5 name="equals" size={18} color={colors.darkPurple} />
       </View>
 
       <View style={{ flexGrow: 120 }}>

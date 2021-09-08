@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { Text } from 'react-native'
+import { View } from 'react-native'
+import { ActivityIndicator } from 'react-native-paper'
 import { useSelector, useDispatch } from 'react-redux'
 import { authenticate } from 'slices/app.slice'
 import Main from './navigation'
@@ -16,8 +17,13 @@ const Routes = () => {
   console.log('[##] loggedIn', loggedIn)
 
   // rendering
-  if (!checked) return <Text>Loading...</Text>
-  return <Main />
+  return !checked ? (
+    <View style={{ justifyContent: 'center', alignContent: 'center' }}>
+      <ActivityIndicator />
+    </View>
+  ) : (
+    <Main />
+  )
 }
 
 export default Routes

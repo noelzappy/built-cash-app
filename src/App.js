@@ -7,6 +7,7 @@ import 'utils/ignore'
 // assets
 import { imageAssets } from 'theme/images'
 import { fontAssets } from 'theme/fonts'
+import { NativeBaseProvider } from 'native-base'
 import Router from './routes'
 
 const App = () => {
@@ -29,7 +30,9 @@ const App = () => {
   if (!didLoad) return <View />
   return (
     <Provider store={store}>
-      <Router />
+      <NativeBaseProvider>
+        <Router />
+      </NativeBaseProvider>
     </Provider>
   )
 }

@@ -25,10 +25,12 @@
     "expo-font": "~9.2.1",
     "global": "^4.4.0",
     "moment": "^2.24.0",
+    "native-base": "^3.1.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-datepicker": "^1.7.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-onboarding-swiper": "^1.1.4",
     "react-native-paper": "^4.9.2",
@@ -41,7 +43,9 @@
     "react-native-web": "~0.13.12",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "styled-components": "^5.3.1",
+    "styled-system": "^5.1.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
