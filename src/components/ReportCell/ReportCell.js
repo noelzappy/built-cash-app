@@ -27,34 +27,28 @@ export default function ReportCell(props) {
     time, cashIn, cashOut, Balance,
   } = props
   return (
-    <View>
-      <View style={styles.cardContainerInner}>
-        <DataTable>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <View style={styles.cardTime}>
-                <Text style={styles.cardTimeText}>{time}</Text>
-              </View>
-            </DataTable.Cell>
-            <DataTable.Cell>
-              <View style={styles.cardCashIn}>
-                <Text style={styles.cardCashInText}>{cashIn}</Text>
-              </View>
-            </DataTable.Cell>
-            <DataTable.Cell>
-              <View style={styles.cardCashOut}>
-                <Text style={styles.cardCashOutText}>{cashOut}</Text>
-              </View>
-            </DataTable.Cell>
-            <DataTable.Cell>
-              <View style={styles.balanceContainer}>
-                <Text style={styles.balanceText}>{Balance}</Text>
-              </View>
-            </DataTable.Cell>
-          </DataTable.Row>
-        </DataTable>
-      </View>
-    </View>
+    <DataTable.Row>
+      <DataTable.Cell>
+        <View style={styles.cardTime}>
+          <Text style={styles.cardTimeText}>{time}</Text>
+        </View>
+      </DataTable.Cell>
+      <DataTable.Cell>
+        <View style={styles.cardCashIn}>
+          <Text style={styles.cardCashInText}>{cashIn}</Text>
+        </View>
+      </DataTable.Cell>
+      <DataTable.Cell>
+        <View style={styles.cardCashOut}>
+          <Text style={styles.cardCashOutText}>{cashOut}</Text>
+        </View>
+      </DataTable.Cell>
+      <DataTable.Cell>
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceText}>{Balance}</Text>
+        </View>
+      </DataTable.Cell>
+    </DataTable.Row>
   )
 }
 
