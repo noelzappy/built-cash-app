@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
   balanceText: {
     color: colors.green,
     fontWeight: 'bold',
-    fontSize: 20,
   },
 })
 

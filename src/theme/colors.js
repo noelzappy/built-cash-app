@@ -7,6 +7,7 @@ const colors = {
   gray: '#797777',
   green: 'rgb(0,128,0)',
   red: 'rgb(255,0,0)',
+  black: '#000',
 }
 
 export default colors

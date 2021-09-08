@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import en from '../../languages/english'
 import ReportCell from '../ReportCell/ReportCell'
 
-export default function ReportTable() {
+export default function ReportTable(props) {
+  const { data } = props
   return (
     <View>
       <DataTable>
@@ -30,7 +31,19 @@ export default function ReportTable() {
             </View>
           </DataTable.Title>
         </DataTable.Header>
-        <ReportCell />
+
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <ReportCell
+              time={item.time}
+              cashIn={item.cashIn}
+              cashOut={item.cashOut}
+              Balance={item.balance}
+            />
+          )}
+          keyExtractor={(item) => item.index}
+        />
       </DataTable>
     </View>
   )
