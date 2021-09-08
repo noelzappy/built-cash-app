@@ -12,6 +12,8 @@ const en = {
   TOTAL_OUT: 'Total OUT',
   IN: 'IN',
   OUT: 'OUT',
+  DATE: 'Date',
+  BALANCE: 'Balance',
 }
 
 export default en

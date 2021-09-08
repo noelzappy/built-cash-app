@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, StatusBar } from 'react-native'
+import {
+  StyleSheet, View, StatusBar, Dimensions,
+} from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
 import en from '../../languages/english'
 import AllCard from '../../components/AllCard/AllCard'
 import CashTable from '../../components/CashTable/CashTable'
 import ActionButton from '../../components/ActionButton'
-import ReportTable from '../../components/ReportsTable/ReportTable'
+import ReportTab from '../../components/ReportTab'
 
 const styles = StyleSheet.create({
   root: {
@@ -43,10 +45,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 })
+const { height } = Dimensions.get('window')
 
 const Home = () => {
-  const [activateCashBook, setActivateCashBook] = useState(true)
-  const [activateReports, setActivateReports] = useState(false)
+  const [cashBookActive, setCashBookActive] = useState(true)
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
@@ -55,15 +58,14 @@ const Home = () => {
           <Button
             title={en.CASHBOOK}
             onPress={() => {
-              setActivateCashBook(true)
-              setActivateReports(false)
+              setCashBookActive(!cashBookActive)
             }}
             backgroundColor="transparent"
             style={
-              activateReports === false ? styles.btnActive : styles.btnInactive
+              cashBookActive === true ? styles.btnActive : styles.btnInactive
             }
             textStyle={
-              activateReports === false
+              cashBookActive === true
                 ? styles.btnActiveText
                 : styles.btnInactiveText
             }
@@ -74,29 +76,74 @@ const Home = () => {
           <Button
             title={en.REPORTS}
             onPress={() => {
-              setActivateCashBook(false)
-              setActivateReports(true)
+              setCashBookActive(!cashBookActive)
             }}
             backgroundColor="transparent"
-            style={
-              activateReports === true ? styles.btnActive : styles.btnInactive
-            }
+            style={!cashBookActive ? styles.btnActive : styles.btnInactive}
             textStyle={
-              activateReports === true
-                ? styles.btnActiveText
-                : styles.btnInactiveText
+              !cashBookActive ? styles.btnActiveText : styles.btnInactiveText
             }
           />
         </View>
       </View>
-      {activateCashBook ? (
+      {cashBookActive ? (
         <>
           <AllCard />
-          <CashTable time="10:15AM" cashIn={200} />
+          <View
+            style={{
+              flex: 1,
+              marginBottom: height - (height - 200),
+            }}
+          >
+            <CashTable
+              data={[
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 500 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 500 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashOut: 500 },
+                { time: '10:15AM', cashIn: 200 },
+                { time: '10:15AM', cashOut: 200 },
+                { time: '10:15AM', cashIn: 100 },
+                { time: '10:15AM', cashOut: 400 },
+                { time: '10:15AM', cashIn: 600 },
+                { time: '10:15AM', cashOut: 500 },
+              ]}
+            />
+          </View>
           <ActionButton />
         </>
       ) : (
-        <ReportTable />
+        <ReportTab />
       )}
     </View>
   )

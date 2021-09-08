@@ -1,14 +1,16 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import en from '../../languages/english'
 import Button from '../Button'
+
+const { height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    height: 100,
+    height: height - (height - 100),
     justifyContent: 'space-between',
     alignItems: 'center',
     position: 'absolute',
@@ -17,6 +19,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: 50,
+    backgroundColor: 'white',
   },
   btnStyle: {
     justifyContent: 'space-evenly',

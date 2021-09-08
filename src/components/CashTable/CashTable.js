@@ -1,5 +1,7 @@
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import {
+  View, StyleSheet, Text, FlatList,
+} from 'react-native'
 import { DataTable } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import en from '../../languages/english'
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
 })
 
 export default function CashTable(props) {
-  const { time, cashIn, cashOut } = props
+  const { data } = props
   const today = new Date().toLocaleDateString()
   return (
     <View>
@@ -64,8 +66,17 @@ export default function CashTable(props) {
               </View>
             </DataTable.Title>
           </DataTable.Header>
-
-          <CashTableCell cashIn={cashIn} cashOut={cashOut} time={time} />
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <CashTableCell
+                cashIn={item.cashIn}
+                cashOut={item.cashOut}
+                time={item.time}
+              />
+            )}
+            keyExtractor={(item) => item.index}
+          />
         </DataTable>
       </View>
     </View>
@@ -73,12 +84,5 @@ export default function CashTable(props) {
 }
 
 CashTable.propTypes = {
-  time: PropTypes.string.isRequired,
-  cashIn: PropTypes.number,
-  cashOut: PropTypes.number,
-}
-
-CashTable.defaultProps = {
-  cashIn: '',
-  cashOut: '',
+  data: PropTypes.arrayOf.isRequired,
 }
