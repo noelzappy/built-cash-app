@@ -15,6 +15,7 @@ const en = {
   DATE: 'Date',
   BALANCE: 'Balance',
   NET_BALANCE: 'Net Balance',
+  DOWNLOAD_REPORTS: 'Download Reports',
 }
 
 export default en

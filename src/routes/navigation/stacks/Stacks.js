@@ -1,20 +1,12 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
-import Home from 'scenes/home'
+import Reports from '../../../scenes/Reports'
+import CashBook from '../../../scenes/CashBook/CashBook'
 import Settings from 'scenes/settings'
-import FontIcon from 'react-native-vector-icons/FontAwesome5'
+import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
-
-// ------------------------------------
-// Constants
-// ------------------------------------
-
-// ------------------------------------
-// Language
-import * as en from '../../../languages/english'
-// ------------------------------------
 
 const Stack = createStackNavigator()
 
@@ -27,67 +19,37 @@ const navigationProps = {
 // ------------------------------------
 // Navigators
 // ------------------------------------
-
-const HomeNavigator = () => (
+export const CashTab = () => (
   <Stack.Navigator
-    initialRouteName="Home"
-    headerMode="screen"
-    screenOptions={navigationProps}
+    screenOptions={{
+      headerShown: false,
+    }}
   >
+    <Stack.Screen name="CashBook" component={CashBook} />
+  </Stack.Navigator>
+)
+
+export const ReportTab = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="CashTab" component={Reports} />
+  </Stack.Navigator>
+)
+
+export const HomeNavigator = () => (
+  <Stack.Navigator headerMode="screen" screenOptions={navigationProps}>
     <Stack.Screen
       name="Home"
-      component={Home}
+      component={TopTabs}
       options={({ navigation }) => ({
-        title: en.Home,
+        title: 'Home',
         headerRight: () => <HeaderRight navigation={navigation} />,
         headerTitle: () => <HeaderTitle />,
       })}
     />
-    <Stack.Screen
-      name="Settings"
-      component={Settings}
-      options={({ navigation }) => ({
-        title: 'Home',
-        headerLeft: () => (
-          <FontIcon.Button
-            name="arrow-circle-left"
-            color="white"
-            backgroundColor="transparent"
-            onPress={() => {
-              navigation.goBack()
-            }}
-            style={{ paddingLeft: 15 }}
-          />
-        ),
-        headerTitle: () => <HeaderTitle />,
-      })}
-    />
+    <Stack.Screen name="Settings" component={Settings} />
   </Stack.Navigator>
 )
-
-// export const ProfileNavigator = () => (
-//   <Stack.Navigator
-//     initialRouteName="Profile"
-//     headerMode="screen"
-//     screenOptions={navigationProps}
-//   >
-//     <Stack.Screen
-//       name="Profile"
-//       component={Profile}
-//       options={({ navigation }) => ({
-//         title: en.Profile,
-//         headerRight: () => <HeaderLeft navigation={navigation} />,
-//         headerTitle: () => <HeaderTitle />,
-//       })}
-//     />
-//     <Stack.Screen
-//       name="Settings"
-//       component={Settings}
-//       options={{
-//         title: 'Settings',
-//       }}
-//     />
-//   </Stack.Navigator>
-// )
-
-export default HomeNavigator

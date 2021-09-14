@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper'
 import { useSelector, useDispatch } from 'react-redux'
 import { authenticate } from 'slices/app.slice'
-import Main from './navigation'
+import Navigation from './navigation'
 
 const Routes = () => {
   const { checked, loggedIn } = useSelector((state) => state.app)
@@ -22,7 +22,7 @@ const Routes = () => {
       <ActivityIndicator />
     </View>
   ) : (
-    <Main />
+    <Navigation />
   )
 }
 

@@ -1,3 +1,3 @@
-import HomeNavigator from './Stacks'
+import { CashTab, ReportTab } from './Stacks'
 
-export default HomeNavigator
+export default { CashTab, ReportTab }

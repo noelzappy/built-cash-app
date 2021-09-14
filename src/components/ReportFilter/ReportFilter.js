@@ -8,8 +8,8 @@ import { colors } from '../../theme'
 export default function ReportFilter() {
   const today = new Date()
 
-  const [fromDate, setFromDate] = useState(today.toLocaleDateString())
-  const [toDate, setToDate] = useState(today.toLocaleDateString())
+  const [fromDate, setFromDate] = useState(today)
+  const [toDate, setToDate] = useState(today)
   const { isOpen, onOpen, onClose } = useDisclose()
   return (
     <View
@@ -61,9 +61,8 @@ export default function ReportFilter() {
         <Actionsheet.Content>
           <Actionsheet.Item
             onPress={() => {
-              const d = new Date().toLocaleDateString()
-              setFromDate(d)
-              setToDate(d)
+              setFromDate(today)
+              setToDate(today)
               onClose()
             }}
           >
@@ -77,7 +76,7 @@ export default function ReportFilter() {
                 today.getDate() - 7,
               )
               setFromDate(d)
-              setToDate(today.toLocaleDateString())
+              setToDate(today)
               onClose()
             }}
           >
@@ -91,7 +90,7 @@ export default function ReportFilter() {
                 today.getDate() - 30,
               )
               setFromDate(d)
-              setToDate(today.toLocaleDateString())
+              setToDate(today)
               onClose()
             }}
           >
@@ -105,7 +104,7 @@ export default function ReportFilter() {
                 today.getDate() - 365,
               )
               setFromDate(d)
-              setToDate(today.toLocaleDateString())
+              setToDate(today)
               onClose()
             }}
           >

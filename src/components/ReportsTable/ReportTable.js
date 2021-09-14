@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  View, Text, FlatList, Dimensions,
-} from 'react-native'
+import { View, Text, FlatList, Dimensions } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import en from '../../languages/english'
 import ReportCell from '../ReportCell/ReportCell'
@@ -11,7 +9,7 @@ const { height } = Dimensions.get('window')
 export default function ReportTable(props) {
   const { data } = props
   return (
-    <View style={{ marginBottom: height - (height - 100) }}>
+    <View style={{ marginBottom: height - (height - 350) }}>
       <DataTable>
         <DataTable.Header>
           <DataTable.Title>

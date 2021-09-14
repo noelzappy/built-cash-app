@@ -1,4 +1,5 @@
 import React from 'react'
+import DownloadReportButton from '../DownloadReportButton'
 import ReportFilter from '../ReportFilter/ReportFilter'
 import ReportHeader from '../ReportHeader/ReportHeader'
 import ReportTable from '../ReportsTable/ReportTable'
@@ -14,7 +15,7 @@ export default function ReportTab() {
             time: '10:15AM',
             cashIn: 300,
             cashOut: 43,
-            balance: 250,
+            balance: 270,
           },
           {
             time: '10:15AM',
@@ -252,6 +253,7 @@ export default function ReportTab() {
           },
         ]}
       />
+      <DownloadReportButton />
     </>
   )
 }
