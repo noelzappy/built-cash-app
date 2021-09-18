@@ -16,6 +16,11 @@ const en = {
   BALANCE: 'Balance',
   NET_BALANCE: 'Net Balance',
   DOWNLOAD_REPORTS: 'Download Reports',
+  ENTER_AMOUNT: 'Enter Amount',
+  PAYMENT_METHOD: 'Payment Method',
+  ONLINE: 'Online',
+  OFFLINE: 'Offline',
+  CASH: 'Cash',
 }
 
 export default en

@@ -7,6 +7,8 @@ import Settings from 'scenes/settings'
 import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
+import CashIn from '../../../scenes/CashIn/CashIn'
+import CashOut from 'scenes/CashOut'
 
 const Stack = createStackNavigator()
 
@@ -51,5 +53,19 @@ export const HomeNavigator = () => (
       })}
     />
     <Stack.Screen name="Settings" component={Settings} />
+    <Stack.Screen
+      name="CashIn"
+      component={CashIn}
+      options={() => ({
+        title: 'Cash In Entry',
+      })}
+    />
+    <Stack.Screen
+      name="CashOut"
+      component={CashOut}
+      options={() => ({
+        title: 'Cash Out Entry',
+      })}
+    />
   </Stack.Navigator>
 )

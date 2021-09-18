@@ -21,14 +21,14 @@ export default function TopTabs() {
         name="Reports"
         component={CashTab}
         options={() => ({
-          title: en.REPORTS,
+          title: en.CASHBOOK,
         })}
       />
       <Tab.Screen
         name="CashBook"
         component={ReportTab}
         options={() => ({
-          title: en.CASHBOOK,
+          title: en.REPORTS,
         })}
       />
     </Tab.Navigator>
