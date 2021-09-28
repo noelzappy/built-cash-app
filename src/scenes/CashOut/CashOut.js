@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Input, Button } from 'native-base'
+import DropdownAlert from 'react-native-dropdownalert'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
   container: {
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
 })
 
 export default function CashOut() {
+  const dropDownAlert = useRef()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
@@ -75,10 +77,20 @@ export default function CashOut() {
   const onOfflinePress = () => {
     setPaymentMethod('cash')
   }
+
   const handleSaveEntry = () => {
     setIsSaving(true)
-      console.log('Saved')
-      setIsSaving(true)
+    const payload = {
+      paymentMethod: paymentMethod,
+      amount: entryAmount,
+    }
+    if (payload.amount === '') {
+      dropDownAlert.alertWithType('error', 'Error', 'Amount cannot be empty')
+      return
+    }
+
+    console.log(payload)
+    setIsSaving(false)
   }
   return (
     <View style={styles.container}>
@@ -144,6 +156,7 @@ export default function CashOut() {
           Save
         </Button>
       </View>
+      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }

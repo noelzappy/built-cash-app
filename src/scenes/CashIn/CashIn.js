@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import DropdownAlert from 'react-native-dropdownalert'
 import { Input, Button } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
 })
 
 export default function CashIn() {
+  const dropDownAlert = useRef()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
@@ -77,8 +79,17 @@ export default function CashIn() {
   }
   const handleSaveEntry = () => {
     setIsSaving(true)
-    console.log('Saved')
-    setIsSaving(true)
+    const payload = {
+      paymentMethod: paymentMethod,
+      amount: entryAmount,
+    }
+    if (payload.amount === '') {
+      dropDownAlert.alertWithType('error', 'Error', 'Amount cannot be empty')
+      return
+    }
+
+    console.log(payload)
+    setIsSaving(false)
   }
   return (
     <View style={styles.container}>
@@ -144,6 +155,7 @@ export default function CashIn() {
           Save
         </Button>
       </View>
+      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }
