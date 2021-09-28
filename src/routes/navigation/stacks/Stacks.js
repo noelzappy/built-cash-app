@@ -21,25 +21,25 @@ const navigationProps = {
 // ------------------------------------
 // Navigators
 // ------------------------------------
-export const CashTab = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="CashBook" component={CashBook} />
-  </Stack.Navigator>
-)
+// export const CashTab = () => (
+//   <Stack.Navigator
+//     screenOptions={{
+//       headerShown: false,
+//     }}
+//   >
+//     <Stack.Screen name="CashBook" component={CashBook} />
+//   </Stack.Navigator>
+// )
 
-export const ReportTab = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="CashTab" component={Reports} />
-  </Stack.Navigator>
-)
+// export const ReportTab = () => (
+//   <Stack.Navigator
+//     screenOptions={{
+//       headerShown: false,
+//     }}
+//   >
+//     <Stack.Screen name="CashTab" component={Reports} />
+//   </Stack.Navigator>
+// )
 
 export const HomeNavigator = () => (
   <Stack.Navigator headerMode="screen" screenOptions={navigationProps}>

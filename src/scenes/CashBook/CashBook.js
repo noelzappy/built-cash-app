@@ -6,7 +6,7 @@ import ActionButton from '../../components/ActionButton'
 
 const { height } = Dimensions.get('window')
 
-export default function CashBook(props) {
+export default function CashBook({ navigation }) {
   return (
     <>
       <AllCard />
@@ -61,7 +61,7 @@ export default function CashBook(props) {
           ]}
         />
       </View>
-      <ActionButton navigation={props.navigation} />
+      <ActionButton navigation={navigation} />
     </>
   )
 }
