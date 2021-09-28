@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Input, Button } from 'native-base'
-import DropdownAlert from 'react-native-dropdownalert'
+import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import firebase from 'firebase'
 import { colors } from '../../theme'
 import en from '../../languages/english'
 
@@ -61,13 +62,12 @@ const styles = StyleSheet.create({
 })
 
 export default function CashOut() {
-  const dropDownAlert = useRef()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
 
   const onAmountValueChange = (num) => {
-    let newNumber = num.replace(/[^\d.-]/g, '')
+    const newNumber = num.replace(/[^\d.-]/g, '')
     setEntryAmount(newNumber)
   }
 
@@ -81,15 +81,36 @@ export default function CashOut() {
   const handleSaveEntry = () => {
     setIsSaving(true)
     const payload = {
-      paymentMethod: paymentMethod,
+      paymentMethod,
       amount: entryAmount,
+      entryType: 'cash out',
     }
     if (payload.amount === '') {
-      dropDownAlert.alertWithType('error', 'Error', 'Amount cannot be empty')
+      showMessage({
+        type: 'danger',
+        message: 'Entry Error',
+        description: 'Amount cannot be empty',
+        textStyle: {
+          fontSize: 16,
+        },
+        titleStyle: {
+          fontSize: 18,
+        },
+        style: {
+          paddingTop: 40,
+        },
+      })
+      setIsSaving(false)
       return
     }
 
-    console.log(payload)
+    firebase
+      .database()
+      .ref('data/')
+      .set(payload)
+      .then(() => {
+        console.log('worked')
+      })
     setIsSaving(false)
   }
   return (
@@ -104,7 +125,13 @@ export default function CashOut() {
           placeholder={en.ENTER_AMOUNT}
           keyboardType="numeric"
           InputLeftElement={
-            <Text style={{ fontSize: 25, color: colors.gray, padding: 7 }}>
+            <Text
+              style={{
+                fontSize: 25,
+                color: colors.gray,
+                padding: 7,
+              }}
+            >
               GHS |
             </Text>
           }
@@ -156,7 +183,6 @@ export default function CashOut() {
           Save
         </Button>
       </View>
-      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import DropdownAlert from 'react-native-dropdownalert'
+import { showMessage } from 'react-native-flash-message'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import firebase from 'firebase'
 import { Input, Button } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
   container: {
@@ -61,13 +62,12 @@ const styles = StyleSheet.create({
 })
 
 export default function CashIn() {
-  const dropDownAlert = useRef()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
 
   const onAmountValueChange = (num) => {
-    let newNumber = num.replace(/[^\d.-]/g, '')
+    const newNumber = num.replace(/[^\d.-]/g, '')
     setEntryAmount(newNumber)
   }
 
@@ -80,15 +80,37 @@ export default function CashIn() {
   const handleSaveEntry = () => {
     setIsSaving(true)
     const payload = {
-      paymentMethod: paymentMethod,
+      paymentMethod,
       amount: entryAmount,
+      entryType: 'cash in',
     }
     if (payload.amount === '') {
-      dropDownAlert.alertWithType('error', 'Error', 'Amount cannot be empty')
+      showMessage({
+        type: 'danger',
+        message: 'Entry Error',
+        description: 'Amount cannot be empty',
+        textStyle: {
+          fontSize: 16,
+        },
+        titleStyle: {
+          fontSize: 18,
+        },
+        style: {
+          paddingTop: 40,
+        },
+      })
+      setIsSaving(false)
       return
     }
 
-    console.log(payload)
+    firebase
+      .database()
+      .ref('data/')
+      .set(payload)
+      .then(() => {
+        console.log('worked')
+      })
+
     setIsSaving(false)
   }
   return (
@@ -155,7 +177,6 @@ export default function CashIn() {
           Save
         </Button>
       </View>
-      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }
