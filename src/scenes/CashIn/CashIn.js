@@ -4,7 +4,7 @@ import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from 'firebase'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { Input, Button } from 'native-base'
+import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
 
@@ -66,6 +66,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 30,
   },
+  desContainer: {
+    margin: 20,
+  },
 })
 
 export default function CashIn() {
@@ -74,6 +77,7 @@ export default function CashIn() {
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(new Date(1598051730000))
   const [showDateSelector, setShowDateSelector] = useState(false)
+  const [description, setDescription] = useState('')
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -92,7 +96,10 @@ export default function CashIn() {
       paymentMethod,
       amount: entryAmount,
       entryType: 'cash in',
+      description,
+      date,
     }
+
     if (payload.amount === '') {
       showMessage({
         type: 'danger',
@@ -108,30 +115,12 @@ export default function CashIn() {
           paddingTop: 40,
         },
       })
+
       setIsSaving(false)
       return
     }
 
-    firebase
-      .database()
-      .ref('data/')
-      .set(payload)
-      .then(() => {
-        showMessage({
-          message: 'Success',
-          description: 'Entry saved successfully',
-          type: 'success',
-          textStyle: {
-            fontSize: 16,
-          },
-          titleStyle: {
-            fontSize: 18,
-          },
-          style: {
-            paddingTop: 40,
-          },
-        })
-      })
+    console.log(payload)
 
     setIsSaving(false)
   }
@@ -153,7 +142,13 @@ export default function CashIn() {
           placeholder={en.ENTER_AMOUNT}
           keyboardType="numeric"
           InputLeftElement={
-            <Text style={{ fontSize: 25, color: colors.gray, padding: 7 }}>
+            <Text
+              style={{
+                fontSize: 25,
+                color: colors.gray,
+                padding: 7,
+              }}
+            >
               GHS |
             </Text>
           }
@@ -193,9 +188,19 @@ export default function CashIn() {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View>
-        <Text>Enter Description</Text>
-      </View> */}
+      <View style={styles.desContainer}>
+        <TextArea
+          h={20}
+          placeholder="Enter Description"
+          w={{
+            base: '100%',
+            md: '25%',
+          }}
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          totalLines={3}
+        />
+      </View>
       <View style={styles.extraContainer}>
         <View>
           {showDateSelector ? (

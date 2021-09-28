@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { Input, Button } from 'native-base'
+import { Input, Button, TextArea } from 'native-base'
 import { showMessage } from 'react-native-flash-message'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from 'firebase'
 import { colors } from '../../theme'
@@ -59,12 +60,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red,
     marginHorizontal: 20,
   },
+  extraContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginTop: 30,
+  },
+  desContainer: {
+    margin: 20,
+  },
 })
 
 export default function CashOut() {
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
+  const [date, setDate] = useState(new Date(1598051730000))
+  const [showDateSelector, setShowDateSelector] = useState(false)
+  const [description, setDescription] = useState('')
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -83,7 +96,9 @@ export default function CashOut() {
     const payload = {
       paymentMethod,
       amount: entryAmount,
-      entryType: 'cash out',
+      entryType: 'cash in',
+      description,
+      // date,
     }
     if (payload.amount === '') {
       showMessage({
@@ -104,26 +119,7 @@ export default function CashOut() {
       return
     }
 
-    firebase
-      .database()
-      .ref('data/')
-      .set(payload)
-      .then(() => {
-        showMessage({
-          message: 'Success',
-          description: 'Entry saved successfully',
-          type: 'success',
-          textStyle: {
-            fontSize: 16,
-          },
-          titleStyle: {
-            fontSize: 18,
-          },
-          style: {
-            paddingTop: 40,
-          },
-        })
-      })
+    console.log(payload)
     setIsSaving(false)
   }
   return (
@@ -182,6 +178,48 @@ export default function CashOut() {
           >
             <Text style={styles.textActive}>{en.ONLINE}</Text>
           </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.desContainer}>
+        <TextArea
+          h={20}
+          placeholder="Enter Description"
+          w={{
+            base: '100%',
+            md: '25%',
+          }}
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          totalLines={3}
+        />
+      </View>
+      <View style={styles.extraContainer}>
+        <View>
+          {showDateSelector ? (
+            <DateTimePicker
+              value={date}
+              placeholder="Select Date"
+              format="YYYY-MM-DD"
+              mode="date"
+              onChange={(e, d) => {
+                onDateChange(d)
+              }}
+              display="default"
+            />
+          ) : (
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowDateSelector(true)
+                }}
+              >
+                <Text> Change Date</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View>
+          <Text>Add Attachment</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
