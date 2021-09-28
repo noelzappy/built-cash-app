@@ -109,7 +109,20 @@ export default function CashOut() {
       .ref('data/')
       .set(payload)
       .then(() => {
-        console.log('worked')
+        showMessage({
+          message: 'Success',
+          description: 'Entry saved successfully',
+          type: 'success',
+          textStyle: {
+            fontSize: 16,
+          },
+          titleStyle: {
+            fontSize: 18,
+          },
+          style: {
+            paddingTop: 40,
+          },
+        })
       })
     setIsSaving(false)
   }

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from 'firebase'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { Input, Button } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
@@ -59,12 +60,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
     marginHorizontal: 20,
   },
+  extraContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginTop: 30,
+  },
 })
 
 export default function CashIn() {
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
+  const [date, setDate] = useState(new Date(1598051730000))
+  const [showDateSelector, setShowDateSelector] = useState(false)
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -108,11 +117,30 @@ export default function CashIn() {
       .ref('data/')
       .set(payload)
       .then(() => {
-        console.log('worked')
+        showMessage({
+          message: 'Success',
+          description: 'Entry saved successfully',
+          type: 'success',
+          textStyle: {
+            fontSize: 16,
+          },
+          titleStyle: {
+            fontSize: 18,
+          },
+          style: {
+            paddingTop: 40,
+          },
+        })
       })
 
     setIsSaving(false)
   }
+
+  function onDateChange(d) {
+    setDate(d)
+    setShowDateSelector(false)
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.Input}>
@@ -163,6 +191,38 @@ export default function CashIn() {
           >
             <Text style={styles.textActive}>{en.ONLINE}</Text>
           </TouchableOpacity>
+        </View>
+      </View>
+      {/* <View>
+        <Text>Enter Description</Text>
+      </View> */}
+      <View style={styles.extraContainer}>
+        <View>
+          {showDateSelector ? (
+            <DateTimePicker
+              value={date}
+              placeholder="Select Date"
+              format="YYYY-MM-DD"
+              mode="date"
+              onChange={(e, d) => {
+                onDateChange(d)
+              }}
+              display="default"
+            />
+          ) : (
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowDateSelector(true)
+                }}
+              >
+                <Text> Change Date</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View>
+          <Text>Add Attachment</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
