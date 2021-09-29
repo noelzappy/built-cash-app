@@ -11,6 +11,8 @@ module.exports = (api) => {
             scenes: './src/scenes',
             theme: './src/theme',
             utils: './src/utils',
+            languages: './src/languages',
+            constants: './src/constants',
           },
         },
       ],

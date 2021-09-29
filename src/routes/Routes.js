@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { View } from 'react-native'
-import { ActivityIndicator } from 'react-native-paper'
 import { useSelector, useDispatch } from 'react-redux'
+import { NavigationContainer } from '@react-navigation/native'
 import Navigation from './navigation'
+import { AuthNavigator } from './navigation/stacks/Stacks'
 
 const Routes = () => {
   const loggedIn = useSelector((state) => state.authReducer)
@@ -12,9 +13,9 @@ const Routes = () => {
 
   // rendering
   return !loggedIn ? (
-    <View style={{ justifyContent: 'center', alignContent: 'center' }}>
-      <ActivityIndicator />
-    </View>
+    <NavigationContainer>
+      <AuthNavigator />
+    </NavigationContainer>
   ) : (
     <Navigation />
   )

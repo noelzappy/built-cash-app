@@ -1,14 +1,15 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
+import Settings from 'scenes/settings'
 import Reports from '../../../scenes/Reports'
 import CashBook from '../../../scenes/CashBook/CashBook'
-import Settings from 'scenes/settings'
 import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
 import CashIn from '../../../scenes/CashIn/CashIn'
-import CashOut from 'scenes/CashOut'
+import AuthScreen from '../../../scenes/Auth/AuthScreen'
+import CashOut from '../../../scenes/CashOut'
 
 const Stack = createStackNavigator()
 
@@ -21,6 +22,17 @@ const navigationProps = {
 // ------------------------------------
 // Navigators
 // ------------------------------------
+
+export const AuthNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="AuthScreen" component={AuthScreen} />
+  </Stack.Navigator>
+)
+
 export const CashTab = () => (
   <Stack.Navigator
     screenOptions={{
