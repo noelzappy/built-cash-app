@@ -21,6 +21,7 @@ const en = {
   ONLINE: 'Online',
   OFFLINE: 'Offline',
   CASH: 'Cash',
+  ENTER_VERIFICATION_CODE: 'Enter Verification Code',
 }
 
 export default en

@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Platform,
@@ -15,9 +14,11 @@ import {
   FirebaseRecaptchaBanner,
 } from 'expo-firebase-recaptcha'
 import * as firebase from 'firebase'
-import { Input } from 'native-base'
+import { Input, Button } from 'native-base'
+import Modal from 'react-native-modal'
 import firebaseApp from '../../constants/firebaseConfig'
 import { colors } from '../../theme'
+import en from '../../languages/english'
 
 const styles = StyleSheet.create({
   container: {
@@ -43,6 +44,13 @@ const styles = StyleSheet.create({
     color: colors.darkPurple,
     textAlign: 'center',
   },
+  modalInner: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
 })
 
 const AuthScreen = ({ navigation }) => {
@@ -50,6 +58,7 @@ const AuthScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState()
   const [verificationId, setVerificationId] = useState()
   const [verificationCode, setVerificationCode] = useState()
+  const [showModal, setShowModal] = useState(false)
 
   const firebaseConfig = firebase.apps.length
     ? firebase.app().options
@@ -91,7 +100,6 @@ const AuthScreen = ({ navigation }) => {
       </View>
 
       <Button
-        title="Verify"
         disabled={!phoneNumber}
         onPress={async () => {
           try {
@@ -106,6 +114,8 @@ const AuthScreen = ({ navigation }) => {
               type: 'warning',
               description: 'Verification code successfully sent to your phone',
             })
+
+            setShowModal(true)
           } catch (err) {
             showMessage({
               message: 'Verification Failed',
@@ -114,33 +124,54 @@ const AuthScreen = ({ navigation }) => {
             })
           }
         }}
-      />
+      >
+        Verify Phone
+      </Button>
 
-      <View>
-        <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
-        <TextInput
-          style={{ marginVertical: 10, fontSize: 17 }}
-          editable={!!verificationId}
-          placeholder="123456"
-          onChangeText={setVerificationCode}
-        />
-        <Button
-          title="Confirm Verification Code"
-          disabled={!verificationId}
-          onPress={async () => {
-            try {
-              const credential = firebase.auth.PhoneAuthProvider.credential(
-                verificationId,
-                verificationCode,
-              )
-              await firebase.auth().signInWithCredential(credential)
-              showMessage({ message: 'Phone authentication successful 👍' })
-            } catch (err) {
-              showMessage({ message: `Error: ${err.message}`, color: 'red' })
-            }
-          }}
-        />
-      </View>
+      <Modal
+        isVisible={showModal}
+        avoidKeyboard
+        // style={{ backgroundColor: 'black' }}
+      >
+        <View style={styles.modalInner}>
+          <Text style={{ marginTop: 20, fontSize: 18, paddingBottom: 10 }}>
+            {en.ENTER_VERIFICATION_CODE}
+          </Text>
+
+          <Input
+            style={{
+              marginVertical: 10,
+              fontSize: 17,
+              padding: 5,
+              width: '50%',
+            }}
+            editable={!!verificationId}
+            placeholder="123456"
+            onChangeText={setVerificationCode}
+          />
+
+          <Button
+            style={{ marginTop: 10 }}
+            disabled={!verificationId}
+            onPress={async () => {
+              try {
+                const credential = firebase.auth.PhoneAuthProvider.credential(
+                  verificationId,
+                  verificationCode,
+                )
+                await firebase.auth().signInWithCredential(credential)
+                showMessage({ message: 'Phone authentication successful 👍' })
+              } catch (err) {
+                showMessage({ message: `Error: ${err.message}`, color: 'red' })
+              } finally {
+                setShowModal(false)
+              }
+            }}
+          >
+            Confirm Code
+          </Button>
+        </View>
+      </Modal>
 
       {attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
     </View>
