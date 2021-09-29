@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { Provider } from 'react-redux'
-import store from 'utils/store'
 import 'utils/ignore'
 import FlashMessage from 'react-native-flash-message'
 import firebase from 'firebase/app'
+import { createStore, combineReducers } from 'redux'
 // assets
 import { imageAssets } from 'theme/images'
 import { fontAssets } from 'theme/fonts'
 import { NativeBaseProvider } from 'native-base'
 import Router from './routes'
+import { dataReducer, authReducer } from './utils/reducers'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCEVkg_anAk0gIQ-2UV6f48cPTZuIIan0w',
@@ -25,13 +26,16 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 
+const rootReducer = combineReducers({
+  dataReducer,
+  authReducer,
+})
+const store = createStore(rootReducer)
+
 const App = () => {
-  // state
   const [didLoad, setDidLoad] = useState(false)
 
-  // handler
   const handleLoadAssets = async () => {
-    // assets preloading
     await Promise.all([...imageAssets, ...fontAssets])
     setDidLoad(true)
   }
