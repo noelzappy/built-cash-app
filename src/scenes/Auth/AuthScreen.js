@@ -16,9 +16,11 @@ import {
 import * as firebase from 'firebase'
 import { Input, Button } from 'native-base'
 import Modal from 'react-native-modal'
+import { getDatabase } from 'firebase/database'
 import firebaseApp from '../../constants/firebaseConfig'
 import { colors } from '../../theme'
 import en from '../../languages/english'
+import { fetchData, loginUser, setData } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -60,16 +62,14 @@ const AuthScreen = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState()
   const [showModal, setShowModal] = useState(false)
 
+  const dispatch = useDispatch()
+  const mainState = useSelector((state) => state.mainReducer)
+
   const firebaseConfig = firebase.apps.length
     ? firebase.app().options
     : firebaseApp
 
   const attemptInvisibleVerification = true
-
-  // function phoneChecker(text) {
-  //   console.log(+text)
-  //   setPhoneNumber(phone)
-  // }
 
   return (
     <View style={styles.container}>
@@ -114,7 +114,6 @@ const AuthScreen = ({ navigation }) => {
               type: 'warning',
               description: 'Verification code successfully sent to your phone',
             })
-
             setShowModal(true)
           } catch (err) {
             showMessage({
@@ -160,11 +159,49 @@ const AuthScreen = ({ navigation }) => {
                   verificationCode,
                 )
                 await firebase.auth().signInWithCredential(credential)
-                showMessage({ message: 'Phone authentication successful 👍' })
+
+                showMessage({
+                  message: 'Authentication Successful',
+                  description: 'You have successfully authenticated',
+                  type: 'success',
+                })
+                firebase.auth().onAuthStateChanged((user) => {
+                  if (user) {
+                    firebase
+                      .database()
+                      .ref(user.uid)
+                      .on('value', (snapshot) => {
+                        if (!snapshot.exists()) {
+                          firebase
+                            .database()
+                            .ref(user.uid)
+                            .set({
+                              transactions: [
+                                { time: '10:15AM', cashIn: 200 },
+                                { time: '10:15AM', cashOut: 500 },
+                              ],
+                              accounts: {},
+                              reports: {},
+                            })
+                        } else {
+                          dispatch(setData({ snapshot, user }))
+                        }
+                      })
+                    dispatch(loginUser())
+                  } else {
+                    showMessage({
+                      message: 'Login Failed',
+                      description: 'Please try again',
+                      type: 'danger',
+                    })
+                  }
+                })
               } catch (err) {
-                showMessage({ message: `Error: ${err.message}`, color: 'red' })
-              } finally {
-                setShowModal(false)
+                showMessage({
+                  message: 'Verification Error',
+                  description: `Error: ${err.message}`,
+                  type: 'danger',
+                })
               }
             }}
           >

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { View } from 'react-native'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import Navigation from './navigation'
 import { AuthNavigator } from './navigation/stacks/Stacks'
 
 const Routes = () => {
-  const loggedIn = useSelector((state) => state.authReducer)
+  const loggedIn = useSelector((state) => state.mainReducer.loggedIn)
 
   // TODO: switch router by loggedIn state
   console.log('[##] loggedIn', loggedIn)

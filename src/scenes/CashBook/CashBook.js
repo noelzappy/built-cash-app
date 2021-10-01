@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Dimensions } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'
+
 import AllCard from '../../components/AllCard/AllCard'
 import CashTable from '../../components/CashTable/CashTable'
 import ActionButton from '../../components/ActionButton'
+import { fetchData } from '../../utils/actions'
 
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
+  const mainState = useSelector((state) => state.mainReducer)
+  const dispatch = useDispatch()
+  // const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
+
+  useEffect(() => {
+    // // console.log(mainState.userDetail.uid)
+    // dispatch(fetchData(uid))
+    dispatch(fetchData(mainState.userDetail.uid))
+    // console.log(mainState)
+  }, [])
+
   return (
     <>
       <AllCard />
@@ -16,50 +30,7 @@ export default function CashBook({ navigation }) {
           marginBottom: height - (height - 200),
         }}
       >
-        <CashTable
-          data={[
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 500 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 500 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashOut: 500 },
-            { time: '10:15AM', cashIn: 200 },
-            { time: '10:15AM', cashOut: 200 },
-            { time: '10:15AM', cashIn: 100 },
-            { time: '10:15AM', cashOut: 400 },
-            { time: '10:15AM', cashIn: 600 },
-            { time: '10:15AM', cashOut: 500 },
-          ]}
-        />
+        <CashTable data={mainState.data.transactions} />
       </View>
       <ActionButton navigation={navigation} />
     </>

@@ -3,18 +3,17 @@ import { View } from 'react-native'
 import { Provider } from 'react-redux'
 import 'utils/ignore'
 import FlashMessage from 'react-native-flash-message'
-
-import { createStore, combineReducers } from 'redux'
+import thunk from 'redux-thunk'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 // assets
 import { imageAssets } from 'theme/images'
 import { fontAssets } from 'theme/fonts'
 import { NativeBaseProvider } from 'native-base'
 import Routes from './routes'
-import { dataReducer, authReducer } from './utils/reducers'
+import mainReducer from './utils/reducers'
 
 const rootReducer = combineReducers({
-  dataReducer,
-  authReducer,
+  mainReducer,
 })
 const store = createStore(rootReducer)
 
