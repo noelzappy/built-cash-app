@@ -10,6 +10,7 @@ import { fetchData } from '../../utils/actions'
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
+  const [bookData, setBookData] = useState([])
   const mainState = useSelector((state) => state.mainReducer)
   const dispatch = useDispatch()
   // const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
@@ -20,6 +21,11 @@ export default function CashBook({ navigation }) {
     dispatch(fetchData(mainState.userDetail.uid))
     // console.log(mainState)
   }, [])
+  // useEffect(() => {
+  //   const tempData = []
+  //   mainState.data.map((item) => tempData.push(item))
+  //   setBookData(tempData)
+  // }, [mainState.data])
 
   return (
     <>

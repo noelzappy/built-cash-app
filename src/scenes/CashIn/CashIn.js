@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useDispatch, useSelector } from 'react-redux'
 import firebase from 'firebase'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
+import { persistData } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +74,8 @@ const styles = StyleSheet.create({
 })
 
 export default function CashIn() {
+  const mainState = useSelector((state) => state.mainReducer)
+  const dispatch = useDispatch()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
@@ -95,7 +99,7 @@ export default function CashIn() {
     const payload = {
       paymentMethod,
       amount: entryAmount,
-      entryType: 'cash in',
+      entryType: 'cashIn',
       description,
       date,
     }
@@ -115,12 +119,17 @@ export default function CashIn() {
           paddingTop: 40,
         },
       })
-
       setIsSaving(false)
       return
     }
 
-    console.log(payload)
+    const uid = mainState.userDetail.uid
+    const ll = {
+      uid,
+      data: { time: '10:45', cashIn: parseFloat(entryAmount) },
+    }
+
+    dispatch(persistData(ll))
 
     setIsSaving(false)
   }

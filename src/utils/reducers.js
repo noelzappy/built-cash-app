@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-import { FETCH_DATA, LOGIN_USER, SET_DATA } from './actions'
+import { FETCH_DATA, LOGIN_USER, PERSIST_DATA, SET_DATA } from './actions'
 
 const initialState = {
   loggedIn: false,
@@ -9,6 +9,8 @@ const initialState = {
   base: { data: {}, user: {} },
   data: {},
 }
+
+const db = firebase.database()
 
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -34,6 +36,15 @@ const mainReducer = (state = initialState, action) => {
           }
         })
       return { ...state, data: tempData }
+
+    case PERSIST_DATA:
+      let newData = {}
+      db.ref(action.payload.details.uid + '/transactions')
+        .push(action.payload.details.data)
+        .then((d) => {
+          newData = d
+        })
+      return { ...state, data: newData }
     default:
       return state
   }

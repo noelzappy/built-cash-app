@@ -15,7 +15,7 @@ import mainReducer from './utils/reducers'
 const rootReducer = combineReducers({
   mainReducer,
 })
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const App = () => {
   const [didLoad, setDidLoad] = useState(false)
