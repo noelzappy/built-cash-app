@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet, Text, View, StatusBar,
-} from 'react-native'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'
 import Button from 'components/Button'
 import { colors } from 'theme'
+import { logoutUser } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   root: {
@@ -21,16 +21,19 @@ const styles = StyleSheet.create({
 })
 
 const Settings = ({ route, navigation }) => {
-  const from = route?.params?.from
+  const dispatch = useDispatch()
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>{`Settings (from ${from})`}</Text>
+      <Text style={styles.title}>Setting Screen</Text>
       <Button
-        title="Go Back"
+        title="Logout"
         color="white"
         backgroundColor={colors.pink}
-        onPress={navigation.goBack}
+        onPress={() => {
+          dispatch(logoutUser())
+        }}
       />
     </View>
   )

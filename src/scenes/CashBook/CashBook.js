@@ -26,22 +26,23 @@ export default function CashBook({ navigation }) {
   const [localData, setLocalData] = useState([])
 
   const sortLocalData = useCallback(() => {
+    // console.log(data.transactions[today])
+    const myData = data.transactions[today]
     const tempArray = []
-    for (const [key, value] of Object.entries(data.transactions[today])) {
-      tempArray.push({ key, value })
-    }
-
-    const arr = []
-    tempArray.forEach((e) => {
-      arr.push({ time: e.value.time, [e.value.entryType]: e.value.amount })
+    Object.entries(myData).forEach((item) => {
+      const itemKey = item[0]
+      const _item = item[1]
+      tempArray.push({
+        time: _item.time,
+        [_item.entryType]: _item.amount,
+        key: itemKey,
+      })
     })
-    setLocalData(arr)
+    setLocalData(tempArray.reverse())
   })
 
   useEffect(() => {
-    // dispatch(fetchData(uid))
     dispatch(fetchData(userDetail.uid))
-    // console.log(mainState.data)
     sortLocalData()
   }, [])
 

@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  View, StyleSheet, Text, FlatList,
-} from 'react-native'
+import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import en from '../../languages/english'
@@ -75,7 +73,7 @@ export default function CashTable(props) {
                 time={item.time}
               />
             )}
-            keyExtractor={(item) => item.index}
+            keyExtractor={(item) => item.key}
           />
         </DataTable>
       </View>

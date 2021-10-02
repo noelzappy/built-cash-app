@@ -156,6 +156,7 @@ export default function EntryScreen({ route, navigation }) {
       setEntryAmount('')
       setDescription('')
       setDate(today)
+      dispatch(fetchData(mainState.userDetail.uid))
     } else {
       showMessage({
         type: 'danger',

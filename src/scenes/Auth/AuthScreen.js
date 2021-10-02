@@ -111,13 +111,9 @@ const AuthScreen = ({ navigation }) => {
               })
             }
           })
+
+        dispatch(fetchData(user.uid))
         dispatch(loginUser())
-      } else {
-        showMessage({
-          message: 'Login Failed',
-          description: 'Please try again',
-          type: 'danger',
-        })
       }
     })
   }
@@ -144,18 +140,12 @@ const AuthScreen = ({ navigation }) => {
             .on('value', (snapshot) => {
               if (snapshot.exists()) {
                 dispatch(setData({ snapshot, user }))
+                dispatch(fetchData(user.uid))
                 dispatch(loginUser())
-                return
               } else {
                 setBusinessModal(true)
               }
             })
-        } else {
-          showMessage({
-            message: 'Login Failed',
-            description: 'Please try again',
-            type: 'danger',
-          })
         }
       })
     } catch (err) {

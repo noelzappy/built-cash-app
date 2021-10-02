@@ -1,6 +1,12 @@
 import firebase from 'firebase'
 
-import { FETCH_DATA, LOGIN_USER, PERSIST_DATA, SET_DATA } from './actions'
+import {
+  FETCH_DATA,
+  LOGIN_USER,
+  LOGOUT_USER,
+  PERSIST_DATA,
+  SET_DATA,
+} from './actions'
 
 const initialState = {
   loggedIn: false,
@@ -19,6 +25,15 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         loggedIn: true,
       }
+    case LOGOUT_USER:
+      firebase.auth().signOut()
+      return {
+        loggedIn: false,
+        userDetail: {},
+        newData: {},
+        error: '',
+        data: {},
+      }
     case SET_DATA:
       return {
         ...state,
@@ -27,14 +42,18 @@ const mainReducer = (state = initialState, action) => {
       }
     case FETCH_DATA:
       let tempData = {}
-      firebase
-        .database()
-        .ref(action.payload)
-        .on('value', (snapshot) => {
-          if (snapshot.exists()) {
-            tempData = snapshot.val()
-          }
-        })
+      try {
+        firebase
+          .database()
+          .ref(action.payload)
+          .on('value', (snapshot) => {
+            if (snapshot.exists()) {
+              tempData = snapshot.val()
+            }
+          })
+      } catch (err) {
+        return { ...state, error: err.message }
+      }
       return { ...state, data: tempData }
 
     case PERSIST_DATA:

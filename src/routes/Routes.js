@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
+import firebase from 'firebase'
 import Navigation from './navigation'
 import { AuthNavigator } from './navigation/stacks/Stacks'
 
