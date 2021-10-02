@@ -171,13 +171,7 @@ const AuthScreen = ({ navigation }) => {
                       .database()
                       .ref(user.uid)
                       .on('value', (snapshot) => {
-                        if (!snapshot.exists()) {
-                          firebase.database().ref(user.uid).set({
-                            transactions: [],
-                            accounts: {},
-                            reports: {},
-                          })
-                        } else {
+                        if (snapshot.exists()) {
                           dispatch(setData({ snapshot, user }))
                         }
                       })

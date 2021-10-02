@@ -4,7 +4,8 @@ import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import firebase from 'firebase'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import moment from 'moment'
+import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
@@ -73,13 +74,25 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function CashIn() {
+const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
+
+export default function EntryScreen({ route, navigation }) {
+  const { entryType, title } = route.params
+
+  const nowDate = new Date()
+  const today =
+    nowDate.getDate() +
+    '-' +
+    (nowDate.getMonth() + 1) +
+    '-' +
+    nowDate.getFullYear()
+
   const mainState = useSelector((state) => state.mainReducer)
   const dispatch = useDispatch()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
-  const [date, setDate] = useState(new Date(1598051730000))
+  const [date, setDate] = useState(today)
   const [showDateSelector, setShowDateSelector] = useState(false)
   const [description, setDescription] = useState('')
 
@@ -96,7 +109,7 @@ export default function CashIn() {
   }
   const handleSaveEntry = () => {
     setIsSaving(true)
-    const payload = {
+    const entry = {
       paymentMethod,
       amount: entryAmount,
       entryType: 'cashIn',
@@ -104,7 +117,7 @@ export default function CashIn() {
       date,
     }
 
-    if (payload.amount === '') {
+    if (entry.amount === '') {
       showMessage({
         type: 'danger',
         message: 'Entry Error',
@@ -123,20 +136,26 @@ export default function CashIn() {
       return
     }
 
-    const uid = mainState.userDetail.uid
-    const ll = {
-      uid,
-      data: { time: '10:45', cashIn: parseFloat(entryAmount) },
+    dispatch(persistData({ uid, entry }))
+    console.log(mainState.error)
+    if (mainState.error === '') {
+      showMessage({
+        type: 'success',
+        message: 'Cash In Saved',
+        description: 'Cash In Entry has been saved successfully',
+      })
+      setEntryAmount('')
+      setDescription('')
+      setDate(today)
+    } else {
+      showMessage({
+        type: 'danger',
+        message: 'Error',
+        description: mainState.error.message,
+      })
     }
 
-    dispatch(persistData(ll))
-
     setIsSaving(false)
-  }
-
-  function onDateChange(d) {
-    setDate(d)
-    setShowDateSelector(false)
   }
 
   return (
@@ -212,32 +231,21 @@ export default function CashIn() {
       </View>
       <View style={styles.extraContainer}>
         <View>
-          {showDateSelector ? (
-            <DateTimePicker
-              value={date}
-              placeholder="Select Date"
-              format="YYYY-MM-DD"
-              mode="date"
-              onChange={(e, d) => {
-                onDateChange(d)
-              }}
-              display="default"
-            />
-          ) : (
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowDateSelector(true)
-                }}
-              >
-                <Text> Change Date</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <DatePicker
+            format="DD-MM-YYYY"
+            showIcon={false}
+            placeholder={date}
+            date={date}
+            onDateChange={(d) => {
+              setDate(d)
+            }}
+            onCloseModal={() => {}}
+          />
         </View>
-        <View>
+
+        {/* <View>
           <Text>Add Attachment</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.buttonContainer}>
         <Button

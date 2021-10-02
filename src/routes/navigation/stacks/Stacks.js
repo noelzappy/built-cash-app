@@ -7,7 +7,7 @@ import CashBook from '../../../scenes/CashBook/CashBook'
 import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
-import CashIn from '../../../scenes/CashIn/CashIn'
+import EntryScreen from '../../../scenes/EntryScreen/EntryScreen'
 import AuthScreen from '../../../scenes/Auth/AuthScreen'
 import CashOut from '../../../scenes/CashOut'
 
@@ -66,8 +66,8 @@ export const HomeNavigator = () => (
     />
     <Stack.Screen name="Settings" component={Settings} />
     <Stack.Screen
-      name="CashIn"
-      component={CashIn}
+      name="EntryScreen"
+      component={EntryScreen}
       options={() => ({
         title: 'Cash In Entry',
       })}

@@ -3,11 +3,11 @@ import firebase from 'firebase'
 import { FETCH_DATA, LOGIN_USER, PERSIST_DATA, SET_DATA } from './actions'
 
 const initialState = {
-  loggedIn: false,
+  loggedIn: true,
   userDetail: {},
-  transaction: {},
-  base: { data: {}, user: {} },
-  data: {},
+  incomes: {},
+  expenses: {},
+  error: '',
 }
 
 const db = firebase.database()
@@ -38,13 +38,38 @@ const mainReducer = (state = initialState, action) => {
       return { ...state, data: tempData }
 
     case PERSIST_DATA:
-      let newData = {}
-      db.ref(action.payload.details.uid + '/transactions')
-        .push(action.payload.details.data)
-        .then((d) => {
-          newData = d
-        })
-      return { ...state, data: newData }
+      try {
+        const nowDate = new Date()
+        const today =
+          nowDate.getDate() +
+          '-' +
+          (nowDate.getMonth() + 1) +
+          '-' +
+          nowDate.getFullYear()
+
+        let newData = {}
+
+        if (action.payload.entry.entryType === 'cashIn') {
+          db.ref(`${action.payload.uid}/transactions/incomes/${today}`)
+            .push(action.payload.entry)
+            .on('value', (d) => {
+              newData = d
+            })
+        } else {
+          db.ref(`${action.payload.uid}/transactions/expenses/${today}`)
+            .push(action.payload.entry)
+            .on('value', (d) => {
+              newData = d
+            })
+        }
+        if (action.payload.entry.entryType === 'cashIn') {
+          return { ...state, incomes: newData }
+        }
+        return { ...state, expenses: newData }
+      } catch (err) {
+        return { ...state, error: err.message }
+      }
+
     default:
       return state
   }

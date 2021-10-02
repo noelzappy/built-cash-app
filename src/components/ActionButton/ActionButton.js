@@ -51,7 +51,10 @@ export default function ActionButton({ navigation }) {
           txtStyle={styles.txtStyle}
           icon={<AntDesign name="pluscircleo" size={26} color="white" />}
           onPress={() => {
-            navigation.navigate('CashIn')
+            navigation.navigate('EntryScreen', {
+              title: 'Cash In Entry',
+              entryType: 'cashIn',
+            })
           }}
         />
       </View>
@@ -64,7 +67,10 @@ export default function ActionButton({ navigation }) {
           txtStyle={styles.txtStyle}
           icon={<AntDesign name="minuscircleo" size={26} color="white" />}
           onPress={() => {
-            navigation.navigate('CashOut')
+            navigation.navigate('CashOut', {
+              title: 'Cash In Entry',
+              entryType: 'cashIn',
+            })
           }}
         />
       </View>
