@@ -53,6 +53,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
+  businessModal: {
+    backgroundColor: 'white',
+    flex: 1,
+    width: '100%',
+    borderRadius: 10,
+    padding: 25,
+  },
+  businessInput: {
+    marginVertical: 25,
+  },
+  businessModalHeader: {
+    textAlign: 'center',
+    marginVertical: 15,
+    fontSize: 24,
+  },
 })
 
 const AuthScreen = ({ navigation }) => {
@@ -61,6 +76,10 @@ const AuthScreen = ({ navigation }) => {
   const [verificationId, setVerificationId] = useState()
   const [verificationCode, setVerificationCode] = useState()
   const [showModal, setShowModal] = useState(false)
+  const [businessModal, setBusinessModal] = useState(false)
+  const [businessName, setBusinessName] = useState()
+  const [amountInHand, setAmountInHand] = useState('0')
+  const [errorText, setErrorText] = useState('')
 
   const dispatch = useDispatch()
   const mainState = useSelector((state) => state.mainReducer)
@@ -70,6 +89,83 @@ const AuthScreen = ({ navigation }) => {
     : firebaseApp
 
   const attemptInvisibleVerification = true
+
+  function businessSetupHandler() {
+    if (businessName === '') {
+      setErrorText(en.BUSINESS_SETUP_ERROR)
+      return
+    }
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .database()
+          .ref(user.uid)
+          .on('value', (snapshot) => {
+            if (snapshot.exists()) {
+              dispatch(setData({ snapshot, user }))
+            } else {
+              firebase.database().ref(user.uid).set({
+                businessName,
+                totalBalance: amountInHand,
+              })
+            }
+          })
+        dispatch(loginUser())
+      } else {
+        showMessage({
+          message: 'Login Failed',
+          description: 'Please try again',
+          type: 'danger',
+        })
+      }
+    })
+  }
+
+  async function verificationHandler() {
+    try {
+      const credential = firebase.auth.PhoneAuthProvider.credential(
+        verificationId,
+        verificationCode,
+      )
+      await firebase.auth().signInWithCredential(credential)
+
+      showMessage({
+        message: 'Authentication Successful',
+        description: 'You have successfully authenticated',
+        type: 'success',
+      })
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          firebase
+            .database()
+            .ref(user.uid)
+            .on('value', (snapshot) => {
+              if (snapshot.exists()) {
+                dispatch(setData({ snapshot, user }))
+                dispatch(loginUser())
+                return
+              } else {
+                setBusinessModal(true)
+              }
+            })
+        } else {
+          showMessage({
+            message: 'Login Failed',
+            description: 'Please try again',
+            type: 'danger',
+          })
+        }
+      })
+    } catch (err) {
+      showMessage({
+        message: 'Verification Error',
+        description: `Error: ${err.message}`,
+        type: 'danger',
+      })
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -152,49 +248,47 @@ const AuthScreen = ({ navigation }) => {
           <Button
             style={{ marginTop: 10 }}
             disabled={!verificationId}
-            onPress={async () => {
-              try {
-                const credential = firebase.auth.PhoneAuthProvider.credential(
-                  verificationId,
-                  verificationCode,
-                )
-                await firebase.auth().signInWithCredential(credential)
-
-                showMessage({
-                  message: 'Authentication Successful',
-                  description: 'You have successfully authenticated',
-                  type: 'success',
-                })
-                firebase.auth().onAuthStateChanged((user) => {
-                  if (user) {
-                    firebase
-                      .database()
-                      .ref(user.uid)
-                      .on('value', (snapshot) => {
-                        if (snapshot.exists()) {
-                          dispatch(setData({ snapshot, user }))
-                        }
-                      })
-                    dispatch(loginUser())
-                  } else {
-                    showMessage({
-                      message: 'Login Failed',
-                      description: 'Please try again',
-                      type: 'danger',
-                    })
-                  }
-                })
-              } catch (err) {
-                showMessage({
-                  message: 'Verification Error',
-                  description: `Error: ${err.message}`,
-                  type: 'danger',
-                })
-              }
-            }}
+            onPress={verificationHandler}
           >
             Confirm Code
           </Button>
+        </View>
+      </Modal>
+      <Modal isVisible={businessModal}>
+        <View style={styles.businessModal}>
+          <View>
+            <Text style={styles.businessModalHeader}>{en.BUSINESS_SETUP}</Text>
+          </View>
+          <Text style={{ color: 'red', textAlign: 'center' }}>{errorText}</Text>
+          <View>
+            <View style={styles.businessInput}>
+              <Text>{en.ENTER_BUSINESS_NAME} </Text>
+              <Input
+                placeholder={en.ENTER_BUSINESS_NAME}
+                onChangeText={(text) => setBusinessName(text)}
+                value={businessName}
+              />
+            </View>
+            <View style={styles.businessInput}>
+              <Text>{en.AMOUNT_IN_HAND} </Text>
+              <Input
+                placeholder={en.AMOUNT_IN_HAND}
+                onChangeText={(text) => setAmountInHand(text)}
+                value={amountInHand}
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+          <View>
+            <Button
+              onPress={() => {
+                businessSetupHandler()
+              }}
+              disabled={!businessName}
+            >
+              Submit
+            </Button>
+          </View>
         </View>
       </Modal>
 

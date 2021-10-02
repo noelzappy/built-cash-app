@@ -9,7 +9,7 @@ import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { persistData } from '../../utils/actions'
+import { fetchData, persistData } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -63,6 +63,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
     marginHorizontal: 20,
   },
+  button_out: {
+    backgroundColor: colors.red,
+    marginHorizontal: 20,
+  },
   extraContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -74,10 +78,10 @@ const styles = StyleSheet.create({
   },
 })
 
-const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
+// const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
 
 export default function EntryScreen({ route, navigation }) {
-  const { entryType, title } = route.params
+  const { entryType } = route.params
 
   const nowDate = new Date()
   const today =
@@ -93,8 +97,8 @@ export default function EntryScreen({ route, navigation }) {
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(today)
-  const [showDateSelector, setShowDateSelector] = useState(false)
   const [description, setDescription] = useState('')
+  const { uid } = mainState.userDetail
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -109,19 +113,24 @@ export default function EntryScreen({ route, navigation }) {
   }
   const handleSaveEntry = () => {
     setIsSaving(true)
+
+    const d = new Date()
+    const time = d.getHours() + ':' + d.getMinutes()
+
     const entry = {
       paymentMethod,
       amount: entryAmount,
-      entryType: 'cashIn',
+      entryType,
       description,
       date,
+      time,
     }
 
     if (entry.amount === '') {
       showMessage({
         type: 'danger',
-        message: 'Entry Error',
-        description: 'Amount cannot be empty',
+        message: en.ERROR,
+        description: en.AMOUNT_CANNOT_BE_EMPTY,
         textStyle: {
           fontSize: 16,
         },
@@ -137,12 +146,12 @@ export default function EntryScreen({ route, navigation }) {
     }
 
     dispatch(persistData({ uid, entry }))
-    console.log(mainState.error)
+
     if (mainState.error === '') {
       showMessage({
         type: 'success',
-        message: 'Cash In Saved',
-        description: 'Cash In Entry has been saved successfully',
+        message: en.SUCCESS,
+        description: en.TRANSACTION_SAVED,
       })
       setEntryAmount('')
       setDescription('')
@@ -150,11 +159,10 @@ export default function EntryScreen({ route, navigation }) {
     } else {
       showMessage({
         type: 'danger',
-        message: 'Error',
+        message: en.ERROR,
         description: mainState.error.message,
       })
     }
-
     setIsSaving(false)
   }
 
@@ -162,7 +170,7 @@ export default function EntryScreen({ route, navigation }) {
     <View style={styles.container}>
       <View style={styles.Input}>
         <Input
-          width="100%" // mx={3}
+          width="100%"
           value={entryAmount}
           onChangeText={(num) => {
             onAmountValueChange(num)
@@ -219,7 +227,7 @@ export default function EntryScreen({ route, navigation }) {
       <View style={styles.desContainer}>
         <TextArea
           h={20}
-          placeholder="Enter Description"
+          placeholder={en.ENTER_DESCRIPTION}
           w={{
             base: '100%',
             md: '25%',
@@ -249,7 +257,7 @@ export default function EntryScreen({ route, navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          style={styles.button}
+          style={entryType === 'cashIn' ? styles.button : styles.button_out}
           onPress={() => {
             handleSaveEntry()
           }}

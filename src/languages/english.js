@@ -22,6 +22,18 @@ const en = {
   OFFLINE: 'Offline',
   CASH: 'Cash',
   ENTER_VERIFICATION_CODE: 'Enter Verification Code',
+  CASH_IN_ENTRY: 'Cash In Entry',
+  CASH_OUT_ENTRY: 'Cash Out Entry',
+  SUCCESS: 'Success',
+  TRANSACTION_SAVED: 'Transaction saved successfully',
+  TRANSACTION_SAVE_FAILED: 'Unable to save the transaction',
+  ERROR: 'Error',
+  ENTER_DESCRIPTION: 'Enter description',
+  BUSINESS_SETUP: 'Business Setup',
+  ENTER_BUSINESS_NAME: 'Enter business name',
+  AMOUNT_IN_HAND: 'Amount in hand',
+  BUSINESS_SETUP_ERROR: 'Business name cannot be empty',
+  AMOUNT_CANNOT_BE_EMPTY: 'Amount cannot be empty',
 }
 
 export default en

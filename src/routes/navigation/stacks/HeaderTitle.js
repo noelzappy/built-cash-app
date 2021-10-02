@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
+import { useSelector } from 'react-redux'
 
 const styles = StyleSheet.create({
   logo: {
@@ -7,7 +8,10 @@ const styles = StyleSheet.create({
   },
 })
 
-const HeaderTitle = () => <Text style={styles.logo}>My Company</Text>
+const HeaderTitle = () => {
+  const mainReducer = useSelector((state) => state.mainReducer)
+  return <Text style={styles.logo}>{mainReducer.data.businessName}</Text>
+}
 
 HeaderTitle.propTypes = {}
 HeaderTitle.defaultProps = {}

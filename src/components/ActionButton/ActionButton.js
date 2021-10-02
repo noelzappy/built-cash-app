@@ -52,7 +52,7 @@ export default function ActionButton({ navigation }) {
           icon={<AntDesign name="pluscircleo" size={26} color="white" />}
           onPress={() => {
             navigation.navigate('EntryScreen', {
-              title: 'Cash In Entry',
+              title: en.CASH_IN_ENTRY,
               entryType: 'cashIn',
             })
           }}
@@ -67,9 +67,9 @@ export default function ActionButton({ navigation }) {
           txtStyle={styles.txtStyle}
           icon={<AntDesign name="minuscircleo" size={26} color="white" />}
           onPress={() => {
-            navigation.navigate('CashOut', {
-              title: 'Cash In Entry',
-              entryType: 'cashIn',
+            navigation.navigate('EntryScreen', {
+              title: en.CASH_OUT_ENTRY,
+              entryType: 'cashOut',
             })
           }}
         />

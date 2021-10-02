@@ -9,7 +9,6 @@ import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
 import EntryScreen from '../../../scenes/EntryScreen/EntryScreen'
 import AuthScreen from '../../../scenes/Auth/AuthScreen'
-import CashOut from '../../../scenes/CashOut'
 
 const Stack = createStackNavigator()
 
@@ -68,15 +67,8 @@ export const HomeNavigator = () => (
     <Stack.Screen
       name="EntryScreen"
       component={EntryScreen}
-      options={() => ({
-        title: 'Cash In Entry',
-      })}
-    />
-    <Stack.Screen
-      name="CashOut"
-      component={CashOut}
-      options={() => ({
-        title: 'Cash Out Entry',
+      options={({ route }) => ({
+        title: route.params.title,
       })}
     />
   </Stack.Navigator>

@@ -3,11 +3,11 @@ import firebase from 'firebase'
 import { FETCH_DATA, LOGIN_USER, PERSIST_DATA, SET_DATA } from './actions'
 
 const initialState = {
-  loggedIn: true,
+  loggedIn: false,
   userDetail: {},
-  incomes: {},
-  expenses: {},
+  newData: {},
   error: '',
+  data: {},
 }
 
 const db = firebase.database()
@@ -48,24 +48,12 @@ const mainReducer = (state = initialState, action) => {
           nowDate.getFullYear()
 
         let newData = {}
-
-        if (action.payload.entry.entryType === 'cashIn') {
-          db.ref(`${action.payload.uid}/transactions/incomes/${today}`)
-            .push(action.payload.entry)
-            .on('value', (d) => {
-              newData = d
-            })
-        } else {
-          db.ref(`${action.payload.uid}/transactions/expenses/${today}`)
-            .push(action.payload.entry)
-            .on('value', (d) => {
-              newData = d
-            })
-        }
-        if (action.payload.entry.entryType === 'cashIn') {
-          return { ...state, incomes: newData }
-        }
-        return { ...state, expenses: newData }
+        db.ref(`${action.payload.uid}/transactions/${today}`)
+          .push(action.payload.entry)
+          .on('value', (d) => {
+            newData = d
+          })
+        return { ...state, newData }
       } catch (err) {
         return { ...state, error: err.message }
       }
