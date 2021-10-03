@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import PropTypes from 'prop-types'
@@ -11,23 +11,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
   },
-  hCardTime: {
-    marginLeft: 4,
-    paddingLeft: 10,
-  },
-  hCardDate: {
-    marginLeft: 4,
-    paddingLeft: 10,
-  },
   hCardIn: {
-    marginLeft: 4,
-    paddingLeft: 10,
-  },
-  hCardInText: {
-    marginLeft: 4,
-    paddingLeft: 10,
-  },
-  hCardOut: {
     marginLeft: 4,
     paddingLeft: 10,
   },
@@ -38,8 +22,9 @@ const styles = StyleSheet.create({
 })
 
 export default function CashTable(props) {
-  const { data } = props
+  const { data, totalInOut, onRefresh, refreshing } = props
   const today = new Date().toLocaleDateString()
+
   return (
     <View>
       <View style={styles.headingCardContainer}>
@@ -47,20 +32,24 @@ export default function CashTable(props) {
           <DataTable.Header>
             <DataTable.Title>
               <View>
-                <Text style={styles.hCardTime}>{en.TODAYS_ENTRIES}</Text>
-                <Text style={styles.hCardDate}>{today}</Text>
+                <Text style={styles.hCardIn}>{en.TODAYS_ENTRIES}</Text>
+                <Text style={styles.hCardOutText}>{today}</Text>
               </View>
             </DataTable.Title>
             <DataTable.Title>
               <View>
                 <Text style={styles.hCardIn}>{en.TOTAL_IN}</Text>
-                <Text style={styles.hCardInText}>GHS 0.00</Text>
+                <Text style={styles.hCardOutText}>
+                  GHS {totalInOut.totalIn}
+                </Text>
               </View>
             </DataTable.Title>
             <DataTable.Title>
               <View>
-                <Text style={styles.hCardOut}>{en.TOTAL_OUT}</Text>
-                <Text style={styles.hCardOutText}>GHS 854</Text>
+                <Text style={styles.hCardIn}>{en.TOTAL_OUT}</Text>
+                <Text style={styles.hCardOutText}>
+                  GHS {totalInOut.totalOut}
+                </Text>
               </View>
             </DataTable.Title>
           </DataTable.Header>
@@ -71,6 +60,8 @@ export default function CashTable(props) {
                 cashIn={item.cashIn}
                 cashOut={item.cashOut}
                 time={item.time}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
               />
             )}
             keyExtractor={(item) => item.key}

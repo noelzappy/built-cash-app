@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 })
 
 export default function ActionButton({ navigation }) {
+  // console.log(refresher)
   return (
     <View style={styles.container}>
       <View style={styles.btnContainer}>

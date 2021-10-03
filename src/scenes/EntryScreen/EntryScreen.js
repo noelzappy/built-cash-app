@@ -164,6 +164,7 @@ export default function EntryScreen({ route, navigation }) {
         description: mainState.error.message,
       })
     }
+    dispatch(fetchData(mainState.userDetail.uid))
     setIsSaving(false)
   }
 
@@ -261,6 +262,7 @@ export default function EntryScreen({ route, navigation }) {
           style={entryType === 'cashIn' ? styles.button : styles.button_out}
           onPress={() => {
             handleSaveEntry()
+            dispatch(fetchData(mainState.userDetail.uid))
           }}
           isLoading={isSaving}
           isLoadingText=" Saving Data"

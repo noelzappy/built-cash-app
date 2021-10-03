@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 
 import {
+  CALCULATE_IN_OUT,
   FETCH_DATA,
   LOGIN_USER,
   LOGOUT_USER,
@@ -14,6 +15,7 @@ const initialState = {
   newData: {},
   error: '',
   data: {},
+  totalInOut: {},
 }
 
 const db = firebase.database()
@@ -76,6 +78,8 @@ const mainReducer = (state = initialState, action) => {
       } catch (err) {
         return { ...state, error: err.message }
       }
+    case CALCULATE_IN_OUT:
+      return { ...state, totalInOut: action.payload }
 
     default:
       return state

@@ -4,6 +4,7 @@ export const LOGIN_USER = 'LOGIN_USER'
 export const FETCH_DATA = 'FETCH_DATA'
 export const PERSIST_DATA = 'PERSIST_DATA'
 export const LOGOUT_USER = 'LOGOUT_USER'
+export const CALCULATE_IN_OUT = 'CALCULATE_IN_OUT'
 
 export const loginUser = () => ({
   type: LOGIN_USER,
@@ -18,4 +19,8 @@ export const fetchData = (uid) => ({ type: FETCH_DATA, payload: uid })
 export const persistData = (details) => ({
   type: PERSIST_DATA,
   payload: details,
+})
+export const calculateInOut = (data) => ({
+  type: CALCULATE_IN_OUT,
+  payload: data,
 })
