@@ -52,7 +52,7 @@ export default function CashBook({ navigation }) {
         }
       })
     } catch (err) {
-      // console.log(err)
+      console.warn(err)
     }
 
     setTotalIn(_totalIn)
@@ -90,23 +90,6 @@ export default function CashBook({ navigation }) {
           data={localData}
           totalInOut={{ totalIn, totalOut }}
         />
-      </View>
-
-      <View>
-        {/* <Box position="relative" h={100} w="100%">
-          <Fab
-            onPress={() => {
-              onRefreshHandler()
-            }}
-            renderInPortal={false}
-            placement="bottom-left"
-            position="absolute"
-            size={10}
-            icon={
-              <Icon color="white" as={<EvilIcons name="redo" />} size="sm" />
-            }
-          />
-        </Box> */}
       </View>
       <ActionButton navigation={navigation} />
     </>
