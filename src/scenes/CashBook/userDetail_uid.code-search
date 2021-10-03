@@ -1,0 +1,25 @@
+# Query: userDetail.uid
+# Flags: CaseSensitive WordMatch
+# ContextLines: 1
+
+6 results - 2 files
+
+src/scenes/CashBook/CashBook.js:
+  66    useEffect(() => {
+  67:     // dispatch(fetchTodayData(userDetail.uid))
+  68:     //console.log(userDetail.uid)
+  69:     // dispatch(fetchBusinessData(userDetail.uid))
+  70      // sortLocalData()
+
+src/scenes/EntryScreen/EntryScreen.js:
+  156        setDate(today)
+  157:       dispatch(fetchTodayData(mainState.userDetail.uid))
+  158      } else {
+
+  164      }
+  165:     dispatch(fetchTodayData(mainState.userDetail.uid))
+  166    }
+
+  262              handleSaveEntry()
+  263:             dispatch(fetchTodayData(mainState.userDetail.uid))
+  264              setIsSaving(false)

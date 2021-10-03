@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 })
 
 export default function CashTable(props) {
-  const { data, totalInOut, onRefresh, refreshing } = props
+  const { data, totalInOut } = props
   const today = new Date().toLocaleDateString()
 
   return (
@@ -60,8 +60,6 @@ export default function CashTable(props) {
                 cashIn={item.cashIn}
                 cashOut={item.cashOut}
                 time={item.time}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
               />
             )}
             keyExtractor={(item) => item.key}

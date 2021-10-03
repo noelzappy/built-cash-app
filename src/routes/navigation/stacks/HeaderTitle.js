@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 const styles = StyleSheet.create({
   logo: {
@@ -10,7 +10,15 @@ const styles = StyleSheet.create({
 
 const HeaderTitle = () => {
   const mainReducer = useSelector((state) => state.mainReducer)
-  return <Text style={styles.logo}>{mainReducer.data.businessName}</Text>
+
+  console.log(mainReducer.businessDetails)
+  return (
+    <Text style={styles.logo}>
+      {mainReducer.businessDetails.businessName !== null
+        ? mainReducer.businessDetails.businessName
+        : 'My Company'}
+    </Text>
+  )
 }
 
 HeaderTitle.propTypes = {}

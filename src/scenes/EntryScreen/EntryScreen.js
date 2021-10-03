@@ -9,7 +9,7 @@ import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { fetchData, persistData } from '../../utils/actions'
+import { fetchTodayData, persistData } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -112,8 +112,6 @@ export default function EntryScreen({ route, navigation }) {
     setPaymentMethod('cash')
   }
   const handleSaveEntry = () => {
-    setIsSaving(true)
-
     const d = new Date()
     const time = d.getHours() + ':' + d.getMinutes()
 
@@ -141,7 +139,7 @@ export default function EntryScreen({ route, navigation }) {
           paddingTop: 40,
         },
       })
-      setIsSaving(false)
+
       return
     }
 
@@ -156,7 +154,7 @@ export default function EntryScreen({ route, navigation }) {
       setEntryAmount('')
       setDescription('')
       setDate(today)
-      dispatch(fetchData(mainState.userDetail.uid))
+      dispatch(fetchTodayData(mainState.userDetail.uid))
     } else {
       showMessage({
         type: 'danger',
@@ -164,8 +162,7 @@ export default function EntryScreen({ route, navigation }) {
         description: mainState.error.message,
       })
     }
-    dispatch(fetchData(mainState.userDetail.uid))
-    setIsSaving(false)
+    dispatch(fetchTodayData(mainState.userDetail.uid))
   }
 
   return (
@@ -261,8 +258,10 @@ export default function EntryScreen({ route, navigation }) {
         <Button
           style={entryType === 'cashIn' ? styles.button : styles.button_out}
           onPress={() => {
+            setIsSaving(true)
             handleSaveEntry()
-            dispatch(fetchData(mainState.userDetail.uid))
+            dispatch(fetchTodayData(mainState.userDetail.uid))
+            setIsSaving(false)
           }}
           isLoading={isSaving}
           isLoadingText=" Saving Data"

@@ -20,7 +20,13 @@ import { getDatabase } from 'firebase/database'
 import firebaseApp from '../../constants/firebaseConfig'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { fetchData, loginUser, setData } from '../../utils/actions'
+import {
+  fetchBusinessData,
+  fetchTodayData,
+  loginUser,
+  logoutUser,
+  setData,
+} from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -103,17 +109,25 @@ const AuthScreen = ({ navigation }) => {
           .ref(user.uid)
           .on('value', (snapshot) => {
             if (snapshot.exists()) {
-              dispatch(setData({ snapshot, user }))
+              // dispatch(setData({ snapshot, user }))
+              dispatch(fetchBusinessData(user.uid))
+              dispatch(fetchTodayData(user.uid))
             } else {
-              firebase.database().ref(user.uid).set({
-                businessName,
-                totalBalance: amountInHand,
-              })
+              firebase
+                .database()
+                .ref(`${user.uid}/businessDetails`)
+                .set({
+                  businessName,
+                  accounts: { totalAmountInHand: amountInHand },
+                })
             }
           })
 
-        dispatch(fetchData(user.uid))
-        dispatch(loginUser())
+        console.log(user)
+        dispatch(fetchTodayData(user.uid))
+        dispatch(fetchBusinessData(user.uid))
+        dispatch(loginUser(user))
+        // dispatch(logoutUser())
       }
     })
   }
@@ -140,7 +154,7 @@ const AuthScreen = ({ navigation }) => {
             .on('value', (snapshot) => {
               if (snapshot.exists()) {
                 dispatch(setData({ snapshot, user }))
-                dispatch(fetchData(user.uid))
+                dispatch(fetchTodayData(user.uid))
                 dispatch(loginUser())
               } else {
                 setBusinessModal(true)

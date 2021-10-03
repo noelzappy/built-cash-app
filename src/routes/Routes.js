@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import firebase from 'firebase'
 import Navigation from './navigation'
 import { AuthNavigator } from './navigation/stacks/Stacks'
-import logoutUser from '../utils/actions'
+import { logoutUser, fetchTodayData, fetchBusinessData } from '../utils/actions'
 
 const Routes = () => {
   const loggedIn = useSelector((state) => state.mainReducer.loggedIn)
@@ -14,11 +14,18 @@ const Routes = () => {
   // TODO: switch router by loggedIn state
   console.log('[##] loggedIn', loggedIn)
 
+  let uid = ''
   firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
       dispatch(logoutUser())
     }
+    uid = user.uid
   })
+
+  if (loggedIn) {
+    dispatch(fetchTodayData(uid))
+    dispatch(fetchBusinessData(uid))
+  }
 
   // rendering
   return !loggedIn ? (

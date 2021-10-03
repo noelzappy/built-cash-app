@@ -2,7 +2,8 @@ import firebase from 'firebase'
 
 import {
   CALCULATE_IN_OUT,
-  FETCH_DATA,
+  FETCH_BUSINESS_DATA,
+  FETCH_TODAY_DATA,
   LOGIN_USER,
   LOGOUT_USER,
   PERSIST_DATA,
@@ -16,6 +17,7 @@ const initialState = {
   error: '',
   data: {},
   totalInOut: {},
+  transactionsToday: {},
 }
 
 const db = firebase.database()
@@ -26,6 +28,7 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         loggedIn: true,
+        userDetail: action.payload,
       }
     case LOGOUT_USER:
       firebase.auth().signOut()
@@ -35,28 +38,49 @@ const mainReducer = (state = initialState, action) => {
         newData: {},
         error: '',
         data: {},
+        totalInOut: {},
+        transactions: {},
+        businessDetails: {},
       }
-    case SET_DATA:
-      return {
-        ...state,
-        userDetail: action.payload.user,
-        data: action.payload.snapshot,
-      }
-    case FETCH_DATA:
+    case FETCH_TODAY_DATA:
+      const nowDate = new Date()
+      let today =
+        nowDate.getDate() +
+        '-' +
+        (nowDate.getMonth() + 1) +
+        '-' +
+        nowDate.getFullYear()
+      today = today.toString()
       let tempData = {}
       try {
         firebase
           .database()
-          .ref(action.payload)
+          .ref(`${action.payload}/${today}`)
           .on('value', (snapshot) => {
             if (snapshot.exists()) {
-              tempData = snapshot.val()
+              tempData = snapshot.val().transactions
+              // console.log(tempData)
             }
           })
       } catch (err) {
+        console.log('FETCH_TODAY_DATA error: ' + err)
         return { ...state, error: err.message }
       }
-      return { ...state, data: tempData }
+      return { ...state, transactionsToday: tempData }
+
+    case FETCH_BUSINESS_DATA:
+      try {
+        let newData = {}
+        console.log(action.payload)
+        db.ref(`${action.payload}/businessDetails`).on('value', (d) => {
+          newData = d.val()
+          console.log(d.val())
+        })
+        return { ...state, businessDetails: newData }
+      } catch (err) {
+        console.log('FETCH_BUSINESS_DATA error: ' + err)
+        return { ...state, error: err.message }
+      }
 
     case PERSIST_DATA:
       try {
@@ -72,10 +96,12 @@ const mainReducer = (state = initialState, action) => {
         db.ref(`${action.payload.uid}/transactions/${today}`)
           .push(action.payload.entry)
           .on('value', (d) => {
-            newData = d
+            newData = d.val()
           })
+        console.log(newData)
         return { ...state, newData }
       } catch (err) {
+        console.log('PERSIST_DATA error: ' + err)
         return { ...state, error: err.message }
       }
     case CALCULATE_IN_OUT:
