@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 const HeaderTitle = () => {
   const mainReducer = useSelector((state) => state.mainReducer)
 
-  console.log(mainReducer.businessDetails)
+  // console.log(mainReducer.businessDetails)
   return (
     <Text style={styles.logo}>
       {mainReducer.businessDetails.businessName !== null

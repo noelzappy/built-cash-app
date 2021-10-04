@@ -3,13 +3,11 @@ import { View, Text, StyleSheet } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
-import firebase from 'firebase'
-import moment from 'moment'
 import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { fetchTodayData, persistData } from '../../utils/actions'
+import { fetchTodaysTransactions, saveTransaction } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -84,12 +82,7 @@ export default function EntryScreen({ route, navigation }) {
   const { entryType } = route.params
 
   const nowDate = new Date()
-  const today =
-    nowDate.getDate() +
-    '-' +
-    (nowDate.getMonth() + 1) +
-    '-' +
-    nowDate.getFullYear()
+  const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
   const mainState = useSelector((state) => state.mainReducer)
   const dispatch = useDispatch()
@@ -98,7 +91,7 @@ export default function EntryScreen({ route, navigation }) {
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
-  const { uid } = mainState.userDetail
+  const { uid } = mainState.user
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -113,7 +106,7 @@ export default function EntryScreen({ route, navigation }) {
   }
   const handleSaveEntry = () => {
     const d = new Date()
-    const time = d.getHours() + ':' + d.getMinutes()
+    const time = `${d.getHours()}:${d.getMinutes()}`
 
     const entry = {
       paymentMethod,
@@ -143,7 +136,7 @@ export default function EntryScreen({ route, navigation }) {
       return
     }
 
-    dispatch(persistData({ uid, entry }))
+    dispatch(saveTransaction({ uid, value: entry }))
 
     if (mainState.error === '') {
       showMessage({
@@ -154,15 +147,15 @@ export default function EntryScreen({ route, navigation }) {
       setEntryAmount('')
       setDescription('')
       setDate(today)
-      dispatch(fetchTodayData(mainState.userDetail.uid))
+      dispatch(fetchTodaysTransactions(uid))
     } else {
       showMessage({
         type: 'danger',
         message: en.ERROR,
-        description: mainState.error.message,
+        description: mainState.error,
       })
     }
-    dispatch(fetchTodayData(mainState.userDetail.uid))
+    dispatch(fetchTodaysTransactions(uid))
   }
 
   return (
@@ -260,7 +253,7 @@ export default function EntryScreen({ route, navigation }) {
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
-            dispatch(fetchTodayData(mainState.userDetail.uid))
+            dispatch(fetchTodaysTransactions(uid))
             setIsSaving(false)
           }}
           isLoading={isSaving}

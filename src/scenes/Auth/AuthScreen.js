@@ -22,9 +22,13 @@ import { colors } from '../../theme'
 import en from '../../languages/english'
 import {
   fetchBusinessData,
+  fetchBusinessDetails,
   fetchTodayData,
+  fetchTodaysTransactions,
+  fetchTransactions,
   loginUser,
   logoutUser,
+  setBusinessDetails,
   setData,
 } from '../../utils/actions'
 
@@ -77,6 +81,7 @@ const styles = StyleSheet.create({
 })
 
 const AuthScreen = ({ navigation }) => {
+  const db = firebase.database()
   const recaptchaVerifier = useRef(null)
   const [phoneNumber, setPhoneNumber] = useState()
   const [verificationId, setVerificationId] = useState()
@@ -109,23 +114,21 @@ const AuthScreen = ({ navigation }) => {
           .ref(user.uid)
           .on('value', (snapshot) => {
             if (snapshot.exists()) {
-              // dispatch(setData({ snapshot, user }))
-              dispatch(fetchBusinessData(user.uid))
-              dispatch(fetchTodayData(user.uid))
+              dispatch(fetchBusinessDetails(user.uid))
+              dispatch(fetchTodaysTransactions(user.uid))
+              dispatch(fetchTransactions(user.uid))
             } else {
-              firebase
-                .database()
-                .ref(`${user.uid}/businessDetails`)
-                .set({
-                  businessName,
-                  accounts: { totalAmountInHand: amountInHand },
-                })
+              dispatch(
+                setBusinessDetails({ uid: user.uid, data: { businessName } }),
+              )
+              db.ref(`${user.uid}/transactions/totalAmount`).set(amountInHand)
             }
           })
 
-        console.log(user)
-        dispatch(fetchTodayData(user.uid))
-        dispatch(fetchBusinessData(user.uid))
+        // console.log(user)
+        dispatch(fetchBusinessDetails(user.uid))
+        dispatch(fetchTodaysTransactions(user.uid))
+        dispatch(fetchTransactions(user.uid))
         dispatch(loginUser(user))
         // dispatch(logoutUser())
       }
@@ -153,9 +156,10 @@ const AuthScreen = ({ navigation }) => {
             .ref(user.uid)
             .on('value', (snapshot) => {
               if (snapshot.exists()) {
-                dispatch(setData({ snapshot, user }))
-                dispatch(fetchTodayData(user.uid))
-                dispatch(loginUser())
+                dispatch(fetchBusinessDetails(user.uid))
+                dispatch(fetchTodaysTransactions(user.uid))
+                dispatch(fetchTransactions(user.uid))
+                dispatch(loginUser(user))
               } else {
                 setBusinessModal(true)
               }

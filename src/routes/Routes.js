@@ -5,7 +5,12 @@ import { NavigationContainer } from '@react-navigation/native'
 import firebase from 'firebase'
 import Navigation from './navigation'
 import { AuthNavigator } from './navigation/stacks/Stacks'
-import { logoutUser, fetchTodayData, fetchBusinessData } from '../utils/actions'
+import {
+  fetchBusinessDetails,
+  fetchTodaysTransactions,
+  fetchTransactions,
+  logoutUser,
+} from '../utils/actions'
 
 const Routes = () => {
   const loggedIn = useSelector((state) => state.mainReducer.loggedIn)
@@ -23,8 +28,9 @@ const Routes = () => {
   })
 
   if (loggedIn) {
-    dispatch(fetchTodayData(uid))
-    dispatch(fetchBusinessData(uid))
+    dispatch(fetchBusinessDetails(uid))
+    dispatch(fetchTodaysTransactions(uid))
+    dispatch(fetchTransactions(uid))
   }
 
   // rendering

@@ -1,112 +1,126 @@
 import firebase from 'firebase'
-
 import {
-  CALCULATE_IN_OUT,
-  FETCH_BUSINESS_DATA,
-  FETCH_TODAY_DATA,
+  FETCH_BUSINESS_DETAILS,
+  FETCH_TODAYS_TRANSACTION,
+  FETCH_TRANSACTIONS,
   LOGIN_USER,
   LOGOUT_USER,
-  PERSIST_DATA,
-  SET_DATA,
+  SAVE_TRANSACTION,
+  SET_BUSINESS_DETAILS,
 } from './actions'
 
 const initialState = {
   loggedIn: false,
-  userDetail: {},
-  newData: {},
+  user: {},
+  totalAmountInHand: '',
+  transfers: {},
+  todaysTransfers: {},
+  businessDetails: {},
   error: '',
-  data: {},
-  totalInOut: {},
-  transactionsToday: {},
+  allTransactions: {},
 }
 
 const db = firebase.database()
 
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_BUSINESS_DETAILS: {
+      let bizData = {}
+      let err = ''
+      db.ref(`${action.payload}/businessDetails`).once(
+        'value',
+        (snapshot) => {
+          bizData = snapshot.val()
+        },
+        (error) => {
+          err = error.message
+        },
+      )
+      return { ...state, businessDetails: bizData, error: err }
+    }
+    case SET_BUSINESS_DETAILS: {
+      let error = ''
+      // let tempBusinessDetail = {}
+      db.ref(`${action.payload.uid}/businessDetails`).set(
+        {
+          businessName: action.payload.data.businessName,
+        },
+        (snapshot, err) => {
+          // tempBusinessDetail = snapshot
+          if (err) {
+            error = err.message
+          }
+        },
+      )
+      return { ...state, error }
+    }
+    case FETCH_TRANSACTIONS: {
+      let tempTransaction = {}
+      let error = ''
+      db.ref(`${action.payload}/transactions`).once(
+        'value',
+        (snapshot) => {
+          tempTransaction = snapshot.val()
+        },
+        (err) => {
+          error = err
+        },
+      )
+      return { ...state, allTransactions: tempTransaction, error }
+    }
+    case FETCH_TODAYS_TRANSACTION: {
+      const nowDate = new Date()
+      let today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`
+      today = today.toString()
+
+      // let tempTodaysTransaction = []
+      let error = ''
+      db.ref(`${action.payload}/transactions/transfers`)
+        .child(today)
+        .once(
+          'value',
+          (snapshot) => {
+            if (snapshot.exists()) {
+              // tempTodaysTransaction.push(snapshot.val())
+              // console.log(snapshot.val())
+              return { ...state, todaysTransfers: snapshot.val() }
+            }
+          },
+          (err) => {
+            error = err.message
+          },
+        )
+      // console.log(tempTodaysTransaction)
+      return { ...state, error }
+    }
+    case SAVE_TRANSACTION: {
+      const nowDate = new Date()
+      const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+
+      // let tempTransactions = {}
+      let error = ''
+      db.ref(
+        `${action.payload.uid}/transactions/transfers/${today}`,
+      ).push(action.payload.value, (snapshot, err) => {})
+      return { ...state, error }
+    }
+
     case LOGIN_USER:
       return {
         ...state,
         loggedIn: true,
-        userDetail: action.payload,
+        user: action.payload,
       }
     case LOGOUT_USER:
       firebase.auth().signOut()
       return {
         loggedIn: false,
-        userDetail: {},
-        newData: {},
-        error: '',
-        data: {},
-        totalInOut: {},
-        transactions: {},
+        user: {},
+        totalAmountInHand: '',
+        transfers: {},
+        todaysTransfers: {},
         businessDetails: {},
       }
-    case FETCH_TODAY_DATA:
-      const nowDate = new Date()
-      let today =
-        nowDate.getDate() +
-        '-' +
-        (nowDate.getMonth() + 1) +
-        '-' +
-        nowDate.getFullYear()
-      today = today.toString()
-      let tempData = {}
-      try {
-        firebase
-          .database()
-          .ref(`${action.payload}/${today}`)
-          .on('value', (snapshot) => {
-            if (snapshot.exists()) {
-              tempData = snapshot.val().transactions
-              // console.log(tempData)
-            }
-          })
-      } catch (err) {
-        console.log('FETCH_TODAY_DATA error: ' + err)
-        return { ...state, error: err.message }
-      }
-      return { ...state, transactionsToday: tempData }
-
-    case FETCH_BUSINESS_DATA:
-      try {
-        let newData = {}
-        console.log(action.payload)
-        db.ref(`${action.payload}/businessDetails`).on('value', (d) => {
-          newData = d.val()
-          console.log(d.val())
-        })
-        return { ...state, businessDetails: newData }
-      } catch (err) {
-        console.log('FETCH_BUSINESS_DATA error: ' + err)
-        return { ...state, error: err.message }
-      }
-
-    case PERSIST_DATA:
-      try {
-        const nowDate = new Date()
-        const today =
-          nowDate.getDate() +
-          '-' +
-          (nowDate.getMonth() + 1) +
-          '-' +
-          nowDate.getFullYear()
-
-        let newData = {}
-        db.ref(`${action.payload.uid}/transactions/${today}`)
-          .push(action.payload.entry)
-          .on('value', (d) => {
-            newData = d.val()
-          })
-        console.log(newData)
-        return { ...state, newData }
-      } catch (err) {
-        console.log('PERSIST_DATA error: ' + err)
-        return { ...state, error: err.message }
-      }
-    case CALCULATE_IN_OUT:
-      return { ...state, totalInOut: action.payload }
-
     default:
       return state
   }

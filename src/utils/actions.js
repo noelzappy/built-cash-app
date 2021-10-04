@@ -1,36 +1,78 @@
-export const SAVE_DATA = 'SAVE_DATA'
-export const SET_DATA = 'SET_DATA'
-export const LOGIN_USER = 'LOGIN_USER'
-export const FETCH_TODAY_DATA = 'FETCH_TODAY_DATA'
-export const PERSIST_DATA = 'PERSIST_DATA'
-export const LOGOUT_USER = 'LOGOUT_USER'
-export const CALCULATE_IN_OUT = 'CALCULATE_IN_OUT'
-export const FETCH_BUSINESS_DATA = 'FETCH_BUSINESS_DATA'
-export const UPDATE_AMOUNT_IN_HAND = 'UPDATE_AMOUNT_IN_HAND'
+import firebase from 'firebase'
 
-export const loginUser = (data) => ({
+export const LOGIN_USER = 'LOGIN_USER'
+export const LOGOUT_USER = 'LOGOUT_USER'
+export const SAVE_TRANSACTION = 'SAVE_TRANSACTION'
+export const SET_ERROR = 'SET_ERROR'
+export const CLEAR_ERROR = 'CLEAR_ERROR'
+export const FETCH_BUSINESS_DETAILS = 'FETCH_BUSINESS_DETAILS'
+export const SET_BUSINESS_DETAILS = 'SET_BUSINESS_DETAILS'
+// export const SAVE_TRANSACTIONS = 'SAVE_TRANSACTIONS'
+export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
+export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
+
+export const loginUser = (user) => ({
   type: LOGIN_USER,
-  payload: data,
+  payload: user,
 })
 
 export const logoutUser = () => ({ type: LOGOUT_USER })
 
-export const setData = (data) => ({ type: SET_DATA, payload: data })
+export const setError = (err) => ({ type: SET_ERROR, payload: err })
+export const clearError = () => ({ type: CLEAR_ERROR, payload: '' })
 
-export const fetchTodayData = (uid) => ({
-  type: FETCH_TODAY_DATA,
+export const fetchBusinessDetails = (uid) => ({
+  type: FETCH_BUSINESS_DETAILS,
   payload: uid,
 })
-export const fetchBusinessData = (uid) => ({
-  type: FETCH_BUSINESS_DATA,
-  payload: uid,
-})
-
-export const persistData = (details) => ({
-  type: PERSIST_DATA,
-  payload: details,
-})
-export const calculateInOut = (data) => ({
-  type: CALCULATE_IN_OUT,
+export const setBusinessDetails = (data) => ({
+  type: SET_BUSINESS_DETAILS,
   payload: data,
 })
+
+export const saveTransaction = (data) => ({
+  type: SAVE_TRANSACTION,
+  payload: data,
+})
+export const fetchTransactions = (uid) => ({
+  type: FETCH_TRANSACTIONS,
+  payload: uid,
+})
+
+export const fetchTodaysTransactions = (uid) => ({
+  type: FETCH_TODAYS_TRANSACTION,
+  payload: uid,
+})
+
+// export const watchTransactions = (uid) => {
+//   const nowDate = new Date()
+//   const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+
+//   return (dispatch) => {
+//     firebase
+//       .database()
+//       .ref(`${uid}/transactions`)
+//       .on(
+//         'value',
+//         (snapshot) => {
+//           dispatch(fetchTransactions(snapshot.val()))
+//         },
+//         (err) => {
+//           dispatch(setError(err.message))
+//         },
+//       )
+//     firebase
+//       .database()
+//       .ref(`${uid}/transactions/transfers`)
+//       .child(today)
+//       .on(
+//         'value',
+//         (snapshot) => {
+//           dispatch(fetchTransactions(snapshot.val()))
+//         },
+//         (err) => {
+//           dispatch(setError(err.message))
+//         },
+//       )
+//   }
+// }
