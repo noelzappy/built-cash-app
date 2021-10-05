@@ -37,7 +37,10 @@ export function fetchBusinessDetails() {
                   payload: snapshot.val(),
                 })
               } else {
-                console.log('No Data found')
+                dispatch({
+                  type: FETCH_BUSINESS_DETAILS,
+                  payload: {},
+                })
               }
             },
             (error) => {
@@ -53,7 +56,22 @@ export function fetchBusinessDetails() {
 
 export const setBusinessDetails = (data) => {
   return (dispatch) => {
-    console.log(dispatch)
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .database()
+          .ref(`${user.uid}/businessDetails`)
+          .set({
+            businessName: data,
+          })
+          .then((snapshot) => {
+            dispatch(fetchBusinessDetails())
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    })
   }
 }
 
@@ -93,7 +111,10 @@ export const fetchTransactions = () => (dispatch) => {
                 payload: snapshot.val(),
               })
             } else {
-              console.log('No  data')
+              dispatch({
+                type: FETCH_TRANSACTIONS,
+                payload: {},
+              })
             }
           },
           (err) => {

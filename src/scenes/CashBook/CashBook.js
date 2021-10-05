@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { View, Dimensions } from 'react-native'
+import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import AllCard from '../../components/AllCard/AllCard'
 import CashTable from '../../components/CashTable/CashTable'
@@ -9,7 +10,7 @@ import { fetchTransactions, watchTransactions } from '../../utils/actions'
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
-  const { totalAmountInHand, todaysTransfers } = useSelector(
+  const { totalAmountInHand, allTransactions } = useSelector(
     (state) => state.mainReducer,
   )
 
@@ -20,20 +21,23 @@ export default function CashBook({ navigation }) {
 
   const sortLocalData = useCallback(() => {
     const tempArray = []
-    let _totalIn = 0
-    let _totalOut = 0
-    if (typeof todaysTransfers !== 'undefined') {
-      Object.entries(todaysTransfers).forEach((item) => {
-        const _item = item[1]
+    let total_in = 0
+    let total_out = 0
+    if (!_.isEmpty(allTransactions)) {
+      const nowDate = new Date()
+      const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+
+      Object.entries(allTransactions[today]).forEach((item) => {
+        const item_1 = item[1]
         tempArray.push({
-          time: _item.time,
-          [_item.entryType]: _item.amount,
+          time: item_1.time,
+          [item_1.entryType]: item_1.amount,
           key: item[0],
         })
-        if (_item.entryType === 'cashIn') {
-          _totalIn += parseFloat(_item.amount)
+        if (item_1.entryType === 'cashIn') {
+          total_in += parseFloat(item_1.amount)
         } else {
-          _totalOut += parseFloat(_item.amount)
+          total_out += parseFloat(item_1.amount)
         }
       })
     } else {
@@ -41,8 +45,8 @@ export default function CashBook({ navigation }) {
       console.log('Got undefined')
     }
 
-    setTotalIn(_totalIn)
-    setTotalOut(_totalOut)
+    setTotalIn(total_in)
+    setTotalOut(total_out)
     setLocalData(tempArray.reverse())
   })
 
@@ -50,12 +54,14 @@ export default function CashBook({ navigation }) {
     dispatch(fetchTransactions())
     sortLocalData()
     dispatch(watchTransactions())
+    // console.log(_.isEmpty(allTransactions))
+    // console.log(allTransactions)
     // console.log('Fired Once')
   }, [])
 
   useEffect(() => {
     sortLocalData()
-  }, [todaysTransfers])
+  }, [allTransactions])
 
   return (
     <View style={{ flex: 1 }}>

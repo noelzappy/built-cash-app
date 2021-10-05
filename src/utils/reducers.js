@@ -1,7 +1,8 @@
 import firebase from 'firebase'
+import _ from 'lodash'
+
 import {
   FETCH_BUSINESS_DETAILS,
-  FETCH_TODAYS_TRANSACTION,
   FETCH_TRANSACTIONS,
   LOGIN_USER,
   LOGOUT_USER,
@@ -28,30 +29,13 @@ const mainReducer = (state = initialState, action) => {
       return { ...state, businessDetails: action.payload }
     }
     case SET_BUSINESS_DETAILS: {
-      let error = ''
-      // let tempBusinessDetail = {}
-      db.ref(`${action.payload.uid}/businessDetails`).set(
-        {
-          businessName: action.payload.data.businessName,
-        },
-        (snapshot, err) => {
-          // tempBusinessDetail = snapshot
-          if (err) {
-            error = err.message
-          }
-        },
-      )
-      return { ...state, error }
+      return state
     }
     case FETCH_TRANSACTIONS: {
-      const nowDate = new Date()
-      let today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`
-      today = today.toString()
-
+      // console.log(action.payload.transfers)
       return {
         ...state,
         totalAmountInHand: action.payload.totalAmount,
-        todaysTransfers: action.payload.transfers[today],
         allTransactions: action.payload.transfers,
       }
     }
@@ -59,11 +43,13 @@ const mainReducer = (state = initialState, action) => {
     case SAVE_TRANSACTION: {
       const nowDate = new Date()
       const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-      // let tempTransactions = {}
       let error = ''
-      db.ref(
-        `${action.payload.uid}/transactions/transfers/${today}`,
-      ).push(action.payload.value, (snapshot, err) => {})
+      db.ref(`${action.payload.uid}/transactions/transfers/${today}`).push(
+        action.payload.value,
+        (snapshot, err) => {
+          error = err
+        },
+      )
       return { ...state, error }
     }
 
