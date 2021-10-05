@@ -20,7 +20,6 @@ import firebaseApp from '../../constants/firebaseConfig'
 import { colors } from '../../theme'
 import en from '../../languages/english'
 import {
-  fetchBusinessData,
   fetchBusinessDetails,
   fetchTransactions,
   loginUser,

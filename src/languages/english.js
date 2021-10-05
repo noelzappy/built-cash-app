@@ -7,6 +7,7 @@ const en = {
   REPORTS: 'Reports',
   CASH_IN_HAND: 'Cash in Hand',
   TOTAL_BALANCE: 'Total Balance',
+  TODAYS_BALANCE: "Today's Balance",
   TODAYS_ENTRIES: "Today's Entries",
   TOTAL_IN: 'Total In',
   TOTAL_OUT: 'Total Out',

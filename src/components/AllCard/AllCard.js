@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import en from '../../languages/english'
 import { globalStyles } from '../../theme'
 
-export default function AllCard({ totalBalance }) {
+export default function AllCard({ totalBalance, todaysBalance }) {
   return (
     <View style={globalStyles.allCardContainer}>
       <View>
@@ -12,8 +12,8 @@ export default function AllCard({ totalBalance }) {
       </View>
 
       <View>
-        <Text style={globalStyles.allCardBalance}>{totalBalance}</Text>
-        <Text style={globalStyles.allCardBalanceText}>{en.TOTAL_BALANCE}</Text>
+        <Text style={globalStyles.allCardBalance}>{todaysBalance}</Text>
+        <Text style={globalStyles.allCardBalanceText}>{en.TODAYS_BALANCE}</Text>
       </View>
     </View>
   )
