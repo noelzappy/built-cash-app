@@ -16,20 +16,16 @@ import {
 import * as firebase from 'firebase'
 import { Input, Button } from 'native-base'
 import Modal from 'react-native-modal'
-import { getDatabase } from 'firebase/database'
 import firebaseApp from '../../constants/firebaseConfig'
 import { colors } from '../../theme'
 import en from '../../languages/english'
 import {
   fetchBusinessData,
   fetchBusinessDetails,
-  fetchTodayData,
-  fetchTodaysTransactions,
   fetchTransactions,
   loginUser,
   logoutUser,
   setBusinessDetails,
-  setData,
 } from '../../utils/actions'
 
 const styles = StyleSheet.create({
@@ -114,21 +110,17 @@ const AuthScreen = ({ navigation }) => {
           .ref(user.uid)
           .on('value', (snapshot) => {
             if (snapshot.exists()) {
-              dispatch(fetchBusinessDetails(user.uid))
-              dispatch(fetchTodaysTransactions(user.uid))
-              dispatch(fetchTransactions(user.uid))
+              dispatch(fetchBusinessDetails())
+              dispatch(fetchTransactions())
             } else {
-              dispatch(
-                setBusinessDetails({ uid: user.uid, data: { businessName } }),
-              )
+              dispatch(setBusinessDetails(businessName))
               db.ref(`${user.uid}/transactions/totalAmount`).set(amountInHand)
             }
           })
 
         // console.log(user)
-        dispatch(fetchBusinessDetails(user.uid))
-        dispatch(fetchTodaysTransactions(user.uid))
-        dispatch(fetchTransactions(user.uid))
+        dispatch(fetchBusinessDetails())
+        dispatch(fetchTransactions())
         dispatch(loginUser(user))
         // dispatch(logoutUser())
       }
@@ -156,9 +148,8 @@ const AuthScreen = ({ navigation }) => {
             .ref(user.uid)
             .on('value', (snapshot) => {
               if (snapshot.exists()) {
-                dispatch(fetchBusinessDetails(user.uid))
-                dispatch(fetchTodaysTransactions(user.uid))
-                dispatch(fetchTransactions(user.uid))
+                dispatch(fetchBusinessDetails())
+                dispatch(fetchTransactions())
                 dispatch(loginUser(user))
               } else {
                 setBusinessModal(true)

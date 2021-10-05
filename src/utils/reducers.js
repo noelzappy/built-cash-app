@@ -25,18 +25,7 @@ const db = firebase.database()
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_BUSINESS_DETAILS: {
-      let bizData = {}
-      let err = ''
-      db.ref(`${action.payload}/businessDetails`).once(
-        'value',
-        (snapshot) => {
-          bizData = snapshot.val()
-        },
-        (error) => {
-          err = error.message
-        },
-      )
-      return { ...state, businessDetails: bizData, error: err }
+      return { ...state, businessDetails: action.payload }
     }
     case SET_BUSINESS_DETAILS: {
       let error = ''
@@ -55,48 +44,21 @@ const mainReducer = (state = initialState, action) => {
       return { ...state, error }
     }
     case FETCH_TRANSACTIONS: {
-      let tempTransaction = {}
-      let error = ''
-      db.ref(`${action.payload}/transactions`).once(
-        'value',
-        (snapshot) => {
-          tempTransaction = snapshot.val()
-        },
-        (err) => {
-          error = err
-        },
-      )
-      return { ...state, allTransactions: tempTransaction, error }
-    }
-    case FETCH_TODAYS_TRANSACTION: {
       const nowDate = new Date()
       let today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`
       today = today.toString()
 
-      // let tempTodaysTransaction = []
-      let error = ''
-      db.ref(`${action.payload}/transactions/transfers`)
-        .child(today)
-        .once(
-          'value',
-          (snapshot) => {
-            if (snapshot.exists()) {
-              // tempTodaysTransaction.push(snapshot.val())
-              // console.log(snapshot.val())
-              return { ...state, todaysTransfers: snapshot.val() }
-            }
-          },
-          (err) => {
-            error = err.message
-          },
-        )
-      // console.log(tempTodaysTransaction)
-      return { ...state, error }
+      return {
+        ...state,
+        totalAmountInHand: action.payload.totalAmount,
+        todaysTransfers: action.payload.transfers[today],
+        allTransactions: action.payload.transfers,
+      }
     }
+
     case SAVE_TRANSACTION: {
       const nowDate = new Date()
       const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-
       // let tempTransactions = {}
       let error = ''
       db.ref(

@@ -7,7 +7,7 @@ import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { fetchTodaysTransactions, saveTransaction } from '../../utils/actions'
+import { saveTransaction, fetchTransactions } from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -136,26 +136,16 @@ export default function EntryScreen({ route, navigation }) {
       return
     }
 
-    dispatch(saveTransaction({ uid, value: entry }))
+    dispatch(saveTransaction(entry))
 
-    if (mainState.error === '') {
-      showMessage({
-        type: 'success',
-        message: en.SUCCESS,
-        description: en.TRANSACTION_SAVED,
-      })
-      setEntryAmount('')
-      setDescription('')
-      setDate(today)
-      dispatch(fetchTodaysTransactions(uid))
-    } else {
-      showMessage({
-        type: 'danger',
-        message: en.ERROR,
-        description: mainState.error,
-      })
-    }
-    dispatch(fetchTodaysTransactions(uid))
+    showMessage({
+      type: 'success',
+      message: en.SUCCESS,
+      description: en.TRANSACTION_SAVED,
+    })
+    setEntryAmount('')
+    setDescription('')
+    setDate(today)
   }
 
   return (
@@ -253,8 +243,8 @@ export default function EntryScreen({ route, navigation }) {
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
-            dispatch(fetchTodaysTransactions(uid))
             setIsSaving(false)
+            dispatch(fetchTransactions())
           }}
           isLoading={isSaving}
           isLoadingText=" Saving Data"

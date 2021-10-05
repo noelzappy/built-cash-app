@@ -7,7 +7,6 @@ import Navigation from './navigation'
 import { AuthNavigator } from './navigation/stacks/Stacks'
 import {
   fetchBusinessDetails,
-  fetchTodaysTransactions,
   fetchTransactions,
   logoutUser,
 } from '../utils/actions'
@@ -19,18 +18,15 @@ const Routes = () => {
   // TODO: switch router by loggedIn state
   console.log('[##] loggedIn', loggedIn)
 
-  let uid = ''
   firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
       dispatch(logoutUser())
     }
-    uid = user.uid
   })
 
   if (loggedIn) {
-    dispatch(fetchBusinessDetails(uid))
-    dispatch(fetchTodaysTransactions(uid))
-    dispatch(fetchTransactions(uid))
+    dispatch(fetchBusinessDetails())
+    dispatch(fetchTransactions())
   }
 
   // rendering

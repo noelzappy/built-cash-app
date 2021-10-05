@@ -4,22 +4,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import AllCard from '../../components/AllCard/AllCard'
 import CashTable from '../../components/CashTable/CashTable'
 import ActionButton from '../../components/ActionButton'
-import {
-  fetchBusinessDetails,
-  fetchTodaysTransactions,
-  // watchTransactions,
-} from '../../utils/actions'
+import { fetchTransactions, watchTransactions } from '../../utils/actions'
 
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
-  const {
-    user,
-    totalAmountInHand,
-    todaysTransfers,
-    businessDetails,
-    error,
-  } = useSelector((state) => state.mainReducer)
+  const { totalAmountInHand, todaysTransfers } = useSelector(
+    (state) => state.mainReducer,
+  )
 
   const dispatch = useDispatch()
   const [localData, setLocalData] = useState([])
@@ -30,7 +22,6 @@ export default function CashBook({ navigation }) {
     const tempArray = []
     let _totalIn = 0
     let _totalOut = 0
-    console.log(todaysTransfers)
     if (typeof todaysTransfers !== 'undefined') {
       Object.entries(todaysTransfers).forEach((item) => {
         const _item = item[1]
@@ -56,22 +47,19 @@ export default function CashBook({ navigation }) {
   })
 
   useEffect(() => {
-    // console.log(user.uid)
-    // dispatch(watchTransactions(user.uid))
-    dispatch(fetchBusinessDetails(user.uid))
-    dispatch(fetchTodaysTransactions(user.uid))
+    dispatch(fetchTransactions())
     sortLocalData()
-    console.log('Fired Once')
-    // console.log(localData)
+    dispatch(watchTransactions())
+    // console.log('Fired Once')
   }, [])
 
-  // useEffect(() => {
-  //   sortLocalData()
-  // }, [transactions])
+  useEffect(() => {
+    sortLocalData()
+  }, [todaysTransfers])
 
   return (
     <View style={{ flex: 1 }}>
-      <AllCard totalBalance={10} />
+      <AllCard totalBalance={totalAmountInHand} />
       <View
         style={{
           flex: 1,

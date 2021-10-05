@@ -21,58 +21,110 @@ export const logoutUser = () => ({ type: LOGOUT_USER })
 export const setError = (err) => ({ type: SET_ERROR, payload: err })
 export const clearError = () => ({ type: CLEAR_ERROR, payload: '' })
 
-export const fetchBusinessDetails = (uid) => ({
-  type: FETCH_BUSINESS_DETAILS,
-  payload: uid,
-})
-export const setBusinessDetails = (data) => ({
-  type: SET_BUSINESS_DETAILS,
-  payload: data,
-})
+export function fetchBusinessDetails() {
+  return (dispatch) => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .database()
+          .ref(`${user.uid}/businessDetails`)
+          .once(
+            'value',
+            (snapshot) => {
+              if (snapshot.exists()) {
+                dispatch({
+                  type: FETCH_BUSINESS_DETAILS,
+                  payload: snapshot.val(),
+                })
+              } else {
+                console.log('No Data found')
+              }
+            },
+            (error) => {
+              console.log(error)
+            },
+          )
+      } else {
+        dispatch({ type: LOGOUT_USER })
+      }
+    })
+  }
+}
 
-export const saveTransaction = (data) => ({
-  type: SAVE_TRANSACTION,
-  payload: data,
-})
-export const fetchTransactions = (uid) => ({
-  type: FETCH_TRANSACTIONS,
-  payload: uid,
-})
+export const setBusinessDetails = (data) => {
+  return (dispatch) => {
+    console.log(dispatch)
+  }
+}
 
-export const fetchTodaysTransactions = (uid) => ({
-  type: FETCH_TODAYS_TRANSACTION,
-  payload: uid,
-})
+export const saveTransaction = (data) => (dispatch) => {
+  const nowDate = new Date()
+  const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
-// export const watchTransactions = (uid) => {
-//   const nowDate = new Date()
-//   const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions/transfers/${today}`)
+        .push(data)
+        .then(() => {
+          dispatch(fetchTransactions())
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  })
+}
 
-//   return (dispatch) => {
-//     firebase
-//       .database()
-//       .ref(`${uid}/transactions`)
-//       .on(
-//         'value',
-//         (snapshot) => {
-//           dispatch(fetchTransactions(snapshot.val()))
-//         },
-//         (err) => {
-//           dispatch(setError(err.message))
-//         },
-//       )
-//     firebase
-//       .database()
-//       .ref(`${uid}/transactions/transfers`)
-//       .child(today)
-//       .on(
-//         'value',
-//         (snapshot) => {
-//           dispatch(fetchTransactions(snapshot.val()))
-//         },
-//         (err) => {
-//           dispatch(setError(err.message))
-//         },
-//       )
-//   }
-// }
+export const fetchTransactions = () => (dispatch) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions`)
+        .once(
+          'value',
+          (snapshot) => {
+            if (snapshot.exists()) {
+              // console.log(snapshot.val())
+              dispatch({
+                type: FETCH_TRANSACTIONS,
+                payload: snapshot.val(),
+              })
+            } else {
+              console.log('No  data')
+            }
+          },
+          (err) => {
+            console.log(err)
+          },
+        )
+    } else {
+      dispatch({ type: LOGOUT_USER })
+    }
+  })
+}
+
+export function watchTransactions() {
+  return (dispatch) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .database()
+          .ref(`${user.uid}/transactions`)
+          .on(
+            'value',
+            (snapshot) => {
+              if (snapshot.exists()) {
+                dispatch({ type: FETCH_TRANSACTIONS, payload: snapshot.val() })
+              }
+            },
+            (err) => {
+              console.log(err)
+            },
+          )
+      }
+    })
+  }
+}
