@@ -271,7 +271,7 @@ const AuthScreen = ({ navigation }) => {
               <Text>{en.AMOUNT_IN_HAND} </Text>
               <Input
                 placeholder={en.AMOUNT_IN_HAND}
-                onChangeText={(text) => setAmountInHand(text)}
+                onChangeText={(text) => setAmountInHand(parseFloat(text))}
                 value={amountInHand}
                 keyboardType="numeric"
               />

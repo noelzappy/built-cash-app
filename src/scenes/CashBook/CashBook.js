@@ -52,9 +52,10 @@ export default function CashBook({ navigation }) {
     setTotalIn(total_in)
     setTotalOut(total_out)
     setLocalData(tempArray.reverse())
+    // parseFloat(totalAmountInHand) + (totalIn - totalOut)
     dispatch(
       setTodaysBalance({
-        totalAmountInHand: parseFloat(totalAmountInHand) + (totalIn - totalOut),
+        totalAmountInHand: 0,
         val: totalIn - totalOut,
       }),
     )
