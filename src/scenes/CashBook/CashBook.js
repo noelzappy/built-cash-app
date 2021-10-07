@@ -14,13 +14,14 @@ import {
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
-  const { allTransactions } = useSelector((state) => state.mainReducer)
+  const { allTransactions, totalAmountInHand } = useSelector(
+    (state) => state.mainReducer,
+  )
 
   const dispatch = useDispatch()
   const [localData, setLocalData] = useState([])
   const [totalIn, setTotalIn] = useState(0)
   const [totalOut, setTotalOut] = useState(0)
-  const [todayBalance, setTodayBalance] = useState(0)
 
   const sortLocalData = useCallback(() => {
     const nowDate = new Date()
@@ -51,7 +52,12 @@ export default function CashBook({ navigation }) {
     setTotalIn(total_in)
     setTotalOut(total_out)
     setLocalData(tempArray.reverse())
-    dispatch(setTodaysBalance(totalIn - totalOut))
+    dispatch(
+      setTodaysBalance({
+        totalAmountInHand: parseFloat(totalAmountInHand) + (totalIn - totalOut),
+        val: totalIn - totalOut,
+      }),
+    )
     // console.log(todayBalance)
   })
 

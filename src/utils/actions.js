@@ -128,7 +128,21 @@ export const fetchTransactions = () => (dispatch) => {
 }
 
 export const setTodaysBalance = (data) => (dispatch) => {
-  dispatch({ type: SET_TODAYS_BALANCE, payload: data })
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions`)
+        .update({ totalAmount: data.totalAmountInHand }, (snapshot, error) => {
+          console.log(snapshot)
+          console.log('===================')
+          console.log(error)
+        })
+        .then(() => {
+          dispatch({ type: SET_TODAYS_BALANCE, payload: data.val })
+        })
+    }
+  })
 }
 
 export function watchTransactions() {
