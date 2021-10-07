@@ -7,7 +7,7 @@ export const SET_ERROR = 'SET_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
 export const FETCH_BUSINESS_DETAILS = 'FETCH_BUSINESS_DETAILS'
 export const SET_BUSINESS_DETAILS = 'SET_BUSINESS_DETAILS'
-// export const SAVE_TRANSACTIONS = 'SAVE_TRANSACTIONS'
+export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
 export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
 
@@ -125,6 +125,10 @@ export const fetchTransactions = () => (dispatch) => {
       dispatch({ type: LOGOUT_USER })
     }
   })
+}
+
+export const setTodaysBalance = (data) => (dispatch) => {
+  dispatch({ type: SET_TODAYS_BALANCE, payload: data })
 }
 
 export function watchTransactions() {

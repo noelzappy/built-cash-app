@@ -8,6 +8,7 @@ import {
   LOGOUT_USER,
   SAVE_TRANSACTION,
   SET_BUSINESS_DETAILS,
+  SET_TODAYS_BALANCE,
 } from './actions'
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   businessDetails: {},
   error: '',
   allTransactions: {},
+  todaysBalance: 0,
 }
 
 const db = firebase.database()
@@ -51,6 +53,10 @@ const mainReducer = (state = initialState, action) => {
         },
       )
       return { ...state, error }
+    }
+
+    case SET_TODAYS_BALANCE: {
+      return { ...state, todaysBalance: action.payload }
     }
 
     case LOGIN_USER:

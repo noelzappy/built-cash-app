@@ -2,31 +2,34 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { View, Dimensions } from 'react-native'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
-import AllCard from '../../components/AllCard/AllCard'
+import BalanceCard from '../../components/BalanceCard/BalanceCard'
 import CashTable from '../../components/CashTable/CashTable'
 import ActionButton from '../../components/ActionButton'
-import { fetchTransactions, watchTransactions } from '../../utils/actions'
+import {
+  fetchTransactions,
+  watchTransactions,
+  setTodaysBalance,
+} from '../../utils/actions'
 
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
-  const { totalAmountInHand, allTransactions } = useSelector(
-    (state) => state.mainReducer,
-  )
+  const { allTransactions } = useSelector((state) => state.mainReducer)
 
   const dispatch = useDispatch()
   const [localData, setLocalData] = useState([])
   const [totalIn, setTotalIn] = useState(0)
   const [totalOut, setTotalOut] = useState(0)
+  const [todayBalance, setTodayBalance] = useState(0)
 
   const sortLocalData = useCallback(() => {
+    const nowDate = new Date()
+    const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+
     const tempArray = []
     let total_in = 0
     let total_out = 0
-    if (!_.isEmpty(allTransactions)) {
-      const nowDate = new Date()
-      const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-
+    if (!_.isEmpty(allTransactions) && !_.isEmpty(allTransactions[today])) {
       Object.entries(allTransactions[today]).forEach((item) => {
         const item_1 = item[1]
         tempArray.push({
@@ -48,15 +51,14 @@ export default function CashBook({ navigation }) {
     setTotalIn(total_in)
     setTotalOut(total_out)
     setLocalData(tempArray.reverse())
+    dispatch(setTodaysBalance(totalIn - totalOut))
+    // console.log(todayBalance)
   })
 
   useEffect(() => {
     dispatch(fetchTransactions())
     sortLocalData()
     dispatch(watchTransactions())
-    // console.log(_.isEmpty(allTransactions))
-    // console.log(allTransactions)
-    // console.log('Fired Once')
   }, [])
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function CashBook({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <AllCard totalBalance={totalAmountInHand} />
+      <BalanceCard />
       <View
         style={{
           flex: 1,
