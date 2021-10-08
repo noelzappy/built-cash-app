@@ -7,9 +7,11 @@ export const SET_ERROR = 'SET_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
 export const FETCH_BUSINESS_DETAILS = 'FETCH_BUSINESS_DETAILS'
 export const SET_BUSINESS_DETAILS = 'SET_BUSINESS_DETAILS'
-export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
+export const UPDATE_CASH_IN_HAND = 'UPDATE_CASH_IN_HAND'
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
 export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
+export const FETCH_CASH_IN_HAND = 'FETCH_CASH_IN_HAND'
+export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
 
 export const loginUser = (user) => ({
   type: LOGIN_USER,
@@ -91,6 +93,52 @@ export const saveTransaction = (data) => (dispatch) => {
         .catch((error) => {
           console.log(error)
         })
+    } else {
+      dispatch({ type: LOGOUT_USER })
+    }
+  })
+}
+
+export const setTodaysBalance = (data) => (dispatch) => {
+  dispatch({ type: SET_TODAYS_BALANCE, payload: data })
+}
+
+export const fetchCashInHand = () => (dispatch) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions`)
+        .once('value', (snapshot) => {
+          if (snapshot.exists()) {
+            dispatch({
+              type: FETCH_CASH_IN_HAND,
+              payload: snapshot.val().totalAmount,
+            })
+          }
+        })
+    } else {
+      dispatch({ type: LOGOUT_USER })
+    }
+  })
+}
+
+export const watchCashInHand = () => (dispatch) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions/totalAmount`)
+        .on('value', (snapshot) => {
+          if (snapshot.exists()) {
+            dispatch({
+              type: FETCH_CASH_IN_HAND,
+              payload: snapshot.val(),
+            })
+          }
+        })
+    } else {
+      dispatch({ type: LOGOUT_USER })
     }
   })
 }
@@ -100,7 +148,7 @@ export const fetchTransactions = () => (dispatch) => {
     if (user) {
       firebase
         .database()
-        .ref(`${user.uid}/transactions`)
+        .ref(`${user.uid}/transactions/transfers`)
         .once(
           'value',
           (snapshot) => {
@@ -127,20 +175,22 @@ export const fetchTransactions = () => (dispatch) => {
   })
 }
 
-export const setTodaysBalance = (data) => (dispatch) => {
+export const updateCashInHand = (data) => (dispatch) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+      let tempAmount = 0
+      if (data.entry.entryType === 'cashIn') {
+        tempAmount = parseFloat(data.entry.amount)
+      } else {
+        tempAmount = -Math.abs(parseFloat(data.entry.amount))
+      }
+      const finalAmount = parseFloat(data.totalAmountInHand) + tempAmount
+
+      // console.log(finalAmount)
       firebase
         .database()
-        .ref(`${user.uid}/transactions`)
-        .update({ totalAmount: data.totalAmountInHand }, (snapshot, error) => {
-          console.log(snapshot)
-          console.log('===================')
-          console.log(error)
-        })
-        .then(() => {
-          dispatch({ type: SET_TODAYS_BALANCE, payload: data.val })
-        })
+        .ref(`${user.uid}/transactions/totalAmount`)
+        .set(finalAmount)
     }
   })
 }
@@ -151,7 +201,7 @@ export function watchTransactions() {
       if (user) {
         firebase
           .database()
-          .ref(`${user.uid}/transactions`)
+          .ref(`${user.uid}/transactions/transfers`)
           .on(
             'value',
             (snapshot) => {
@@ -163,6 +213,8 @@ export function watchTransactions() {
               console.log(err)
             },
           )
+      } else {
+        dispatch({ type: LOGOUT_USER })
       }
     })
   }

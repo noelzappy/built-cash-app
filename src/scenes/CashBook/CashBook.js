@@ -9,14 +9,14 @@ import {
   fetchTransactions,
   watchTransactions,
   setTodaysBalance,
+  watchCashInHand,
+  fetchCashInHand,
 } from '../../utils/actions'
 
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation }) {
-  const { allTransactions, totalAmountInHand } = useSelector(
-    (state) => state.mainReducer,
-  )
+  const { allTransactions } = useSelector((state) => state.mainReducer)
 
   const dispatch = useDispatch()
   const [localData, setLocalData] = useState([])
@@ -52,20 +52,15 @@ export default function CashBook({ navigation }) {
     setTotalIn(total_in)
     setTotalOut(total_out)
     setLocalData(tempArray.reverse())
-    // parseFloat(totalAmountInHand) + (totalIn - totalOut)
-    dispatch(
-      setTodaysBalance({
-        totalAmountInHand: 0,
-        val: totalIn - totalOut,
-      }),
-    )
-    // console.log(todayBalance)
+    dispatch(setTodaysBalance(totalIn - totalOut))
   })
 
   useEffect(() => {
     dispatch(fetchTransactions())
     sortLocalData()
     dispatch(watchTransactions())
+    dispatch(fetchCashInHand())
+    dispatch(watchCashInHand())
   }, [])
 
   useEffect(() => {

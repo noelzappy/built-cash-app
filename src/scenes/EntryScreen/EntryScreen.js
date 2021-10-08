@@ -7,7 +7,11 @@ import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import { colors } from '../../theme'
 import en from '../../languages/english'
-import { saveTransaction, fetchTransactions } from '../../utils/actions'
+import {
+  saveTransaction,
+  fetchTransactions,
+  updateCashInHand,
+} from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -84,14 +88,13 @@ export default function EntryScreen({ route, navigation }) {
   const nowDate = new Date()
   const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
-  const mainState = useSelector((state) => state.mainReducer)
+  const { totalAmountInHand } = useSelector((state) => state.mainReducer)
   const dispatch = useDispatch()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
-  const { uid } = mainState.user
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -137,15 +140,18 @@ export default function EntryScreen({ route, navigation }) {
     }
 
     dispatch(saveTransaction(entry))
+    dispatch(updateCashInHand({ totalAmountInHand, entry }))
 
     showMessage({
       type: 'success',
       message: en.SUCCESS,
       description: en.TRANSACTION_SAVED,
+      hideOnPress: true,
     })
     setEntryAmount('')
     setDescription('')
     setDate(today)
+    setIsSaving(false)
   }
 
   return (
@@ -243,7 +249,6 @@ export default function EntryScreen({ route, navigation }) {
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
-            setIsSaving(false)
             dispatch(fetchTransactions())
           }}
           isLoading={isSaving}

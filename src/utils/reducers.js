@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import {
   FETCH_BUSINESS_DETAILS,
+  FETCH_CASH_IN_HAND,
   FETCH_TRANSACTIONS,
   LOGIN_USER,
   LOGOUT_USER,
@@ -14,7 +15,7 @@ import {
 const initialState = {
   loggedIn: false,
   user: {},
-  totalAmountInHand: '',
+  totalAmountInHand: 0,
   transfers: {},
   todaysTransfers: {},
   businessDetails: {},
@@ -37,28 +38,16 @@ const mainReducer = (state = initialState, action) => {
       // console.log(action.payload.transfers)
       return {
         ...state,
-        totalAmountInHand: action.payload.totalAmount,
-        allTransactions: action.payload.transfers,
+        allTransactions: action.payload,
       }
     }
-
-    case SAVE_TRANSACTION: {
-      const nowDate = new Date()
-      const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-      let error = ''
-      db.ref(`${action.payload.uid}/transactions/transfers/${today}`).push(
-        action.payload.value,
-        (snapshot, err) => {
-          error = err
-        },
-      )
-      return { ...state, error }
+    case FETCH_CASH_IN_HAND: {
+      return { ...state, totalAmountInHand: action.payload }
     }
 
     case SET_TODAYS_BALANCE: {
       return { ...state, todaysBalance: action.payload }
-    }
-
+}
     case LOGIN_USER:
       return {
         ...state,
