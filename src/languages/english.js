@@ -35,6 +35,7 @@ const en = {
   AMOUNT_IN_HAND: 'Amount in hand',
   BUSINESS_SETUP_ERROR: 'Business name cannot be empty',
   AMOUNT_CANNOT_BE_EMPTY: 'Amount cannot be empty',
+  DETAILED_REPORT: 'Detailed Report',
 }
 
 export default en
