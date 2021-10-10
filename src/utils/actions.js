@@ -123,6 +123,27 @@ export const fetchCashInHand = () => (dispatch) => {
   })
 }
 
+export const updateCashInHand = (data) => (dispatch) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      let tempAmount = 0
+      if (data.entry.entryType === 'cashIn') {
+        tempAmount = parseFloat(data.entry.amount)
+      } else {
+        tempAmount = -Math.abs(parseFloat(data.entry.amount))
+      }
+      const finalAmount = parseFloat(data.totalAmountInHand) + tempAmount
+
+      // console.log(finalAmount)
+
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions/totalAmount`)
+        .set(finalAmount)
+    }
+  })
+}
+
 export const watchCashInHand = () => (dispatch) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -171,26 +192,6 @@ export const fetchTransactions = () => (dispatch) => {
         )
     } else {
       dispatch({ type: LOGOUT_USER })
-    }
-  })
-}
-
-export const updateCashInHand = (data) => (dispatch) => {
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      let tempAmount = 0
-      if (data.entry.entryType === 'cashIn') {
-        tempAmount = parseFloat(data.entry.amount)
-      } else {
-        tempAmount = -Math.abs(parseFloat(data.entry.amount))
-      }
-      const finalAmount = parseFloat(data.totalAmountInHand) + tempAmount
-
-      // console.log(finalAmount)
-      firebase
-        .database()
-        .ref(`${user.uid}/transactions/totalAmount`)
-        .set(finalAmount)
     }
   })
 }

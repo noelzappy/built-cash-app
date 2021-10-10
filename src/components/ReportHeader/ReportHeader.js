@@ -13,20 +13,26 @@ const styles = StyleSheet.create({
   },
   figures_in: {
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 20,
     color: colors.green,
     fontWeight: 'bold',
   },
   figures_out: {
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 20,
     color: colors.red,
     fontWeight: 'bold',
   },
   figures_bal: {
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 20,
     color: colors.green,
+    fontWeight: 'bold',
+  },
+  figures_bal_red: {
+    textAlign: 'center',
+    fontSize: 20,
+    color: colors.red,
     fontWeight: 'bold',
   },
   signs: {
@@ -46,7 +52,6 @@ export default function ReportHeader(props) {
       </View>
 
       <View style={styles.signs}>
-        <Text />
         <FontAwesome5 name="minus" size={18} color={colors.darkPurple} />
       </View>
 
@@ -56,13 +61,14 @@ export default function ReportHeader(props) {
       </View>
 
       <View style={styles.signs}>
-        <Text />
         <FontAwesome5 name="equals" size={18} color={colors.darkPurple} />
       </View>
 
       <View style={{ flexGrow: 120 }}>
         <Text style={styles.text}>{en.NET_BALANCE}</Text>
-        <Text style={styles.figures_bal}>{balance}</Text>
+        <Text style={balance < 0 ? styles.figures_bal_red : styles.figures_bal}>
+          {balance}
+        </Text>
       </View>
     </View>
   )

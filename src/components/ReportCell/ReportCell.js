@@ -12,40 +12,46 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.gray,
   },
-  cardCashInText: {
+  greenText: {
     color: colors.green,
   },
-  cardCashOutText: { color: colors.red },
+  redText: { color: colors.red },
   balanceText: {
     color: colors.green,
+    fontWeight: 'bold',
+  },
+  balanceTextRed: {
+    color: colors.red,
     fontWeight: 'bold',
   },
 })
 
 export default function ReportCell(props) {
-  const {
-    time, cashIn, cashOut, Balance,
-  } = props
+  const { time, cashIn, cashOut, Balance } = props
   return (
     <DataTable.Row>
       <DataTable.Cell>
-        <View style={styles.cardTime}>
+        <View style={styles.textContainer}>
           <Text style={styles.cardTimeText}>{time}</Text>
         </View>
       </DataTable.Cell>
       <DataTable.Cell>
-        <View style={styles.cardCashIn}>
-          <Text style={styles.cardCashInText}>{cashIn}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.greenText}>{cashIn}</Text>
         </View>
       </DataTable.Cell>
       <DataTable.Cell>
-        <View style={styles.cardCashOut}>
-          <Text style={styles.cardCashOutText}>{cashOut}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.redText}>{cashOut}</Text>
         </View>
       </DataTable.Cell>
       <DataTable.Cell>
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceText}>{Balance}</Text>
+        <View style={styles.textContainer}>
+          <Text
+            style={Balance < 0 ? styles.balanceTextRed : styles.balanceText}
+          >
+            {Balance}
+          </Text>
         </View>
       </DataTable.Cell>
     </DataTable.Row>

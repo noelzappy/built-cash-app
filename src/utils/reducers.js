@@ -7,7 +7,6 @@ import {
   FETCH_TRANSACTIONS,
   LOGIN_USER,
   LOGOUT_USER,
-  SAVE_TRANSACTION,
   SET_BUSINESS_DETAILS,
   SET_TODAYS_BALANCE,
 } from './actions'
@@ -15,7 +14,7 @@ import {
 const initialState = {
   loggedIn: false,
   user: {},
-  totalAmountInHand: 0,
+  totalAmountInHand: NaN,
   transfers: {},
   todaysTransfers: {},
   businessDetails: {},
@@ -47,7 +46,7 @@ const mainReducer = (state = initialState, action) => {
 
     case SET_TODAYS_BALANCE: {
       return { ...state, todaysBalance: action.payload }
-}
+    }
     case LOGIN_USER:
       return {
         ...state,

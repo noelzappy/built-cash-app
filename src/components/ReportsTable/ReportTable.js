@@ -38,10 +38,10 @@ export default function ReportTable(props) {
           data={data}
           renderItem={({ item }) => (
             <ReportCell
-              time={item.time}
-              cashIn={item.cashIn}
-              cashOut={item.cashOut}
-              Balance={item.balance}
+              time={item.date}
+              cashIn={item.totalCashIn}
+              cashOut={item.totalCashOut}
+              Balance={item.balanceOfDay}
             />
           )}
           keyExtractor={(item) => item.index}

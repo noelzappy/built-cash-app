@@ -1,258 +1,37 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import DownloadReportButton from '../DownloadReportButton'
 import ReportFilter from '../ReportFilter/ReportFilter'
 import ReportHeader from '../ReportHeader/ReportHeader'
 import ReportTable from '../ReportsTable/ReportTable'
 
-export default function ReportTab() {
+export default function ReportTab({ data }) {
+  const [totalIn, setTotalIn] = useState(0)
+  const [totalOut, setTotalOut] = useState(0)
+
+  function calcReports() {
+    let tempIn = 0
+    let tempOut = 0
+    data.forEach((element) => {
+      tempIn += element.totalCashIn
+      tempOut += element.totalCashOut
+    })
+    setTotalIn(tempIn)
+    setTotalOut(tempOut)
+  }
+
+  useEffect(() => {
+    calcReports()
+  }, [data])
+
   return (
     <>
       <ReportFilter />
-      <ReportHeader />
-      <ReportTable
-        data={[
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 270,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 20,
-            cashOut: 7,
-            balance: 630,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 300,
-            cashOut: 43,
-            balance: 250,
-          },
-          {
-            time: '10:15AM',
-            cashIn: 70,
-            cashOut: 3,
-            balance: 650,
-          },
-        ]}
+      <ReportHeader
+        totalIn={totalIn}
+        totalOut={totalOut}
+        balance={totalIn - totalOut}
       />
+      <ReportTable data={data} />
       <DownloadReportButton />
     </>
   )
