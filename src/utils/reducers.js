@@ -58,10 +58,13 @@ const mainReducer = (state = initialState, action) => {
       return {
         loggedIn: false,
         user: {},
-        totalAmountInHand: '',
+        totalAmountInHand: NaN,
         transfers: {},
         todaysTransfers: {},
         businessDetails: {},
+        error: '',
+        allTransactions: {},
+        todaysBalance: 0,
       }
     default:
       return state
