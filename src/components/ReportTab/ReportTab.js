@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function ReportTab({ data }) {
+export default function ReportTab({ data, navigation, route }) {
   const { isOpen, onOpen, onClose } = useDisclose()
   const [totalIn, setTotalIn] = useState(0)
   const [totalOut, setTotalOut] = useState(0)
@@ -77,7 +77,7 @@ export default function ReportTab({ data }) {
           </View>
         </Actionsheet.Content>
       </Actionsheet>
-      <ReportTable data={data} />
+      <ReportTable data={data} navigation={navigation} route={route} />
       <DownloadReportButton />
     </>
   )

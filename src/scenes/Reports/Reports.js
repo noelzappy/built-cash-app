@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import _ from 'lodash'
 import ReportTab from '../../components/ReportTab'
 
-export default function Reports() {
+export default function Reports({navigation,  route}) {
   const { allTransactions } = useSelector((state) => state.mainReducer)
 
   const [data, setData] = useState([])
@@ -45,7 +45,7 @@ export default function Reports() {
 
   return (
     <>
-      <ReportTab data={data} />
+      <ReportTab data={data} navigation={navigation} route ={route} />
     </>
   )
 }

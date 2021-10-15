@@ -112,7 +112,15 @@ const AuthScreen = ({ navigation }) => {
               dispatch(fetchBusinessDetails())
               dispatch(fetchTransactions())
             } else {
-              dispatch(setBusinessDetails(businessName))
+              firebase
+                .database()
+                .ref(`${user.uid}/businessDetails`)
+                .set({
+                  businessName,
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
               db.ref(`${user.uid}/transactions/totalAmount`).set(amountInHand)
             }
           })

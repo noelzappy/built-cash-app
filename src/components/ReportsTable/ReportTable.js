@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, FlatList, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native'
 import { DataTable } from 'react-native-paper'
 import en from '../../languages/english'
 import ReportCell from '../ReportCell/ReportCell'
@@ -7,7 +13,7 @@ import ReportCell from '../ReportCell/ReportCell'
 const { height } = Dimensions.get('window')
 
 export default function ReportTable(props) {
-  const { data } = props
+  const { data, navigation } = props
   return (
     <View style={{ marginBottom: height - (height - 350) }}>
       <DataTable>
@@ -37,12 +43,16 @@ export default function ReportTable(props) {
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <ReportCell
-              time={item.date}
-              cashIn={item.totalCashIn}
-              cashOut={item.totalCashOut}
-              Balance={item.balanceOfDay}
-            />
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SingleReport', { item })}
+            >
+              <ReportCell
+                time={item.date}
+                cashIn={item.totalCashIn}
+                cashOut={item.totalCashOut}
+                Balance={item.balanceOfDay}
+              />
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.index}
         />

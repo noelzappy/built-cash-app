@@ -9,6 +9,7 @@ import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
 import EntryScreen from '../../../scenes/EntryScreen/EntryScreen'
 import AuthScreen from '../../../scenes/Auth/AuthScreen'
+import SingleReport from '../../../scenes/SingleReport/SingleReport'
 
 const Stack = createStackNavigator()
 
@@ -69,6 +70,13 @@ export const HomeNavigator = () => (
       component={EntryScreen}
       options={({ route }) => ({
         title: route.params.title,
+      })}
+    />
+    <Stack.Screen
+      name="SingleReport"
+      component={SingleReport}
+      options={({ route }) => ({
+        title: `Report of ${route.params.item.date}`,
       })}
     />
   </Stack.Navigator>

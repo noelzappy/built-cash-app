@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
 export default function CashTable(props) {
   const { data, totalInOut } = props
   const today = new Date().toLocaleDateString()
+  // console.log(data)
 
   return (
     <View>
