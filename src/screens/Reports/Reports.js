@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import _ from 'lodash'
 import ReportTab from '../../components/ReportTab'
 
-export default function Reports({navigation,  route}) {
+export default function Reports({ navigation, route }) {
   const { allTransactions } = useSelector((state) => state.mainReducer)
 
   const [data, setData] = useState([])
@@ -17,11 +17,12 @@ export default function Reports({navigation,  route}) {
         let tempTotalCashOut = 0
 
         Object.entries(allTransactions[key]).forEach((item) => {
-          // console.log(item[1])
-          if (item[1].entryType === 'cashIn') {
-            tempTotalCashIn += parseFloat(item[1].amount)
-          } else {
-            tempTotalCashOut += parseFloat(item[1].amount)
+          if (!item.includes('balanceOfDay')) {
+            if (item[1].entryType === 'cashIn') {
+              tempTotalCashIn += parseFloat(item[1].amount)
+            } else {
+              tempTotalCashOut += parseFloat(item[1].amount)
+            }
           }
         })
 
@@ -45,7 +46,7 @@ export default function Reports({navigation,  route}) {
 
   return (
     <>
-      <ReportTab data={data} navigation={navigation} route ={route} />
+      <ReportTab data={data} navigation={navigation} route={route} />
     </>
   )
 }

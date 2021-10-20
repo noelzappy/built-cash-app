@@ -12,6 +12,7 @@ export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
 export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
 export const FETCH_CASH_IN_HAND = 'FETCH_CASH_IN_HAND'
 export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
+export const BALANCE_OF_DAY = 'BALANCE_OF_DAY'
 
 export const loginUser = (user) => ({
   type: LOGIN_USER,
@@ -99,6 +100,46 @@ export const saveTransaction = (data) => (dispatch) => {
   })
 }
 
+export const updateBalanceOfDay = (balance) => (dispatch) => {
+  const nowDate = new Date()
+  const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions/transfers/${today}/balanceOfDay`)
+        .set(balance)
+        .then(() => {
+          dispatch(fetchTransactions())
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    } else {
+      dispatch({ type: LOGOUT_USER })
+    }
+  })
+}
+
+export const getBalanceOfDay = (day) => (dispatch) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase
+        .database()
+        .ref(`${user.uid}/transactions/transfers/${day}/balanceOfDay`)
+        .once('value', (snapshot) => {
+          dispatch({ type: BALANCE_OF_DAY, payload: snapshot.val() })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    } else {
+      dispatch({ type: LOGOUT_USER })
+    }
+  })
+}
+
 export const setTodaysBalance = (data) => (dispatch) => {
   dispatch({ type: SET_TODAYS_BALANCE, payload: data })
 }
@@ -140,6 +181,8 @@ export const updateCashInHand = (data) => (dispatch) => {
         .database()
         .ref(`${user.uid}/transactions/totalAmount`)
         .set(finalAmount)
+    } else {
+      dispatch({ type: LOGOUT_USER })
     }
   })
 }

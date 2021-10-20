@@ -36,6 +36,7 @@ const en = {
   BUSINESS_SETUP_ERROR: 'Business name cannot be empty',
   AMOUNT_CANNOT_BE_EMPTY: 'Amount cannot be empty',
   DETAILED_REPORT: 'Detailed Report',
+  REPORT_OF: 'Report of',
 }
 
 export default en

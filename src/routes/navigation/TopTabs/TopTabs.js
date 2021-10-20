@@ -1,8 +1,8 @@
 import React from 'react'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 // import { ReportTab, CashTab } from '../stacks/Stacks'
-import Reports from '../../../scenes/Reports'
-import CashBook from '../../../scenes/CashBook/CashBook'
+import Reports from '../../../screens/Reports'
+import CashBook from '../../../screens/CashBook/CashBook'
 import en from '../../../languages/english'
 import { colors } from '../../../theme'
 

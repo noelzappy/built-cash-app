@@ -11,11 +11,12 @@ import {
   setTodaysBalance,
   watchCashInHand,
   fetchCashInHand,
+  getBalanceOfDay,
 } from '../../utils/actions'
 
 const { height } = Dimensions.get('window')
 
-export default function CashBook({ navigation }) {
+export default function CashBook({ navigation, route }) {
   const { allTransactions } = useSelector((state) => state.mainReducer)
 
   const dispatch = useDispatch()
@@ -32,16 +33,18 @@ export default function CashBook({ navigation }) {
     let total_out = 0
     if (!_.isEmpty(allTransactions) && !_.isEmpty(allTransactions[today])) {
       Object.entries(allTransactions[today]).forEach((item) => {
-        const item_1 = item[1]
-        tempArray.push({
-          time: item_1.time,
-          [item_1.entryType]: item_1.amount,
-          key: item[0],
-        })
-        if (item_1.entryType === 'cashIn') {
-          total_in += parseFloat(item_1.amount)
-        } else {
-          total_out += parseFloat(item_1.amount)
+        if (!item.includes('balanceOfDay')) {
+          const item_1 = item[1]
+          tempArray.push({
+            time: item_1.time,
+            [item_1.entryType]: item_1.amount,
+            key: item[0],
+          })
+          if (item_1.entryType === 'cashIn') {
+            total_in += parseFloat(item_1.amount)
+          } else {
+            total_out += parseFloat(item_1.amount)
+          }
         }
       })
     } else {
@@ -76,7 +79,12 @@ export default function CashBook({ navigation }) {
           marginBottom: height - (height - 200),
         }}
       >
-        <CashTable data={localData} totalInOut={{ totalIn, totalOut }} />
+        <CashTable
+          data={localData}
+          totalInOut={{ totalIn, totalOut }}
+          navigation={navigation}
+          route={route}
+        />
       </View>
       <ActionButton navigation={navigation} />
     </View>

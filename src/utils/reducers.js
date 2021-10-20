@@ -2,6 +2,7 @@ import firebase from 'firebase'
 import _ from 'lodash'
 
 import {
+  BALANCE_OF_DAY,
   FETCH_BUSINESS_DETAILS,
   FETCH_CASH_IN_HAND,
   FETCH_TRANSACTIONS,
@@ -21,6 +22,7 @@ const initialState = {
   error: '',
   allTransactions: {},
   todaysBalance: 0,
+  balanceOfDay: 0,
 }
 
 const db = firebase.database()
@@ -47,6 +49,8 @@ const mainReducer = (state = initialState, action) => {
     case SET_TODAYS_BALANCE: {
       return { ...state, todaysBalance: action.payload }
     }
+    case BALANCE_OF_DAY:
+      return { ...state, balanceOfDay: action.payload }
     case LOGIN_USER:
       return {
         ...state,
@@ -65,6 +69,7 @@ const mainReducer = (state = initialState, action) => {
         error: '',
         allTransactions: {},
         todaysBalance: 0,
+        balanceOfDay: 0,
       }
     default:
       return state

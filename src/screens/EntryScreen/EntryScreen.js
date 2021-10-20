@@ -11,6 +11,7 @@ import {
   saveTransaction,
   fetchTransactions,
   updateCashInHand,
+  updateBalanceOfDay,
 } from '../../utils/actions'
 
 const styles = StyleSheet.create({
@@ -111,6 +112,14 @@ export default function EntryScreen({ route, navigation }) {
     const d = new Date()
     const time = `${d.getHours()}:${d.getMinutes()}`
 
+    let tempAmount = 0
+    if (entryType === 'cashIn') {
+      tempAmount = parseFloat(entryAmount)
+    } else {
+      tempAmount = -Math.abs(parseFloat(entryAmount))
+    }
+    const finalAmount = parseFloat(totalAmountInHand) + tempAmount
+
     const entry = {
       paymentMethod,
       amount: entryAmount,
@@ -139,6 +148,7 @@ export default function EntryScreen({ route, navigation }) {
       return
     }
 
+    dispatch(updateBalanceOfDay(finalAmount))
     dispatch(saveTransaction(entry))
     dispatch(updateCashInHand({ totalAmountInHand, entry }))
 

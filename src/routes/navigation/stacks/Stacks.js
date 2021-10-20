@@ -1,15 +1,17 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
-import Settings from 'scenes/settings'
-import Reports from '../../../scenes/Reports'
-import CashBook from '../../../scenes/CashBook/CashBook'
+import Settings from 'screens/settings'
+import Reports from '../../../screens/Reports'
+import CashBook from '../../../screens/CashBook/CashBook'
 import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
-import EntryScreen from '../../../scenes/EntryScreen/EntryScreen'
-import AuthScreen from '../../../scenes/Auth/AuthScreen'
-import SingleReport from '../../../scenes/SingleReport/SingleReport'
+import EntryScreen from '../../../screens/EntryScreen/EntryScreen'
+import AuthScreen from '../../../screens/Auth/AuthScreen'
+import SingleReport from '../../../screens/SingleReport/SingleReport'
+import SingleEntry from '../../../screens/SingleEntry/SingleEntry'
+import en from '../../../languages/english'
 
 const Stack = createStackNavigator()
 
@@ -76,8 +78,16 @@ export const HomeNavigator = () => (
       name="SingleReport"
       component={SingleReport}
       options={({ route }) => ({
-        title: `Report of ${route.params.item.date}`,
+        title: `${en.REPORT_OF} ${route.params.item.date}`,
       })}
+    />
+
+    <Stack.Screen
+      name="SingleEntry"
+      component={SingleEntry}
+      // options={({ route }) => ({
+      //   title: `Report of ${route.params.item.date}`,
+      // })}
     />
   </Stack.Navigator>
 )
