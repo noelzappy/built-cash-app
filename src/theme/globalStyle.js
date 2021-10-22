@@ -68,6 +68,13 @@ const globalStyles = StyleSheet.create({
   allCardBalanceText: {
     color: colors.darkPurple,
   },
+  headingText: {
+    fontSize: 22,
+    color: colors.darkPurple,
+  },
+  normalFontSize: {
+    fontSize: 18,
+  },
 })
 
 export default globalStyles

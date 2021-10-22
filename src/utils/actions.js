@@ -73,6 +73,8 @@ export const setBusinessDetails = (data) => {
           .catch((err) => {
             console.log(err)
           })
+      } else {
+        dispatch({ type: LOGOUT_USER })
       }
     })
   }

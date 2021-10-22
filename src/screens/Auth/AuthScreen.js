@@ -86,6 +86,7 @@ const AuthScreen = ({ navigation }) => {
   const [businessName, setBusinessName] = useState()
   const [amountInHand, setAmountInHand] = useState('0')
   const [errorText, setErrorText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const dispatch = useDispatch()
   const mainState = useSelector((state) => state.mainReducer)
@@ -204,6 +205,7 @@ const AuthScreen = ({ navigation }) => {
       <Button
         disabled={!phoneNumber}
         onPress={async () => {
+          setIsLoading(true)
           try {
             const phoneProvider = new firebase.auth.PhoneAuthProvider()
             const verifyId = await phoneProvider.verifyPhoneNumber(
@@ -211,7 +213,7 @@ const AuthScreen = ({ navigation }) => {
               recaptchaVerifier.current,
             )
             setVerificationId(verifyId)
-            await showMessage({
+            showMessage({
               message: 'Verification code sent',
               type: 'warning',
               description: 'Verification code successfully sent to your phone',
@@ -225,6 +227,7 @@ const AuthScreen = ({ navigation }) => {
             })
           }
         }}
+        isLoading={isLoading}
       >
         Verify Phone
       </Button>

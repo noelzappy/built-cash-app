@@ -56,15 +56,18 @@ export default function CashTable(props) {
           </DataTable.Header>
           <FlatList
             data={data}
-            renderItem={({ item }) => (
-              <CashTableCell
-                cashIn={item.cashIn}
-                cashOut={item.cashOut}
-                time={item.time}
-                navigation={navigation}
-                route={route}
-              />
-            )}
+            renderItem={({ item }) => {
+              return (
+                <CashTableCell
+                  cashIn={item.cashIn}
+                  cashOut={item.cashOut}
+                  time={item.time}
+                  navigation={navigation}
+                  route={route}
+                  key={item.key}
+                />
+              )
+            }}
             keyExtractor={(item) => item.key}
           />
         </DataTable>

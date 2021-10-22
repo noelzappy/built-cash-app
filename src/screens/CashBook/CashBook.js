@@ -36,6 +36,7 @@ export default function CashBook({ navigation, route }) {
         if (!item.includes('balanceOfDay')) {
           const item_1 = item[1]
           tempArray.push({
+            key: item[0],
             time: item_1.time,
             [item_1.entryType]: item_1.amount,
             key: item[0],

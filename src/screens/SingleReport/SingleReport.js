@@ -87,7 +87,12 @@ export default function SingleReport({ navigation, route }) {
           marginBottom: height - (height - 200),
         }}
       >
-        <CashTable data={localData} totalInOut={{ totalIn, totalOut }} />
+        <CashTable
+          data={localData}
+          totalInOut={{ totalIn, totalOut }}
+          navigation={navigation}
+          route={route}
+        />
       </View>
     </View>
   )

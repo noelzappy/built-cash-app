@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+} from 'react-native'
 import { showMessage } from 'react-native-flash-message'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
-import { colors } from '../../theme'
+import * as Contacts from 'expo-contacts'
+import { AntDesign } from '@expo/vector-icons'
+import { colors, globalStyles } from '../../theme'
 import en from '../../languages/english'
 import {
   saveTransaction,
@@ -81,7 +90,7 @@ const styles = StyleSheet.create({
   },
 })
 
-// const uid = 'nZGfyZrDy6XmTGZhXNvoWXcxZv53'
+const { height, width } = Dimensions.get('window')
 
 export default function EntryScreen({ route, navigation }) {
   const { entryType } = route.params
@@ -96,6 +105,9 @@ export default function EntryScreen({ route, navigation }) {
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
+  const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [showContactsModal, setShowContactsModal] = useState(false)
+  const [allContact, setAllContact] = useState(null)
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -127,6 +139,7 @@ export default function EntryScreen({ route, navigation }) {
       description,
       date,
       time,
+      customer: selectedCustomer,
     }
 
     if (entry.amount === '') {
@@ -144,7 +157,7 @@ export default function EntryScreen({ route, navigation }) {
           paddingTop: 40,
         },
       })
-
+      setIsSaving(false)
       return
     }
 
@@ -160,8 +173,47 @@ export default function EntryScreen({ route, navigation }) {
     })
     setEntryAmount('')
     setDescription('')
+    setSelectedCustomer(null)
     setDate(today)
     setIsSaving(false)
+  }
+
+  const selectCustomer = async () => {
+    const { status } = await Contacts.requestPermissionsAsync()
+    if (status === 'granted') {
+      const { data } = await Contacts.getContactsAsync()
+
+      if (data.length > 0) {
+        setAllContact(data)
+      }
+      setShowContactsModal(true)
+    }
+  }
+
+  const renderContactList = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          paddingVertical: height - (height - 15),
+          backgroundColor: colors.lightGrayPurple,
+          margin: height - (height - 3),
+          paddingHorizontal: height - (height - 10),
+        }}
+        onPress={() => {
+          setSelectedCustomer(item)
+          setShowContactsModal(false)
+        }}
+      >
+        <Text
+          style={{
+            ...globalStyles.normalFontSize,
+            justifyContent: 'flex-start',
+          }}
+        >
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    )
   }
 
   return (
@@ -249,9 +301,18 @@ export default function EntryScreen({ route, navigation }) {
           />
         </View>
 
-        {/* <View>
-          <Text>Add Attachment</Text>
-        </View> */}
+        <TouchableOpacity
+          onPress={() => {
+            selectCustomer()
+          }}
+          style={{
+            backgroundColor: colors.lightPurple,
+            padding: 5,
+          }}
+        >
+          <Text>{en.ADD_CUSTOMER}</Text>
+          {selectedCustomer ? <Text>{selectedCustomer.name}</Text> : null}
+        </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
         <Button
@@ -267,6 +328,46 @@ export default function EntryScreen({ route, navigation }) {
           Save
         </Button>
       </View>
+
+      <Modal visible={showContactsModal} animationType="slide">
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => setShowContactsModal(false)}
+            style={{
+              alignItems: 'flex-start',
+              padding: 15,
+              justifyContent: 'center',
+            }}
+          >
+            <AntDesign name="close" size={26} color="black" />
+          </TouchableOpacity>
+          <View
+            style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
+          >
+            <Text style={{ ...globalStyles.headingText, textAlign: 'center' }}>
+              {en.CHOOSE_A_CUSTOMER}
+            </Text>
+          </View>
+        </View>
+
+        <View>
+          {allContact ? (
+            <FlatList
+              data={allContact}
+              renderItem={renderContactList}
+              keyExtractor={(item) => item.id}
+            />
+          ) : (
+            <View>
+              <Text>{en.CONTACT_PERMISSION_FAIL}</Text>
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   )
 }

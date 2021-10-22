@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 import { Actionsheet, useDisclose } from 'native-base'
-import DownloadReportButton from '../DownloadReportButton'
+import DownloadReportButton from '../DownloadReportBtn'
 import ReportFilter from '../ReportFilter/ReportFilter'
 import ReportHeader from '../ReportHeader/ReportHeader'
 import ReportTable from '../ReportsTable/ReportTable'

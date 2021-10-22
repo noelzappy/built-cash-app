@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import _ from 'lodash'
 
 import {
   BALANCE_OF_DAY,
@@ -59,18 +58,8 @@ const mainReducer = (state = initialState, action) => {
       }
     case LOGOUT_USER:
       firebase.auth().signOut()
-      return {
-        loggedIn: false,
-        user: {},
-        totalAmountInHand: NaN,
-        transfers: {},
-        todaysTransfers: {},
-        businessDetails: {},
-        error: '',
-        allTransactions: {},
-        todaysBalance: 0,
-        balanceOfDay: 0,
-      }
+      return initialState
+
     default:
       return state
   }

@@ -12,8 +12,7 @@ import ReportCell from '../ReportCell/ReportCell'
 
 const { height } = Dimensions.get('window')
 
-export default function ReportTable(props) {
-  const { data, navigation } = props
+export default function ReportTable({ data, navigation }) {
   return (
     <View style={{ marginBottom: height - (height - 350) }}>
       <DataTable>

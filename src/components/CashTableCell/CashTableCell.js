@@ -1,16 +1,17 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { globalStyles } from '../../theme'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function CashTableCell(props) {
-  const { time, cashIn, cashOut, navigation, route } = props
+  const { time, cashIn, cashOut, key, navigation, route } = props
+
+  console.log(key)
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('SingleEntry')
+        navigation.navigate('SingleEntry', { itemId: key })
       }}
     >
       <DataTable.Row>

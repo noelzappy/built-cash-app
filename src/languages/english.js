@@ -37,6 +37,10 @@ const en = {
   AMOUNT_CANNOT_BE_EMPTY: 'Amount cannot be empty',
   DETAILED_REPORT: 'Detailed Report',
   REPORT_OF: 'Report of',
+  ADD_CUSTOMER: 'Add Customer',
+  CHOOSE_A_CUSTOMER: ' Choose a Customer',
+  CONTACT_PERMISSION_FAIL: 'No Contacts or Permission is denied',
+  
 }
 
 export default en
