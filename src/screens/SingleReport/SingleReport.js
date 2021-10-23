@@ -23,7 +23,8 @@ export default function SingleReport({ navigation, route }) {
 
   const sortLocalData = useCallback(() => {
     const nowDate = new Date()
-    const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+    const today =
+      `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
     const tempArray = []
     let total_in = 0
@@ -35,6 +36,7 @@ export default function SingleReport({ navigation, route }) {
             if (!element.includes('balanceOfDay')) {
               const item_1 = element[1]
               tempArray.push({
+                itemDate: item.date,
                 time: item_1.time,
                 [item_1.entryType]: item_1.amount,
                 key: element[0],

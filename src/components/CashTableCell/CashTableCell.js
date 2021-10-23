@@ -10,7 +10,7 @@ export default function CashTableCell(props) {
   return (
     <TouchableOpacity
       onPress={() => {
-        // console.log(itemId)
+        // console.log(itemId, itemDate)
         navigation.navigate('SingleEntry', { itemId, itemDate })
       }}
     >

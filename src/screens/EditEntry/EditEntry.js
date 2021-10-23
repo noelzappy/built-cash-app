@@ -16,7 +16,11 @@ import * as Contacts from 'expo-contacts'
 import { AntDesign } from '@expo/vector-icons'
 import { colors, globalStyles } from '../../theme'
 import en from '../../languages/english'
-import { updateEntry, updateCashInHand } from '../../utils/actions'
+import {
+  updateEntry,
+  updateCashInHand,
+  updateBalanceOfDay,
+} from '../../utils/actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -161,16 +165,17 @@ export default function EditEntry({ route, navigation }) {
       return
     }
 
-    // let tempAmount = 0
-    // if (entryItem.entryType === 'cashIn') {
-    //   tempAmount = parseFloat(entryAmount)
-    // } else {
-    //   tempAmount = -Math.abs(parseFloat(entryAmount))
-    // }
-    // const finalAmount =
-    //   parseFloat(totalAmountInHand - entryItem.amount) + tempAmount
+    let tempAmount = 0
+    if (entryItem.entryType === 'cashIn') {
+      tempAmount = parseFloat(entryAmount)
+    } else {
+      tempAmount = -Math.abs(parseFloat(entryAmount))
+    }
+    const finalAmount =
+      parseFloat(totalAmountInHand - entryItem.amount) + tempAmount
 
-    // // console.log(finalAmount)
+    dispatch(updateBalanceOfDay(finalAmount))
+
     dispatch(updateEntry({ itemId, itemDate, entry }))
     const tempCashInHand = parseFloat(totalAmountInHand - entryItem.amount)
 
