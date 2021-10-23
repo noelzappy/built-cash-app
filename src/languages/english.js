@@ -40,7 +40,12 @@ const en = {
   ADD_CUSTOMER: 'Add Customer',
   CHOOSE_A_CUSTOMER: ' Choose a Customer',
   CONTACT_PERMISSION_FAIL: 'No Contacts or Permission is denied',
-  
+  ENTRY_DETAIL: 'Entry Detail',
+  ENTRY_TYPE: 'Entry Type',
+  AMOUNT: 'Amount',
+  ENTRY_DESCRIPTION: 'Entry Description',
+  EDIT_ENTRY: 'Edit Entry',
+  UPDATE_ENTRY: 'Update Entry'
 }
 
 export default en

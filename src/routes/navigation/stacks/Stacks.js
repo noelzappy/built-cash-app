@@ -12,6 +12,7 @@ import AuthScreen from '../../../screens/Auth/AuthScreen'
 import SingleReport from '../../../screens/SingleReport/SingleReport'
 import SingleEntry from '../../../screens/SingleEntry/SingleEntry'
 import en from '../../../languages/english'
+import EditEntry from '../../../screens/EditEntry/EditEntry'
 
 const Stack = createStackNavigator()
 
@@ -85,9 +86,17 @@ export const HomeNavigator = () => (
     <Stack.Screen
       name="SingleEntry"
       component={SingleEntry}
-      // options={({ route }) => ({
-      //   title: `Report of ${route.params.item.date}`,
-      // })}
+      options={({ route }) => ({
+        title: en.ENTRY_DETAIL,
+      })}
+    />
+
+    <Stack.Screen
+      name="EditEntry"
+      component={EditEntry}
+      options={({ route }) => ({
+        title: en.EDIT_ENTRY,
+      })}
     />
   </Stack.Navigator>
 )

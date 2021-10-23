@@ -57,6 +57,7 @@ export default function CashTable(props) {
           <FlatList
             data={data}
             renderItem={({ item }) => {
+              // console.log(item.key)
               return (
                 <CashTableCell
                   cashIn={item.cashIn}
@@ -64,7 +65,8 @@ export default function CashTable(props) {
                   time={item.time}
                   navigation={navigation}
                   route={route}
-                  key={item.key}
+                  itemId={item.key}
+                  itemDate={item.itemDate}
                 />
               )
             }}

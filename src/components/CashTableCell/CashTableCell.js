@@ -5,13 +5,13 @@ import PropTypes from 'prop-types'
 import { globalStyles } from '../../theme'
 
 export default function CashTableCell(props) {
-  const { time, cashIn, cashOut, key, navigation, route } = props
+  const { time, cashIn, cashOut, itemId, navigation, route, itemDate } = props
 
-  console.log(key)
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('SingleEntry', { itemId: key })
+        // console.log(itemId)
+        navigation.navigate('SingleEntry', { itemId, itemDate })
       }}
     >
       <DataTable.Row>

@@ -13,6 +13,7 @@ export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
 export const FETCH_CASH_IN_HAND = 'FETCH_CASH_IN_HAND'
 export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
 export const BALANCE_OF_DAY = 'BALANCE_OF_DAY'
+export const UPDATE_ENTRY = 'UPDATE_ENTRY'
 
 export const loginUser = (user) => ({
   type: LOGIN_USER,
@@ -23,6 +24,23 @@ export const logoutUser = () => ({ type: LOGOUT_USER })
 
 export const setError = (err) => ({ type: SET_ERROR, payload: err })
 export const clearError = () => ({ type: CLEAR_ERROR, payload: '' })
+
+export const updateEntry =
+  ({ itemId, itemDate, entry }) =>
+  (dispatch) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .database()
+          .ref(`${user.uid}/transactions/transfers/${itemDate}`)
+          .child(itemId)
+          .update(entry)
+          .catch((error) => console.log(error))
+      } else {
+        dispatch({ type: LOGOUT_USER })
+      }
+    })
+  }
 
 export function fetchBusinessDetails() {
   return (dispatch) => {
@@ -82,7 +100,8 @@ export const setBusinessDetails = (data) => {
 
 export const saveTransaction = (data) => (dispatch) => {
   const nowDate = new Date()
-  const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  const today =
+    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -104,7 +123,8 @@ export const saveTransaction = (data) => (dispatch) => {
 
 export const updateBalanceOfDay = (balance) => (dispatch) => {
   const nowDate = new Date()
-  const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  const today =
+    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -176,8 +196,6 @@ export const updateCashInHand = (data) => (dispatch) => {
         tempAmount = -Math.abs(parseFloat(data.entry.amount))
       }
       const finalAmount = parseFloat(data.totalAmountInHand) + tempAmount
-
-      // console.log(finalAmount)
 
       firebase
         .database()

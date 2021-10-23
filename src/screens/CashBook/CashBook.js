@@ -23,10 +23,10 @@ export default function CashBook({ navigation, route }) {
   const [localData, setLocalData] = useState([])
   const [totalIn, setTotalIn] = useState(0)
   const [totalOut, setTotalOut] = useState(0)
-
   const sortLocalData = useCallback(() => {
     const nowDate = new Date()
-    const today = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+    const today =
+      `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
 
     const tempArray = []
     let total_in = 0
@@ -39,7 +39,7 @@ export default function CashBook({ navigation, route }) {
             key: item[0],
             time: item_1.time,
             [item_1.entryType]: item_1.amount,
-            key: item[0],
+            itemDate: today,
           })
           if (item_1.entryType === 'cashIn') {
             total_in += parseFloat(item_1.amount)
