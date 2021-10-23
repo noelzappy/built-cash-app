@@ -81,6 +81,7 @@ export default function SingleEntry({ navigation, route }) {
         </View>
         {entryItem.customer ? (
           <View>
+            <Text>Customer</Text>
             <Text>{entryItem.customer.name}</Text>
           </View>
         ) : null}

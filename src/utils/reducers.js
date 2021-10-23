@@ -14,7 +14,7 @@ import {
 const initialState = {
   loggedIn: false,
   user: {},
-  totalAmountInHand: NaN,
+  totalAmountInHand: 0,
   transfers: {},
   todaysTransfers: {},
   businessDetails: {},

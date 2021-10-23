@@ -23,10 +23,17 @@ const styles = StyleSheet.create({
 const Settings = ({ route, navigation }) => {
   const dispatch = useDispatch()
 
+  const { totalAmountInHand, businessDetails } = useSelector(
+    (state) => state.mainReducer,
+  )
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Setting Screen</Text>
+      <Text style={styles.title}>{businessDetails.businessName}</Text>
+      <Text style={styles.title}>
+        {`Total Amount In Hand: ${totalAmountInHand}`}
+      </Text>
       <Button
         title="Logout"
         color="white"
