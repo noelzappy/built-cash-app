@@ -13,13 +13,16 @@ import SingleReport from '../../../screens/SingleReport/SingleReport'
 import SingleEntry from '../../../screens/SingleEntry/SingleEntry'
 import en from '../../../languages/english'
 import EditEntry from '../../../screens/EditEntry/EditEntry'
+import { appColors } from '../../../theme/globalStyle'
 
 const Stack = createStackNavigator()
 
 const navigationProps = {
-  headerTintColor: 'white',
-  headerStyle: { backgroundColor: colors.darkPurple },
-  headerTitleStyle: { fontSize: 18 },
+  headerStyle: {
+    backgroundColor: appColors.appBase,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
 }
 
 // ------------------------------------

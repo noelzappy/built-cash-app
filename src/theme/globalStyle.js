@@ -1,7 +1,200 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
+import { width, height, totalSize } from 'react-native-dimension'
+import Constants from 'expo-constants'
 import colors from './colors'
 
-const globalStyles = StyleSheet.create({
+export const appColors = {
+  appBlue: '#2F5794',
+  appWhite: '#fff',
+  appGreen: '#0E9873',
+  appLightGold: '#F1C944',
+  appDarkGold: '#D1AE37',
+  appDarkAsh: '#686868',
+  appMediumAsh: '#A5A5A5',
+  appLightAsh: '#E1DDDD',
+  appRed: '#E20909',
+  appDirtyWhite: '#F0F3FA',
+  appBase: '#2F5794',
+  _appBase: '#00BFA6',
+}
+
+export const fontSizes = {
+  huge: Platform.OS === 'ios' ? totalSize(2.8) : totalSize(3),
+  big: Platform.OS === 'ios' ? totalSize(2.3) : totalSize(2.5),
+  maxi: Platform.OS === 'ios' ? totalSize(1.8) : totalSize(2),
+  normal: Platform.OS === 'ios' ? totalSize(1.3) : totalSize(1.5),
+  small: Platform.OS === 'ios' ? totalSize(0.8) : totalSize(1),
+}
+
+export const appStyles = {
+  statusBar: {
+    backgroundColor: appColors.appBase,
+    height: Constants.statusBarHeight,
+  },
+  headMaxi: {
+    fontSize: fontSizes.maxi,
+    fontWeight: 'bold',
+    color: appColors.appWhite,
+  },
+  headBig: {
+    fontSize: fontSizes.big,
+    fontWeight: 'bold',
+    color: appColors.appWhite,
+  },
+  headHuge: {
+    fontSize: fontSizes.huge,
+    fontWeight: 'bold',
+    color: appColors.appWhite,
+  },
+  headRegular: {
+    fontSize: fontSizes.normal,
+    fontWeight: 'bold',
+    color: appColors.appWhite,
+  },
+  textRegular: {
+    fontSize: fontSizes.normal,
+    color: appColors.appWhite,
+  },
+  textMaxi: {
+    fontSize: fontSizes.maxi,
+    color: appColors.appWhite,
+  },
+  headTwo: {
+    fontSize: fontSizes.huge,
+  },
+
+  // Form Styles
+  textInputField: {
+    flexDirection: 'row',
+    width: '85%',
+    height: height(5),
+    marginBottom: height(2),
+    borderColor: 'rgb(229,229,229)',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: height(5) / 2,
+    backgroundColor: '#FFFFFF',
+  },
+  textInput: {
+    width: '85%',
+    height: height(5),
+    paddingLeft: width(12),
+    color: 'rgb(150,150,150)',
+    fontSize: fontSizes.maxi,
+  },
+  textInputImage: {
+    position: 'absolute',
+    bottom: height(1),
+    left: width(5),
+    width: width(4.1),
+    height: height(2.5),
+  },
+  formBox: {
+    alignItems: 'center',
+  },
+
+  // Home styles
+  homeContainer: {
+    backgroundColor: appColors.appDirtyWhite,
+  },
+  headerStyle: {
+    paddingTop: Platform.OS === 'ios' ? height(4) : width(10),
+    paddingLeft: 0,
+    // paddingLeft: width(5),
+    // paddingRight: width(5),
+  },
+  badgeNumber: {
+    position: 'absolute',
+    backgroundColor: appColors.appDarkGold,
+    padding: 2,
+    top: -width(4),
+    left: -5,
+    borderRadius: 5,
+    elevation: 2,
+  },
+  avatarContainer: {
+    width: '100%',
+    marginTop: height(3),
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    width: width(15),
+    height: width(15),
+    borderWidth: width(1),
+    borderColor: appColors.appWhite,
+    backgroundColor: appColors.appWhite,
+    borderRadius: width(20) / 2,
+    // resizeMode: 'contain'
+  },
+  listAvatarContainer3: {
+    width: '100%',
+    marginTop: height(1),
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  listAvatarContainer: {
+    width: '100%',
+    marginTop: height(1),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listAvatarContainer2: {
+    flexDirection: 'row',
+  },
+  listAvatarImage: {
+    width: width(15),
+    height: width(15),
+    // borderWidth: width(1),
+    // borderColor: appColors.appWhite,
+    backgroundColor: appColors.appWhite,
+    borderRadius: width(20) / 2,
+  },
+  listAvatarContainerImage: {
+    width: width(15),
+    height: width(15),
+    // borderWidth: width(1),
+    // borderColor: appColors.appWhite,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: appColors.appDarkAsh,
+    borderRadius: width(20) / 2,
+  },
+  mainCard: {
+    width: '99%',
+    paddingTop: height(1),
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    // height: height(40),
+    borderRadius: width(2),
+    paddingBottom: height(3),
+    marginTop: height(3),
+    borderColor: '#fff',
+    elevation: 2,
+
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
+    // elevation: 3,
+  },
+
+  underline: {
+    width: '100%',
+    marginTop: height(1),
+    marginBottom: height(1),
+    borderBottomWidth: height(0.07),
+    borderBottomColor: appColors.appDarkAsh,
+    opacity: 0.2,
+  },
+}
+
+export const globalStyles = StyleSheet.create({
   cardContainer: {
     shadowColor: '#000',
     shadowOffset: {

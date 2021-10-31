@@ -1,33 +1,56 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { useSelector } from 'react-redux'
+import { width, height } from 'react-native-dimension'
+import { Card } from 'native-base'
+import { AntDesign } from '@expo/vector-icons'
 import en from '../../languages/english'
 import { colors, globalStyles } from '../../theme'
+import { appColors, appStyles } from '../../theme/globalStyle'
 
 const styles = StyleSheet.create({
-  balances: { color: colors.green, fontSize: 22 },
-  balanceDescription: { color: colors.darkPurple },
-  balanceRed: { color: colors.red, fontSize: 22 },
+  balances: { color: appColors.appGreen, fontSize: 22 },
+  balanceDescription: { color: appColors.appBase },
+  balanceRed: { color: appColors.appRed, fontSize: 22 },
 })
 
 export default function BalanceCard() {
-  const { totalAmountInHand, todaysBalance } = useSelector(
+  const { totalAmountInHand, todaysBalance, businessDetails } = useSelector(
     (state) => state.mainReducer,
   )
 
   return (
-    <View style={globalStyles.allCardContainer}>
-      <View>
-        <Text style={styles.balances}>{totalAmountInHand}</Text>
+    <Card
+      style={{
+        ...appStyles.mainCard,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignSelf: 'center',
+        backgroundColor: appColors.appWhite,
+        marginBottom: height(3),
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={styles.balances}>
+          {`${businessDetails.country.currency[0]} ${totalAmountInHand}`}
+        </Text>
         <Text style={styles.balanceDescription}>{en.CASH_IN_HAND}</Text>
       </View>
 
-      <View>
+      <View style={{ flex: 1 }}>
         <Text style={todaysBalance < 0 ? styles.balanceRed : styles.balances}>
-          {todaysBalance}
+          {`${businessDetails.country.currency[0]} ${todaysBalance}`}
         </Text>
         <Text style={styles.balanceDescription}>{en.TODAYS_BALANCE}</Text>
       </View>
-    </View>
+      <View style={{ width: '5%', maxWidth: '5%' }}>
+        <AntDesign
+          name="caretdown"
+          size={width(5)}
+          color={appColors.appBase}
+          style={{ marginTop: 5 }}
+        />
+      </View>
+    </Card>
   )
 }

@@ -5,20 +5,25 @@ import Reports from '../../../screens/Reports'
 import CashBook from '../../../screens/CashBook/CashBook'
 import en from '../../../languages/english'
 import { colors } from '../../../theme'
+import { appColors, appStyles } from '../../../theme/globalStyle'
 
 const Tab = createMaterialTopTabNavigator()
 
 export default function TopTabs() {
-  const navigationProps = {
-    tabBarItemStyle: {
-      backgroundColor: colors.darkPurple,
-    },
-    tabBarStyle: { backgroundColor: colors.darkPurple },
-    tabBarLabelStyle: { fontSize: 18 },
-  }
-
   return (
-    <Tab.Navigator headerMode="screen" screenOptions={navigationProps}>
+    <Tab.Navigator
+      headerMode="screen"
+      tabBarOptions={{
+        activeTintColor: appColors.appWhite,
+        inactiveTintColor: appColors.appLightAsh,
+        style: {
+          backgroundColor: appColors.appBase,
+        },
+        labelStyle: {
+          ...appStyles.headRegular,
+        },
+      }}
+    >
       <Tab.Screen
         name="Reports"
         component={CashBook}

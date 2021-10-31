@@ -33,7 +33,7 @@ const en = {
   BUSINESS_SETUP: 'Business Setup',
   ENTER_BUSINESS_NAME: 'Enter business name',
   AMOUNT_IN_HAND: 'Amount in hand',
-  BUSINESS_SETUP_ERROR: 'Business name cannot be empty',
+  BUSINESS_SETUP_ERROR: 'Please check entries and try again',
   AMOUNT_CANNOT_BE_EMPTY: 'Amount cannot be empty',
   DETAILED_REPORT: 'Detailed Report',
   REPORT_OF: 'Report of',
@@ -45,7 +45,13 @@ const en = {
   AMOUNT: 'Amount',
   ENTRY_DESCRIPTION: 'Entry Description',
   EDIT_ENTRY: 'Edit Entry',
-  UPDATE_ENTRY: 'Update Entry'
+  UPDATE_ENTRY: 'Update Entry',
+  BUSINESS_DETAILS: 'Business Details',
+  CHOOSE_COUNTRY: 'Select Country',
+  BUSINESS_ADDRESS: 'Business Address',
+  NO_ENTRY_YET: 'No Entry Yet',
+  TODAY: 'Today',
+  SINGLE_DAY: 'Single Day',
 }
 
 export default en

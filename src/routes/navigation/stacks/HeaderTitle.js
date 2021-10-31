@@ -1,23 +1,19 @@
 import React from 'react'
-import { StyleSheet, Text } from 'react-native'
-import { useSelector, useDispatch } from 'react-redux'
-
-const styles = StyleSheet.create({
-  logo: {
-    color: '#fff',
-  },
-})
+import { Text, TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux'
+import { appStyles } from '../../../theme/globalStyle'
 
 const HeaderTitle = () => {
-  const mainReducer = useSelector((state) => state.mainReducer)
+  const { businessDetails } = useSelector((state) => state.mainReducer)
 
-  // console.log(mainReducer.businessDetails)
   return (
-    <Text style={styles.logo}>
-      {mainReducer.businessDetails.businessName !== null
-        ? mainReducer.businessDetails.businessName
-        : 'My Company'}
-    </Text>
+    <TouchableOpacity onPress={() => {}}>
+      <Text style={appStyles.headMaxi}>
+        {businessDetails.businessName
+          ? businessDetails.businessName
+          : 'My Company'}
+      </Text>
+    </TouchableOpacity>
   )
 }
 

@@ -1,8 +1,10 @@
 import React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
+import { width, height as pHeight } from 'react-native-dimension'
 import en from '../../languages/english'
 import Button from '../Button'
+import { appColors } from '../../theme/globalStyle'
 
 const { height } = Dimensions.get('window')
 
@@ -15,11 +17,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: 0,
-    borderTopColor: 'rgba(0,0,0,0.05)',
     borderWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: 10,
-    backgroundColor: 'white',
+    backgroundColor: appColors.appWhite,
+    borderColor: '#fff',
   },
   btnStyle: {
     justifyContent: 'space-evenly',
@@ -45,11 +47,17 @@ export default function ActionButton({ navigation }) {
       <View style={styles.btnContainer}>
         <Button
           title={en.IN}
-          backgroundColor="rgba(0,128,0, 0.8)"
+          backgroundColor={appColors.appGreen}
           color="white"
           style={styles.btnStyle}
           txtStyle={styles.txtStyle}
-          icon={<AntDesign name="pluscircleo" size={26} color="white" />}
+          icon={
+            <AntDesign
+              name="pluscircleo"
+              size={26}
+              color={appColors.appWhite}
+            />
+          }
           onPress={() => {
             navigation.navigate('EntryScreen', {
               title: en.CASH_IN_ENTRY,
@@ -61,11 +69,17 @@ export default function ActionButton({ navigation }) {
       <View style={styles.btnContainer}>
         <Button
           title={en.OUT}
-          backgroundColor="rgba(255,0,0, 0.8)"
+          backgroundColor={appColors.appRed}
           color="white"
           style={styles.btnStyle}
           txtStyle={styles.txtStyle}
-          icon={<AntDesign name="minuscircleo" size={26} color="white" />}
+          icon={
+            <AntDesign
+              name="minuscircleo"
+              size={26}
+              color={appColors.appWhite}
+            />
+          }
           onPress={() => {
             navigation.navigate('EntryScreen', {
               title: en.CASH_OUT_ENTRY,

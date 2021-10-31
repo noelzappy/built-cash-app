@@ -8,6 +8,7 @@ const colors = {
   green: 'rgb(0,128,0)',
   red: 'rgb(255,0,0)',
   black: '#000',
+  appBase: '#231d54',
 }
 
 export default colors
