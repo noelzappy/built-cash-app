@@ -12,7 +12,7 @@ export const appColors = {
   appDarkAsh: '#686868',
   appMediumAsh: '#A5A5A5',
   appLightAsh: '#E1DDDD',
-  appRed: '#E20909',
+  appRed: '#f07167',
   appDirtyWhite: '#F0F3FA',
   appBase: '#2F5794',
   _appBase: '#00BFA6',

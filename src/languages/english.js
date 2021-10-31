@@ -13,6 +13,7 @@ const en = {
   TOTAL_OUT: 'Total Out',
   IN: 'IN',
   OUT: 'OUT',
+  NET: 'NET',
   DATE: 'Date',
   BALANCE: 'Balance',
   NET_BALANCE: 'Net Balance',
@@ -52,6 +53,12 @@ const en = {
   NO_ENTRY_YET: 'No Entry Yet',
   TODAY: 'Today',
   SINGLE_DAY: 'Single Day',
+  TODAYS_SUMMARY: "Today's Summary",
+  IN_DETAILS: 'IN Details',
+  OUT_DETAILS: 'OUT Details',
+  RUNNING_BALANCE: 'Running Balance',
+  ONLINE_BALANCE: 'Online Balance',
+  TOTAL_RUNNING_BALANCE: 'Total Running Balance',
 }
 
 export default en
