@@ -42,8 +42,6 @@ export default function Reports({ navigation, route }) {
     generateReport()
   }, [allTransactions])
 
-  // console.log(data)
-
   return (
     <>
       <ReportTab data={data} navigation={navigation} route={route} />

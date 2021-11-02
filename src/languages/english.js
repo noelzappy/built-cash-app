@@ -30,7 +30,7 @@ const en = {
   TRANSACTION_SAVED: 'Transaction saved successfully',
   TRANSACTION_SAVE_FAILED: 'Unable to save the transaction',
   ERROR: 'Error',
-  ENTER_DESCRIPTION: 'Enter description',
+  ENTER_DESCRIPTION: 'Enter item names,  description, quantity, etc',
   BUSINESS_SETUP: 'Business Setup',
   ENTER_BUSINESS_NAME: 'Enter business name',
   AMOUNT_IN_HAND: 'Amount in hand',
@@ -59,6 +59,11 @@ const en = {
   RUNNING_BALANCE: 'Running Balance',
   ONLINE_BALANCE: 'Online Balance',
   TOTAL_RUNNING_BALANCE: 'Total Running Balance',
+  SAVE_ENTRY: 'Save Entry',
+  WEEK_AGO: 'A Week Ago',
+  MONTH_AGO: ' A Month Ago',
+  YEAR_AGO: 'A  Year Ago',
+  THIS_MONTH: 'This Month',
 }
 
 export default en

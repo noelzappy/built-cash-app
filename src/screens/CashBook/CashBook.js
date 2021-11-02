@@ -26,13 +26,13 @@ import {
   setTodaysBalance,
   watchCashInHand,
   fetchCashInHand,
-  getBalanceOfDay,
 } from '../../utils/actions'
 import { appColors, appStyles } from '../../theme/globalStyle'
 import NotFound from '../../../assets/images/not_found.svg'
 import en from '../../languages/english'
 import CustomCard from '../../components/CustomCard/CustomCard'
 import DetailsCard from '../../components/DetailsCard'
+import DetailBottomSheet from '../../components/DetailBottomSheet/DetailBottomSheet'
 
 const { height } = Dimensions.get('window')
 
@@ -54,9 +54,7 @@ export default function CashBook({ navigation, route }) {
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
 
   const snapPoints = useMemo(() => ['30%', '90%'], [])
-  const nowDate = new Date()
-  const today =
-    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  const today = moment().format('DD-MM-YYYY')
 
   const handleSheetChanges = useCallback((index) => {
     if (index == -1) {
@@ -74,6 +72,7 @@ export default function CashBook({ navigation, route }) {
     let paidOfflineOUT = 0
     if (!_.isEmpty(allTransactions) && !_.isEmpty(allTransactions[today])) {
       Object.entries(allTransactions[today]).forEach((item) => {
+        console.log(item)
         if (!item.includes('balanceOfDay')) {
           tempArray.push({
             key: item[0],
@@ -133,11 +132,6 @@ export default function CashBook({ navigation, route }) {
         activeOpacity={0.6}
         onPress={() => {
           setOpenBottomSheet(!openBottomSheet)
-          if (openBottomSheet) {
-            bottomSheetRef.current.close()
-          } else {
-            bottomSheetRef.current.expand()
-          }
         }}
       >
         <BalanceCard />
@@ -185,218 +179,23 @@ export default function CashBook({ navigation, route }) {
           activeOpacity={0.5}
           onPress={() => {
             setOpenBottomSheet(false)
-            bottomSheetRef.current.close()
           }}
         />
       ) : null}
 
       <ActionButton navigation={navigation} />
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        enablePanDownToClose
-        handleStyle={{
-          backgroundColor: appColors.appWhite,
-          borderTopStartRadius: width(12),
-          borderTopEndRadius: width(12),
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            padding: width(4),
-            backgroundColor: appColors.appWhite,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomColor: appColors.appLightAsh,
-              borderBottomWidth: width(0.07),
-              paddingBottom: pHeight(1.5),
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: 'rgba(47, 87, 148, 0.2)',
-                padding: width(3),
-                borderRadius: width(1),
-              }}
-            >
-              <FontAwesome
-                name="bar-chart"
-                size={width(7)}
-                color={appColors.appBase}
-              />
-            </View>
-            <View style={{ paddingHorizontal: width(3) }}>
-              <Text
-                style={{ ...appStyles.textMaxi, color: appColors.appDarkAsh }}
-              >
-                {`${en.TODAYS_SUMMARY} (${moment().format('Do MMM')})`}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottomColor: appColors.appLightAsh,
-              borderBottomWidth: width(0.07),
-              paddingBottom: pHeight(1.5),
-            }}
-          >
-            <CustomCard color="green" amount={totalIn} />
-            <Entypo
-              name="minus"
-              size={width(7)}
-              color={appColors.appDarkAsh}
-              style={{ paddingTop: pHeight(2) }}
-            />
-            <CustomCard color="red" amount={totalOut} />
-            <MaterialCommunityIcons
-              name="equal"
-              size={width(7)}
-              color={appColors.appDarkAsh}
-              style={{ paddingTop: pHeight(2) }}
-            />
-            <CustomCard color="blue" amount={totalIn - totalOut} />
-          </View>
-
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <DetailsCard
-              type="IN"
-              cashAmount={totalINPaidOffline}
-              onlineAmount={totalINPaidOnline}
-            />
-            <DetailsCard
-              type="OUT"
-              cashAmount={totalOUTPaidOffline}
-              onlineAmount={totalOUTPaidOnline}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderTopColor: appColors.appLightAsh,
-              borderTopWidth: width(0.07),
-              marginTop: pHeight(2),
-              paddingTop: pHeight(2),
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: 'rgba(47, 87, 148, 0.2)',
-                padding: width(3),
-                borderRadius: width(1),
-              }}
-            >
-              <MaterialIcons
-                name="swap-vert"
-                size={width(7)}
-                color={appColors.appBase}
-              />
-            </View>
-            <View style={{ paddingHorizontal: width(3) }}>
-              <Text
-                style={{ ...appStyles.textMaxi, color: appColors.appDarkAsh }}
-              >
-                {`${en.RUNNING_BALANCE}`}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'rgba(47, 87, 148, 0.1)',
-              padding: width(3),
-              borderRadius: width(1),
-              marginTop: pHeight(2),
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: width(2),
-              }}
-            >
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appBlue }}
-                >
-                  {en.CASH_IN_HAND}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appGreen }}
-                >
-                  {`${businessDetails.country.currency[0]} ${totalAmountInHand}`}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: width(2),
-                paddingVertical: pHeight(2),
-              }}
-            >
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appBlue }}
-                >
-                  {en.ONLINE_BALANCE}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appGreen }}
-                >
-                  {`${businessDetails.country.currency[0]} ${totalINPaidOnline}`}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                borderTopColor: appColors.appDarkAsh,
-                borderTopWidth: width(0.07),
-                marginTop: pHeight(2),
-                paddingTop: pHeight(2),
-                justifyContent: 'space-between',
-                paddingHorizontal: width(2),
-              }}
-            >
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appBlue }}
-                >
-                  {en.TOTAL_RUNNING_BALANCE}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  style={{ ...appStyles.textMaxi, color: appColors.appGreen }}
-                >
-                  {`${businessDetails.country.currency[0]} ${
-                    totalAmountInHand + totalINPaidOnline
-                  }`}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </BottomSheet>
+      <DetailBottomSheet
+        openSheet={openBottomSheet}
+        totalIn={totalIn}
+        totalOut={totalOut}
+        totalINPaidOnline={totalINPaidOnline}
+        totalINPaidOffline={totalINPaidOffline}
+        totalOUTPaidOffline={totalOUTPaidOffline}
+        totalOUTPaidOnline={totalOUTPaidOnline}
+        title={`${en.TODAYS_SUMMARY} (${moment().format('Do MMM')})`}
+        callBack={handleSheetChanges}
+        extra
+      />
     </View>
   )
 }

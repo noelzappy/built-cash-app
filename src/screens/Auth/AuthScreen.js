@@ -145,7 +145,10 @@ const AuthScreen = ({ navigation }) => {
                 .catch((err) => {
                   console.log(err)
                 })
-              db.ref(`${user.uid}/transactions/totalAmount`).set(amountInHand)
+              db.ref(`${user.uid}/transactions/totalAmount`).set({
+                offlineBalance: amountInHand,
+                onlineBalance: 0,
+              })
             }
           })
 
@@ -271,6 +274,9 @@ const AuthScreen = ({ navigation }) => {
                   description: `Error: ${err.message}`,
                   type: 'danger',
                 })
+                setIsLoading(true)
+              } finally {
+                setIsLoading(true)
               }
             } else {
               showMessage({

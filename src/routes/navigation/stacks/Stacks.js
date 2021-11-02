@@ -76,6 +76,7 @@ export const HomeNavigator = () => (
       component={EntryScreen}
       options={({ route }) => ({
         title: route.params.title,
+        headerTintColor: appColors.appWhite,
       })}
     />
     <Stack.Screen

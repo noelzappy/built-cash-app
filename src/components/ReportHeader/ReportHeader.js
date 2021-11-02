@@ -1,74 +1,100 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { FontAwesome5 } from '@expo/vector-icons'
+import { FontAwesome5, AntDesign } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
+import { height, width } from 'react-native-dimension'
 import en from '../../languages/english'
-import { colors, globalStyles } from '../../theme'
+import { appColors, appStyles } from '../../theme/globalStyle'
 
 const styles = StyleSheet.create({
   text: {
-    color: colors.darkPurple,
+    ...appStyles.textRegular,
+    color: appColors.appBase,
     textAlign: 'center',
-    fontSize: 16,
   },
-  figures_in: {
+  figures: {
+    ...appStyles.textMaxi,
     textAlign: 'center',
-    fontSize: 20,
-    color: colors.green,
-    fontWeight: 'bold',
-  },
-  figures_out: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: colors.red,
-    fontWeight: 'bold',
-  },
-  figures_bal: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: colors.green,
-    fontWeight: 'bold',
-  },
-  figures_bal_red: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: colors.red,
-    fontWeight: 'bold',
   },
   signs: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    flexGrow: 70,
+    ...appStyles.textMaxi,
   },
 })
 
 export default function ReportHeader(props) {
   const { totalIn, totalOut, balance } = props
   return (
-    <View style={globalStyles.allCardContainer}>
+    <View
+      style={{
+        ...appStyles.mainCard,
+        backgroundColor: appColors.appWhite,
+        flexDirection: 'row',
+        marginVertical: height(2),
+        width: '100%',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        elevation: 1,
+        alignItems: 'center',
+      }}
+    >
       <View style={{ flexGrow: 100 }}>
         <Text style={styles.text}>{en.TOTAL_IN}</Text>
-        <Text style={styles.figures_in}>{totalIn}</Text>
+        <Text
+          style={{
+            ...styles.figures,
+            color: appColors.appGreen,
+          }}
+        >
+          {totalIn}
+        </Text>
       </View>
 
       <View style={styles.signs}>
-        <FontAwesome5 name="minus" size={18} color={colors.darkPurple} />
+        <FontAwesome5
+          name="minus"
+          size={width(4)}
+          color={appColors.appDarkAsh}
+        />
       </View>
 
       <View style={{ flexGrow: 100 }}>
         <Text style={styles.text}>{en.TOTAL_OUT}</Text>
-        <Text style={styles.figures_out}>{totalOut}</Text>
+        <Text
+          style={{
+            ...styles.figures,
+            color: appColors.appRed,
+          }}
+        >
+          {totalOut}
+        </Text>
       </View>
 
       <View style={styles.signs}>
-        <FontAwesome5 name="equals" size={18} color={colors.darkPurple} />
+        <FontAwesome5
+          name="equals"
+          size={width(4)}
+          color={appColors.appDarkAsh}
+        />
       </View>
 
       <View style={{ flexGrow: 120 }}>
         <Text style={styles.text}>{en.NET_BALANCE}</Text>
-        <Text style={balance < 0 ? styles.figures_bal_red : styles.figures_bal}>
+        <Text
+          style={{
+            ...styles.figures,
+            color: balance > 0 ? appColors.appGreen : appColors.appRed,
+          }}
+        >
           {balance}
         </Text>
+      </View>
+      <View style={{ width: '5%', maxWidth: '5%' }}>
+        <AntDesign
+          name="caretdown"
+          size={width(5)}
+          color={appColors.appBase}
+          style={{ marginTop: 5 }}
+        />
       </View>
     </View>
   )

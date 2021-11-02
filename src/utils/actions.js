@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import moment from 'moment'
 
 export const LOGIN_USER = 'LOGIN_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
@@ -99,9 +100,7 @@ export const setBusinessDetails = (data) => {
 }
 
 export const saveTransaction = (data) => (dispatch) => {
-  const nowDate = new Date()
-  const today =
-    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  const today = moment().format('DD-MM-YYYY')
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -122,9 +121,7 @@ export const saveTransaction = (data) => (dispatch) => {
 }
 
 export const updateBalanceOfDay = (balance) => (dispatch) => {
-  const nowDate = new Date()
-  const today =
-    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
+  const today = moment().format('DD-MM-YYYY')
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -189,14 +186,36 @@ export const fetchCashInHand = () => (dispatch) => {
 export const updateCashInHand = (data) => (dispatch) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+      const { onlineBalance, offlineBalance } = data.totalAmountInHand
+
       let tempAmount = 0
-      if (data.entry.entryType === 'cashIn') {
+
+      if (
+        data.entry.entryType === 'cashIn' &&
+        data.entry.paymentMethod === 'online'
+      ) {
         tempAmount = parseFloat(data.entry.amount)
-      } else {
+      }
+
+      if (
+        data.entry.entryType === 'cashOut' &&
+        data.entry.paymentMethod === 'offline'
+      ) {
         tempAmount = -Math.abs(parseFloat(data.entry.amount))
       }
-      const finalAmount = parseFloat(data.totalAmountInHand) + tempAmount
 
+      const finalAmount =
+        data.entry.paymentMethod === 'online'
+          ? {
+              onlineBalance: parseFloat(onlineBalance) + tempAmount,
+              offlineBalance,
+            }
+          : {
+              onlineBalance,
+              offlineBalance: parseFloat(offlineBalance) + tempAmount,
+            }
+
+      // console.log(finalAmount)
       firebase
         .database()
         .ref(`${user.uid}/transactions/totalAmount`)

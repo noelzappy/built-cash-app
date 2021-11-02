@@ -5,7 +5,6 @@ import { width, height } from 'react-native-dimension'
 import { Card } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
 import en from '../../languages/english'
-import { colors, globalStyles } from '../../theme'
 import { appColors, appStyles } from '../../theme/globalStyle'
 
 const styles = StyleSheet.create({
@@ -32,7 +31,7 @@ export default function BalanceCard() {
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.balances}>
-          {`${businessDetails.country.currency[0]} ${totalAmountInHand}`}
+          {`${businessDetails.country.currency[0]} ${totalAmountInHand.offlineBalance}`}
         </Text>
         <Text style={styles.balanceDescription}>{en.CASH_IN_HAND}</Text>
       </View>

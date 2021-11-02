@@ -1,59 +1,67 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
-import DatePicker from 'react-native-datepicker'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Actionsheet, useDisclose } from 'native-base'
+import CustomDatePicker from 'components/DatePicker'
+import { width, height } from 'react-native-dimension'
+import moment from 'moment'
 import { colors } from '../../theme'
+import { appColors } from '../../theme/globalStyle'
+import en from '../../languages/english'
 
-export default function ReportFilter() {
+export default function ReportFilter(props) {
+  const { getFilterDate } = props
+
   const today = new Date()
 
   const [fromDate, setFromDate] = useState(today)
   const [toDate, setToDate] = useState(today)
   const { isOpen, onOpen, onClose } = useDisclose()
+
+  const fromDateHandler = (d) => {
+    setFromDate(d)
+    getFilterDate({ fromDate, toDate })
+  }
+  const toDateHandler = (d) => {
+    setToDate(d)
+    getFilterDate({ fromDate, toDate })
+  }
+
+  useEffect(() => {
+    getFilterDate({ fromDate, toDate })
+  }, [fromDate, toDate])
   return (
     <View
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        margin: 10,
+        marginTop: height(3),
+        alignItems: 'center',
+        marginHorizontal: width(3),
       }}
     >
       <View>
-        <DatePicker
-          date={fromDate}
-          placeholder="From Date"
-          format="DD/MM/YY"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          onDateChange={(d) => setFromDate(d)}
-          showIcon={false}
-        />
+        <CustomDatePicker onDateChange={fromDateHandler} />
       </View>
       <View>
-        <DatePicker
-          date={toDate}
-          placeholder="To Date"
-          format="DD/MM/YY"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          onDateChange={(d) => setToDate(d)}
-          showIcon={false}
-        />
+        <CustomDatePicker onDateChange={toDateHandler} />
       </View>
       <View>
         <FontAwesome5.Button
           name="sliders-h"
           backgroundColor="transparent"
-          color={colors.darkPurple}
-          size={24}
+          color={appColors.appBase}
+          size={width(7)}
           style={{
-            borderWidth: 0.4,
-            borderColor: colors.darkPurple,
+            justifyContent: 'center',
+            backgroundColor: appColors.appWhite,
+            alignItems: 'center',
           }}
           onPress={() => {
             onOpen()
           }}
+          aciveOpacity={0.7}
+          underlayColor="white"
         />
       </View>
 
@@ -66,7 +74,7 @@ export default function ReportFilter() {
               onClose()
             }}
           >
-            Today
+            {en.TODAY}
           </Actionsheet.Item>
           <Actionsheet.Item
             onPress={() => {
@@ -80,7 +88,7 @@ export default function ReportFilter() {
               onClose()
             }}
           >
-            A Week Ago
+            {en.WEEK_AGO}
           </Actionsheet.Item>
           <Actionsheet.Item
             onPress={() => {
@@ -94,7 +102,7 @@ export default function ReportFilter() {
               onClose()
             }}
           >
-            A Month Ago
+            {en.MONTH_AGO}
           </Actionsheet.Item>
           <Actionsheet.Item
             onPress={() => {
@@ -106,9 +114,10 @@ export default function ReportFilter() {
               setFromDate(d)
               setToDate(today)
               onClose()
+              getFilterDate({ fromDate, toDate })
             }}
           >
-            A Year Ago
+            {en.YEAR_AGO}
           </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>

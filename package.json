@@ -46,6 +46,7 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-modal": "^13.0.0",
+    "react-native-modern-datepicker": "^1.0.0-beta.91",
     "react-native-onboarding-swiper": "^1.1.4",
     "react-native-pager-view": "5.0.12",
     "react-native-paper": "^4.9.2",

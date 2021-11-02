@@ -1,7 +1,8 @@
 import React from 'react'
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, StyleSheet, View } from 'react-native'
+import { width, height } from 'react-native-dimension'
 import en from 'languages/english'
-import { colors } from 'theme'
+import { appColors, appStyles } from '../../theme/globalStyle'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,16 +13,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: 0,
-    borderTopColor: 'rgba(0,0,0,0.05)',
-    borderWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: 50,
     paddingBottom: 10,
-    backgroundColor: colors.darkPurple,
+    paddingTop: height(1),
+    borderTopStartRadius: width(2),
+    marginTop: height(3),
+    borderColor: appColors.appDarkAsh,
+    backgroundColor: appColors.appBase,
+    borderTopEndRadius: width(2),
   },
   txtStyle: {
-    fontSize: 20,
-    color: '#fff',
+    ...appStyles.textMaxi,
+    color: appColors.appWhite,
   },
 })
 
