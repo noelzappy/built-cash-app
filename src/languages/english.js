@@ -64,6 +64,7 @@ const en = {
   MONTH_AGO: ' A Month Ago',
   YEAR_AGO: 'A  Year Ago',
   THIS_MONTH: 'This Month',
+  CUSTOMER: 'Customer',
 }
 
 export default en

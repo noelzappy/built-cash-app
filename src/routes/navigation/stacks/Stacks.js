@@ -1,7 +1,12 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { colors } from 'theme'
+import moment from 'moment'
+import { TouchableOpacity } from 'react-native'
 import Settings from 'screens/settings'
+import { width } from 'react-native-dimension'
+import { MaterialIcons } from '@expo/vector-icons'
+import { useDispatch } from 'react-redux'
+import { deleteEntry } from 'utils/actions'
 import Reports from '../../../screens/Reports'
 import CashBook from '../../../screens/CashBook/CashBook'
 import TopTabs from '../TopTabs/TopTabs'
@@ -59,48 +64,82 @@ export const ReportTab = () => (
   </Stack.Navigator>
 )
 
-export const HomeNavigator = () => (
-  <Stack.Navigator headerMode="screen" screenOptions={navigationProps}>
-    <Stack.Screen
-      name="Home"
-      component={TopTabs}
-      options={({ navigation }) => ({
-        title: 'Home',
-        headerRight: () => <HeaderRight navigation={navigation} />,
-        headerTitle: () => <HeaderTitle />,
-      })}
-    />
-    <Stack.Screen name="Settings" component={Settings} />
-    <Stack.Screen
-      name="EntryScreen"
-      component={EntryScreen}
-      options={({ route }) => ({
-        title: route.params.title,
-        headerTintColor: appColors.appWhite,
-      })}
-    />
-    <Stack.Screen
-      name="SingleReport"
-      component={SingleReport}
-      options={({ route }) => ({
-        title: `${en.REPORT_OF} ${route.params.item.date}`,
-      })}
-    />
+export const HomeNavigator = () => {
+  const dispatch = useDispatch()
+  return (
+    <Stack.Navigator headerMode="screen" screenOptions={navigationProps}>
+      <Stack.Screen
+        name="Home"
+        component={TopTabs}
+        options={({ navigation }) => ({
+          title: 'Home',
+          headerRight: () => <HeaderRight navigation={navigation} />,
+          headerTitle: () => <HeaderTitle />,
+        })}
+      />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="EntryScreen"
+        component={EntryScreen}
+        options={({ route }) => ({
+          title: route.params.title,
+          headerTintColor: appColors.appWhite,
+        })}
+      />
+      <Stack.Screen
+        name="SingleReport"
+        component={SingleReport}
+        options={({ route }) => {
+          const { date } = route.params.item
+          return {
+            title: `${en.REPORT_OF} ${moment(date.split('-').join('/')).format(
+              'DD MMM',
+            )}`,
+            headerTintColor: appColors.appWhite,
+          }
+        }}
+      />
 
-    <Stack.Screen
-      name="SingleEntry"
-      component={SingleEntry}
-      options={({ route }) => ({
-        title: en.ENTRY_DETAIL,
-      })}
-    />
+      <Stack.Screen
+        name="SingleEntry"
+        component={SingleEntry}
+        options={({ route, navigation }) => ({
+          title: en.ENTRY_DETAIL,
+          headerTintColor: appColors.appWhite,
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                style={{ paddingRight: width(3), padding: width(2) }}
+                onPress={() => {
+                  dispatch(
+                    deleteEntry({
+                      id: route.params.itemId,
+                      date: route.params.itemDate,
+                    }),
+                  )
+                  navigation.navigate('Home')
+                }}
+              >
+                <MaterialIcons
+                  name="delete"
+                  size={width(7)}
+                  color={appColors.appWhite}
+                />
+              </TouchableOpacity>
+            )
+          },
+        })}
+      />
 
-    <Stack.Screen
-      name="EditEntry"
-      component={EditEntry}
-      options={({ route }) => ({
-        title: en.EDIT_ENTRY,
-      })}
-    />
-  </Stack.Navigator>
-)
+      <Stack.Screen
+        name="EditEntry"
+        component={EditEntry}
+        options={({ route }) => ({
+          title: en.EDIT_ENTRY,
+
+          headerTintColor: appColors.appWhite,
+        })}
+      />
+    </Stack.Navigator>
+  )
+}

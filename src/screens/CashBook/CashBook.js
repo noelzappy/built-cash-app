@@ -72,7 +72,6 @@ export default function CashBook({ navigation, route }) {
     let paidOfflineOUT = 0
     if (!_.isEmpty(allTransactions) && !_.isEmpty(allTransactions[today])) {
       Object.entries(allTransactions[today]).forEach((item) => {
-        console.log(item)
         if (!item.includes('balanceOfDay')) {
           tempArray.push({
             key: item[0],

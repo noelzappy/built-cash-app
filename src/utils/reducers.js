@@ -24,8 +24,6 @@ const initialState = {
   balanceOfDay: 0,
 }
 
-const db = firebase.database()
-
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_BUSINESS_DETAILS: {
@@ -35,7 +33,6 @@ const mainReducer = (state = initialState, action) => {
       return state
     }
     case FETCH_TRANSACTIONS: {
-      // console.log(action.payload.transfers)
       return {
         ...state,
         allTransactions: action.payload,

@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Dimensions, TouchableOpacity } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
-import BalanceCard from '../../components/BalanceCard/BalanceCard'
+import { width, height as pHeight } from 'react-native-dimension'
 import CashTable from '../../components/CashTable/CashTable'
 import DynamicBalanceCard from '../../components/DynamicBalanceCard'
 import { getBalanceOfDay } from '../../utils/actions'
+import { appColors } from '../../theme/globalStyle'
 
 const { height } = Dimensions.get('window')
 
@@ -22,10 +23,6 @@ export default function SingleReport({ navigation, route }) {
   const [totalOut, setTotalOut] = useState(0)
 
   const sortLocalData = useCallback(() => {
-    const nowDate = new Date()
-    const today =
-      `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-
     const tempArray = []
     let total_in = 0
     let total_out = 0
@@ -52,7 +49,6 @@ export default function SingleReport({ navigation, route }) {
       })
     } else {
       setLocalData(tempArray)
-      console.log('Got undefined')
     }
 
     setTotalIn(total_in)
@@ -62,13 +58,12 @@ export default function SingleReport({ navigation, route }) {
 
   useEffect(() => {
     dispatch(getBalanceOfDay(item.date))
-
     Object.entries(allTransactions).forEach((entry) => {
       if (entry.includes(item.date)) {
         setData(entry)
       }
     })
-    sortLocalData()
+    // sortLocalData()
   }, [])
 
   useEffect(() => {
@@ -76,26 +71,20 @@ export default function SingleReport({ navigation, route }) {
   }, [data])
 
   return (
-    <View style={{ flex: 1 }}>
-      <DynamicBalanceCard
-        data={{
-          todaysBalance: totalIn - totalOut,
-          totalAmountInHand: balanceOfDay,
-        }}
-      />
-      <View
-        style={{
-          flex: 1,
-          marginBottom: height - (height - 200),
-        }}
-      >
-        <CashTable
-          data={localData}
-          totalInOut={{ totalIn, totalOut }}
-          navigation={navigation}
-          route={route}
+    <View style={{ flex: 1, backgroundColor: appColors.appDirtyWhite }}>
+      <TouchableOpacity activeOpacity={0.8}>
+        <DynamicBalanceCard
+          balance={totalIn - totalOut}
+          cashInHand={balanceOfDay}
         />
-      </View>
+      </TouchableOpacity>
+
+      <CashTable
+        data={localData}
+        totalInOut={{ totalIn, totalOut }}
+        navigation={navigation}
+        route={route}
+      />
     </View>
   )
 }

@@ -14,6 +14,8 @@ import DatePicker from 'react-native-datepicker'
 import { Input, Button, TextArea } from 'native-base'
 import * as Contacts from 'expo-contacts'
 import { AntDesign } from '@expo/vector-icons'
+import moment from 'moment'
+import { width, height as pHeight } from 'react-native-dimension'
 import { colors, globalStyles } from '../../theme'
 import en from '../../languages/english'
 import {
@@ -22,39 +24,34 @@ import {
   updateBalanceOfDay,
 } from '../../utils/actions'
 
+import { appColors, appStyles } from '../../theme/globalStyle'
+import CustomDatePicker from '../../components/DatePicker'
+import ContactsPicker from '../../components/ContactsPicker/ContactsPicker'
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  Input: {
-    marginVertical: 15,
-    alignItems: 'center',
-    marginHorizontal: 20,
-  },
   paymentModeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 20,
+    marginHorizontal: width(3),
     alignItems: 'center',
-    paddingStart: 5,
-    marginVertical: 7,
-  },
-  paymentModTabContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 50,
+    paddingStart: width(1),
+    marginVertical: pHeight(2),
   },
   paymentMethodActive: {
-    backgroundColor: colors.darkPurple,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 30,
+    backgroundColor: appColors.appBase,
+    paddingVertical: pHeight(1),
+    paddingHorizontal: width(5),
+    borderRadius: width(12),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paymentMethodInActive: {
-    paddingVertical: 8,
-    paddingEnd: 15,
-    paddingStart: 5,
-    borderRadius: 30,
+    paddingVertical: pHeight(1),
+    paddingEnd: width(4),
+    paddingStart: width(3),
+    borderRadius: width(12),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textActive: {
     fontSize: 20,
@@ -70,34 +67,15 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
-  button: {
-    backgroundColor: colors.green,
-    marginHorizontal: 20,
-  },
-  button_out: {
-    backgroundColor: colors.red,
-    marginHorizontal: 20,
-  },
-  extraContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginTop: 30,
-  },
-  desContainer: {
-    margin: 20,
-  },
 })
-const { height, width } = Dimensions.get('window')
+const { height } = Dimensions.get('window')
 
 export default function EditEntry({ route, navigation }) {
   const { itemId, entryItem, itemDate } = route.params
-
-  const nowDate = new Date()
-  const today =
-    `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`.toString()
-
-  const { totalAmountInHand } = useSelector((state) => state.mainReducer)
+  const today = moment().format('DD-MM-YYYY')
+  const { totalAmountInHand, businessDetails } = useSelector(
+    (state) => state.mainReducer,
+  )
   const dispatch = useDispatch()
   const [entryAmount, setEntryAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('cash')
@@ -158,8 +136,9 @@ export default function EditEntry({ route, navigation }) {
           fontSize: 18,
         },
         style: {
-          paddingTop: 40,
+          paddingTop: pHeight(2),
         },
+        hideOnPress: true,
       })
       setIsSaving(false)
       return
@@ -172,73 +151,81 @@ export default function EditEntry({ route, navigation }) {
       tempAmount = -Math.abs(parseFloat(entryAmount))
     }
     const finalAmount =
-      parseFloat(totalAmountInHand - entryItem.amount) + tempAmount
+      parseFloat(
+        totalAmountInHand.onlineBalance +
+          totalAmountInHand.offlineBalance -
+          entryItem.amount,
+      ) + tempAmount
 
     dispatch(updateBalanceOfDay(finalAmount))
 
     dispatch(updateEntry({ itemId, itemDate, entry }))
-    const tempCashInHand = parseFloat(totalAmountInHand - entryItem.amount)
 
-    dispatch(updateCashInHand({ totalAmountInHand: tempCashInHand, entry }))
+    const tempCashInHand =
+      paymentMethod === 'online'
+        ? parseFloat(totalAmountInHand.onlineBalance - entryItem.amount)
+        : parseFloat(totalAmountInHand.offlineBalance - entryItem.amount)
+
+    if (paymentMethod === 'online') {
+      dispatch(
+        updateCashInHand({
+          totalAmountInHand: {
+            offlineBalance: totalAmountInHand.offlineBalance,
+            onlineBalance: tempAmount,
+          },
+          entry,
+        }),
+      )
+    } else {
+      dispatch(
+        updateCashInHand({
+          totalAmountInHand: {
+            offlineBalance: tempAmount,
+            onlineBalance: totalAmountInHand.onlineBalance,
+          },
+          entry,
+        }),
+      )
+    }
 
     showMessage({
       type: 'success',
       message: en.SUCCESS,
       description: en.TRANSACTION_SAVED,
       hideOnPress: true,
+      backgroundColor: appColors.appGreen,
     })
-    setEntryAmount('')
-    setDescription('')
-    setSelectedCustomer(null)
-    setDate(today)
+    // setEntryAmount('')
+    // setDescription('')
+    // setSelectedCustomer(null)
+    // setDate(today)
     setIsSaving(false)
 
     navigation.navigate('Home')
   }
 
-  const selectCustomer = async () => {
-    const { status } = await Contacts.requestPermissionsAsync()
-    if (status === 'granted') {
-      const { data } = await Contacts.getContactsAsync()
-
-      if (data.length > 0) {
-        setAllContact(data)
-      }
-      setShowContactsModal(true)
-    }
+  const onDateChange = (d) => {
+    setDate(moment(d).format('DD-MM-YYYY'))
   }
-
-  const renderContactList = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          paddingVertical: height - (height - 15),
-          backgroundColor: colors.lightGrayPurple,
-          margin: height - (height - 3),
-          paddingHorizontal: height - (height - 10),
-        }}
-        onPress={() => {
-          setSelectedCustomer(item)
-          setShowContactsModal(false)
-        }}
-      >
-        <Text
-          style={{
-            ...globalStyles.normalFontSize,
-            justifyContent: 'flex-start',
-          }}
-        >
-          {item.name}
-        </Text>
-      </TouchableOpacity>
-    )
+  const contactsHandler = (contact) => {
+    setSelectedCustomer(contact)
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.Input}>
+    <View style={{ flex: 1, backgroundColor: appColors.appDirtyWhite }}>
+      <View
+        style={{
+          marginVertical: pHeight(3),
+          alignItems: 'center',
+          marginHorizontal: width(3),
+          borderWidth: width(0.07),
+          borderColor: appColors.appMediumAsh,
+          borderRadius: width(0.7),
+          paddingVertical: pHeight(0.3),
+          backgroundColor: appColors.appWhite,
+        }}
+      >
         <Input
-          width="100%"
           value={entryAmount}
           onChangeText={(num) => {
             onAmountValueChange(num)
@@ -248,23 +235,31 @@ export default function EditEntry({ route, navigation }) {
           InputLeftElement={
             <Text
               style={{
-                fontSize: 25,
-                color: colors.gray,
+                ...appStyles.textMaxi,
+                color: appColors.appDarkAsh,
                 padding: 7,
               }}
             >
-              GHS |
+              {businessDetails.country.currency[0]} |
             </Text>
           }
-          fontSize={20}
-          borderColor={colors.lightPurple}
+          size="xl"
+          borderColor={appColors.appMediumAsh}
+          variant="unstyled"
         />
       </View>
 
       <View style={styles.paymentModeContainer}>
         <Text style={styles.label}>{en.PAYMENT_METHOD}</Text>
-
-        <View style={styles.paymentModTabContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: appColors.appMediumAsh,
+            borderRadius: width(12),
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <TouchableOpacity
             style={
               paymentMethod === 'cash'
@@ -292,7 +287,7 @@ export default function EditEntry({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.desContainer}>
+      <View style={{ margin: width(3), backgroundColor: appColors.appWhite }}>
         <TextArea
           h={20}
           placeholder={en.ENTER_DESCRIPTION}
@@ -303,89 +298,45 @@ export default function EditEntry({ route, navigation }) {
           value={description}
           onChangeText={(text) => setDescription(text)}
           totalLines={3}
+          size="2xl"
+          borderRadius={width(3)}
+          variant="unstyled"
+          style={{ borderRadius: width(2) }}
         />
       </View>
-      <View style={styles.extraContainer}>
-        <View>
-          <DatePicker
-            format="DD-MM-YYYY"
-            showIcon={false}
-            placeholder={date}
-            date={date}
-            onDateChange={(d) => {
-              setDate(d)
-            }}
-            onCloseModal={() => {}}
-          />
-        </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            selectCustomer()
-          }}
-          style={{
-            backgroundColor: colors.lightPurple,
-            padding: 5,
-          }}
-        >
-          <Text>{en.ADD_CUSTOMER}</Text>
-          {selectedCustomer ? <Text>{selectedCustomer.name}</Text> : null}
-        </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: width(4),
+          marginTop: 30,
+        }}
+      >
+        <CustomDatePicker onDateChange={onDateChange} />
+
+        <ContactsPicker setSelectedCustomer={contactsHandler} />
       </View>
 
       <View style={styles.buttonContainer}>
         <Button
-          style={styles.button}
+          style={{
+            backgroundColor: appColors.appGreen,
+            marginHorizontal: width(3),
+            height: pHeight(5.5),
+            elevation: 1,
+          }}
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
           }}
           isLoading={isSaving}
           isLoadingText="Updating Data"
+          size="lg"
         >
           {en.UPDATE_ENTRY}
         </Button>
       </View>
-
-      <Modal visible={showContactsModal} animationType="slide">
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => setShowContactsModal(false)}
-            style={{
-              alignItems: 'flex-start',
-              padding: 15,
-              justifyContent: 'center',
-            }}
-          >
-            <AntDesign name="close" size={26} color="black" />
-          </TouchableOpacity>
-          <View
-            style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
-          >
-            <Text style={{ ...globalStyles.headingText, textAlign: 'center' }}>
-              {en.CHOOSE_A_CUSTOMER}
-            </Text>
-          </View>
-        </View>
-
-        <View>
-          {allContact ? (
-            <FlatList
-              data={allContact}
-              renderItem={renderContactList}
-              keyExtractor={(item) => item.id}
-            />
-          ) : (
-            <View>
-              <Text>{en.CONTACT_PERMISSION_FAIL}</Text>
-            </View>
-          )}
-        </View>
-      </Modal>
     </View>
   )
 }

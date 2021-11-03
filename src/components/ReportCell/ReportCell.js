@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { width, height as pHeight } from 'react-native-dimension'
 import { appColors, appStyles } from 'theme/globalStyle'
+import moment from 'moment'
 import { colors } from '../../theme'
 
 const styles = StyleSheet.create({
@@ -51,7 +52,9 @@ export default function ReportCell(props) {
     >
       <DataTable.Row>
         <DataTable.Cell>
-          <Text style={styles.cardTimeText}>{time}</Text>
+          <Text style={styles.cardTimeText}>
+            {moment(time.split('-').join('/')).format('DD MMM')}
+          </Text>
         </DataTable.Cell>
         <DataTable.Cell>
           <Text style={{ ...styles.text, color: appColors.appGreen }}>

@@ -68,8 +68,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const { height } = Dimensions.get('window')
-
 export default function EntryScreen({ route, navigation }) {
   const { entryType } = route.params
 
@@ -107,7 +105,10 @@ export default function EntryScreen({ route, navigation }) {
     } else {
       tempAmount = -Math.abs(parseFloat(entryAmount))
     }
-    const finalAmount = parseFloat(totalAmountInHand) + tempAmount
+    const finalAmount =
+      parseFloat(totalAmountInHand.onlineBalance) +
+      parseFloat(totalAmountInHand.offlineBalance) +
+      tempAmount
 
     const entry = {
       paymentMethod,
@@ -154,6 +155,7 @@ export default function EntryScreen({ route, navigation }) {
     setSelectedCustomer(null)
     setDate(today)
     setIsSaving(false)
+    navigation.navigate('Home')
   }
 
   const onDateChange = (d) => {

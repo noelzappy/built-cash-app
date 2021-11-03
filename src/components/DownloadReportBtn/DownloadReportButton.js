@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     paddingBottom: 10,
     paddingTop: height(1),
-    borderTopStartRadius: width(2),
     marginTop: height(3),
     borderColor: appColors.appDarkAsh,
     backgroundColor: appColors.appBase,
-    borderTopEndRadius: width(2),
+    // borderTopEndRadius: width(2),
+    // borderTopStartRadius: width(2),
   },
   txtStyle: {
     ...appStyles.textMaxi,
