@@ -291,7 +291,7 @@ const AuthScreen = ({ navigation }) => {
           isLoading={isLoading}
           size="lg"
           style={{
-            backgroundColor: colors.appBase,
+            backgroundColor: appColors.appBase,
             marginVertical: height(2),
           }}
           height={height(5)}
@@ -325,7 +325,7 @@ const AuthScreen = ({ navigation }) => {
               }}
               size="lg"
               style={{
-                backgroundColor: colors.appBase,
+                backgroundColor: appColors.appBase,
                 marginVertical: height(2),
               }}
               isLoading={verifyingCode}
@@ -480,7 +480,7 @@ const AuthScreen = ({ navigation }) => {
                 }}
                 size="lg"
                 style={{
-                  backgroundColor: colors.appBase,
+                  backgroundColor: appColors.appBase,
                   padding: height(2),
                 }}
                 height={height(5)}

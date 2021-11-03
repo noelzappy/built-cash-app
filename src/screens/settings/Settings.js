@@ -1,9 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import Button from 'components/Button'
+import { Card, Button } from 'native-base'
 import { colors } from 'theme'
+import { width, height } from 'react-native-dimension'
+import { appStyles, appColors } from 'theme/globalStyle'
 import { logoutUser } from '../../utils/actions'
 
 const styles = StyleSheet.create({
@@ -28,20 +30,49 @@ const Settings = ({ route, navigation }) => {
   )
 
   return (
-    <View style={styles.root}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>{businessDetails.businessName}</Text>
-      <Text style={styles.title}>
-        {`Total Amount In Hand: ${totalAmountInHand}`}
-      </Text>
-      <Button
-        title="Logout"
-        color="white"
-        backgroundColor={colors.pink}
-        onPress={() => {
-          dispatch(logoutUser())
+    <View style={{ backgroundColor: appColors.appDirtyWhite }}>
+      <Card
+        style={{
+          ...appStyles.mainCard,
+          backgroundColor: appColors.appWhite,
+          paddingTop: height(2),
+          paddingBottom: height(2),
         }}
-      />
+      >
+        <Text
+          style={{
+            ...appStyles.textMaxi,
+            color: appColors.appDarkAsh,
+            paddingVertical: height(1),
+          }}
+        >
+          {businessDetails.businessName}
+        </Text>
+        <Text
+          style={{
+            ...appStyles.textMaxi,
+            color: appColors.appDarkAsh,
+            paddingVertical: height(1),
+          }}
+        >
+          {`Total Amount In Hand: ${totalAmountInHand}`}
+        </Text>
+        <Button
+          onPress={() => {
+            dispatch(logoutUser())
+          }}
+          style={{
+            backgroundColor: appColors.appBase,
+            marginHorizontal: width(3),
+            height: height(5.5),
+            elevation: 1,
+            marginVertical: height(2),
+          }}
+          size="lg"
+        >
+          Logout
+        </Button>
+      </Card>
     </View>
   )
 }

@@ -77,7 +77,14 @@ export const HomeNavigator = () => {
           headerTitle: () => <HeaderTitle />,
         })}
       />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={() => ({
+          title: 'Settings',
+          headerTintColor: appColors.appWhite,
+        })}
+      />
       <Stack.Screen
         name="EntryScreen"
         component={EntryScreen}
@@ -136,7 +143,6 @@ export const HomeNavigator = () => {
         component={EditEntry}
         options={({ route }) => ({
           title: en.EDIT_ENTRY,
-
           headerTintColor: appColors.appWhite,
         })}
       />
