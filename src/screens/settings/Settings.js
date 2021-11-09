@@ -55,7 +55,9 @@ const Settings = ({ route, navigation }) => {
             paddingVertical: height(1),
           }}
         >
-          {`Total Amount In Hand: ${totalAmountInHand}`}
+          {`Total Amount In Hand: ${
+            totalAmountInHand.offlineBalance + totalAmountInHand.onlineBalance
+          }`}
         </Text>
         <Button
           onPress={() => {
