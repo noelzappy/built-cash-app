@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { showMessage } from 'react-native-flash-message'
@@ -155,7 +156,9 @@ const AuthScreen = ({ navigation }) => {
         // console.log(user)
         dispatch(fetchBusinessDetails())
         dispatch(fetchTransactions())
-        dispatch(loginUser(user))
+        setTimeout(() => {
+          dispatch(loginUser(user))
+        }, 3000)
         // dispatch(logoutUser())
       }
     })
@@ -172,7 +175,7 @@ const AuthScreen = ({ navigation }) => {
       showMessage({
         message: 'Authentication Successful',
         description: 'You have successfully authenticated',
-        type: 'success',
+        color: appColors.appGreen,
       })
 
       firebase.auth().onAuthStateChanged((user) => {
@@ -195,306 +198,331 @@ const AuthScreen = ({ navigation }) => {
       showMessage({
         message: 'Verification Error',
         description: `Error: ${err.message}`,
-        type: 'danger',
+        color: appColors.appRed,
       })
     }
   }
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ backgroundColor: appColors.appDirtyWhite }}
-      keyboardShouldPersistTaps
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View
         style={{
-          ...appStyles.mainCard,
-          ...styles.container,
-          marginTop: height(20),
-          justifyContent: 'center',
-          alignSelf: 'center',
-          backgroundColor: appColors.appWhite,
+          flexDirection: 'row',
+          marginTop: height(10),
+          justifyContent: 'space-between',
+          marginHorizontal: width(10),
         }}
       >
+        <View>
+          <Text style={{ ...appStyles.headBig, color: appColors.appBase }}>
+            {en.SIGN_IN}
+          </Text>
+        </View>
+        <View>
+          <TouchableOpacity>
+            <Text style={{ ...appStyles.textMaxi, color: appColors.appBase }}>
+              {en.LANGUAGE_CODE}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ScrollView>
         <View
           style={{
-            marginTop: height(5),
-            marginBottom: height(7),
+            ...appStyles.mainCard,
+            ...styles.container,
+            // marginTop: height(20),
             justifyContent: 'center',
-            alignItems: 'center',
+            alignSelf: 'center',
+            backgroundColor: appColors.appWhite,
           }}
         >
-          <LoginImg width={width(50)} height={height(20)} />
-        </View>
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig}
-          attemptInvisibleVerification={attemptInvisibleVerification}
-        />
-
-        <View style={styles.input}>
-          <PhoneInput
-            ref={phoneInput}
-            defaultValue={phoneNumber}
-            defaultCode="GH"
-            layout="first"
-            onChangeText={(text) => {
-              setPhoneNumber(text)
-            }}
-            onChangeFormattedText={(text) => {
-              setformattedPhoneNumber(text)
-            }}
-            withDarkTheme={false}
-            withShadow
-            autoFocus
-          />
-        </View>
-
-        <Button
-          disabled={!phoneNumber}
-          onPress={async () => {
-            setIsLoading(true)
-            if (phoneInput.current?.isValidNumber(phoneNumber)) {
-              try {
-                const phoneProvider = new firebase.auth.PhoneAuthProvider()
-                const verifyId = await phoneProvider.verifyPhoneNumber(
-                  formattedPhoneNumber,
-                  recaptchaVerifier.current,
-                )
-                setVerificationId(verifyId)
-                showMessage({
-                  message: 'Verification code sent',
-                  type: 'warning',
-                  description:
-                    'Verification code successfully sent to your phone',
-                })
-                setShowModal(true)
-              } catch (err) {
-                showMessage({
-                  message: 'Verification Failed',
-                  description: `Error: ${err.message}`,
-                  type: 'danger',
-                })
-                setIsLoading(true)
-              } finally {
-                setIsLoading(true)
-              }
-            } else {
-              showMessage({
-                message: 'Invalid Phone Number',
-                type: 'danger',
-                description:
-                  'The provided phone number is invalid. Please try again',
-              })
-              setIsLoading(false)
-            }
-          }}
-          isLoading={isLoading}
-          size="lg"
-          style={{
-            backgroundColor: appColors.appBase,
-            marginVertical: height(2),
-          }}
-          height={height(5)}
-        >
-          Verify Phone
-        </Button>
-
-        <Modal isVisible={showModal} avoidKeyboard>
-          <View style={styles.modalInner}>
-            <Text style={{ marginTop: 20, fontSize: 18, paddingBottom: 10 }}>
-              {en.ENTER_VERIFICATION_CODE}
-            </Text>
-
-            <Input
-              style={{
-                marginVertical: 10,
-                fontSize: 17,
-                padding: 5,
-                width: '50%',
-              }}
-              editable={!!verificationId}
-              placeholder="123456"
-              onChangeText={setVerificationCode}
-            />
-
-            <Button
-              disabled={!verificationId}
-              onPress={() => {
-                setVerifyingCode(true)
-                verificationHandler()
-              }}
-              size="lg"
-              style={{
-                backgroundColor: appColors.appBase,
-                marginVertical: height(2),
-              }}
-              isLoading={verifyingCode}
-              height={height(5)}
-            >
-              Confirm Code
-            </Button>
-          </View>
-        </Modal>
-
-        <Modal
-          isVisible={businessModal}
-          coverScreen
-          hasBackdrop={false}
-          avoidKeyboard={false}
-        >
-          <ScrollView
+          <View
             style={{
-              backgroundColor: appColors.appWhite,
-              borderRadius: 10,
-              padding: width(5),
+              marginTop: height(5),
+              marginBottom: height(7),
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <View>
-              <Text style={styles.businessModalHeader}>
-                {en.BUSINESS_SETUP}
+            <LoginImg width={width(50)} height={height(20)} />
+          </View>
+          <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+            attemptInvisibleVerification={attemptInvisibleVerification}
+          />
+
+          <View style={styles.input}>
+            <PhoneInput
+              ref={phoneInput}
+              defaultValue={phoneNumber}
+              defaultCode="GH"
+              layout="first"
+              onChangeText={(text) => {
+                setPhoneNumber(text)
+              }}
+              onChangeFormattedText={(text) => {
+                setformattedPhoneNumber(text)
+              }}
+              withDarkTheme={false}
+              withShadow
+              autoFocus
+            />
+          </View>
+
+          <Button
+            disabled={!phoneNumber}
+            onPress={async () => {
+              setIsLoading(true)
+              if (phoneInput.current?.isValidNumber(phoneNumber)) {
+                try {
+                  const phoneProvider = new firebase.auth.PhoneAuthProvider()
+                  const verifyId = await phoneProvider.verifyPhoneNumber(
+                    formattedPhoneNumber,
+                    recaptchaVerifier.current,
+                  )
+                  setVerificationId(verifyId)
+                  showMessage({
+                    message: 'Verification code sent',
+                    type: 'warning',
+                    description:
+                      'Verification code successfully sent to your phone',
+                  })
+                  setShowModal(true)
+                } catch (err) {
+                  showMessage({
+                    message: 'Verification Failed',
+                    description: `Error: ${err.message}`,
+                    type: 'danger',
+                    color: appColors.appGreen,
+                  })
+                  setIsLoading(true)
+                } finally {
+                  setIsLoading(true)
+                }
+              } else {
+                showMessage({
+                  message: 'Invalid Phone Number',
+                  type: 'danger',
+                  description:
+                    'The provided phone number is invalid. Please try again',
+                })
+                setIsLoading(false)
+              }
+            }}
+            isLoading={isLoading}
+            size="lg"
+            style={{
+              backgroundColor: appColors.appBase,
+              marginVertical: height(2),
+            }}
+            height={height(5)}
+          >
+            Verify Phone
+          </Button>
+
+          <Modal isVisible={showModal} avoidKeyboard>
+            <View style={styles.modalInner}>
+              <Text style={{ marginTop: 20, fontSize: 18, paddingBottom: 10 }}>
+                {en.ENTER_VERIFICATION_CODE}
               </Text>
-            </View>
 
-            <View>
-              <View style={styles.businessInput}>
-                {errorText ? (
-                  <Text style={{ color: 'red', textAlign: 'center' }}>
-                    {errorText}
-                  </Text>
-                ) : null}
-                <Text
-                  style={{
-                    ...appStyles.textMaxi,
-                    paddingVertical: width(2),
-                    color: appColors.appDarkAsh,
-                  }}
-                >
-                  {en.ENTER_BUSINESS_NAME}
-                </Text>
-                <Input
-                  placeholder={en.ENTER_BUSINESS_NAME}
-                  onChangeText={(text) => setBusinessName(text)}
-                  value={businessName}
-                  size="2xl"
-                  onFocus={() => setErrorText(null)}
-                />
-              </View>
-              <View style={styles.businessInput}>
-                <Text
-                  style={{
-                    ...appStyles.textMaxi,
-                    paddingVertical: width(2),
-                    color: appColors.appDarkAsh,
-                  }}
-                >
-                  {en.AMOUNT_IN_HAND}
-                </Text>
-                <Input
-                  placeholder={en.AMOUNT_IN_HAND}
-                  onChangeText={(text) => setAmountInHand(parseFloat(text))}
-                  value={amountInHand}
-                  keyboardType="numeric"
-                  size="2xl"
-                />
-              </View>
+              <Input
+                style={{
+                  marginVertical: 10,
+                  fontSize: 17,
+                  padding: 5,
+                  width: '50%',
+                }}
+                editable={!!verificationId}
+                placeholder="123456"
+                onChangeText={setVerificationCode}
+              />
 
-              <View style={styles.businessInput}>
-                <Text
-                  style={{
-                    ...appStyles.textMaxi,
-                    paddingVertical: width(2),
-                    color: appColors.appDarkAsh,
-                  }}
-                >
-                  {en.BUSINESS_ADDRESS}
-                </Text>
-                <Input
-                  placeholder={en.BUSINESS_ADDRESS}
-                  onChangeText={(text) => setBusinessAddress(text)}
-                  value={businessAddress}
-                  size="2xl"
-                  onFocus={() => setErrorText(null)}
-                />
-              </View>
-
-              <View style={styles.businessInput}>
-                <Text
-                  style={{
-                    ...appStyles.textMaxi,
-                    paddingVertical: width(2),
-                    color: appColors.appDarkAsh,
-                  }}
-                >
-                  {en.CHOOSE_COUNTRY}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => setShowCountrySelector(true)}
-                  style={{
-                    flexDirection: 'row',
-                    borderWidth: 0.3,
-                    borderColor: appColors.appDarkAsh,
-                    paddingVertical: height(1),
-                    paddingLeft: width(2),
-                    borderRadius: 3,
-                  }}
-                >
-                  <CountryPicker
-                    {...{
-                      countryCode,
-                    }}
-                    visible={showCountrySelector}
-                    onSelect={(c) => {
-                      setCountry(c)
-                      setCountryCode(c.cca2)
-                      setShowCountrySelector(false)
-                      // console.log(c)
-                    }}
-                    onClose={() => setShowCountrySelector(false)}
-                  />
-                  <View
-                    style={{
-                      borderLeftWidth: 1,
-                      borderLeftColor: appColors.appDarkAsh,
-                      paddingLeft: width(2),
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...appStyles.textMaxi,
-                        color: appColors.appDarkAsh,
-                      }}
-                    >
-                      {country.name ? country.name : 'Ghana'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View
-              style={{ marginVertical: height(2), marginBottom: height(10) }}
-            >
               <Button
+                disabled={!verificationId}
                 onPress={() => {
-                  setSavingBusiness(true)
-                  businessSetupHandler()
+                  setVerifyingCode(true)
+                  verificationHandler()
                 }}
                 size="lg"
                 style={{
                   backgroundColor: appColors.appBase,
-                  padding: height(2),
+                  marginVertical: height(2),
                 }}
+                isLoading={verifyingCode}
                 height={height(5)}
-                isLoading={savingBusiness}
               >
-                Submit
+                Confirm Code
               </Button>
             </View>
-          </ScrollView>
-        </Modal>
+          </Modal>
 
-        {attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
-      </View>
-    </ScrollView>
+          <Modal
+            isVisible={businessModal}
+            coverScreen
+            hasBackdrop={false}
+            avoidKeyboard={false}
+          >
+            <ScrollView
+              style={{
+                backgroundColor: appColors.appWhite,
+                borderRadius: 10,
+                padding: width(5),
+              }}
+            >
+              <View>
+                <Text style={styles.businessModalHeader}>
+                  {en.BUSINESS_SETUP}
+                </Text>
+              </View>
+
+              <View>
+                <View style={styles.businessInput}>
+                  {errorText ? (
+                    <Text style={{ color: 'red', textAlign: 'center' }}>
+                      {errorText}
+                    </Text>
+                  ) : null}
+                  <Text
+                    style={{
+                      ...appStyles.textMaxi,
+                      paddingVertical: width(2),
+                      color: appColors.appDarkAsh,
+                    }}
+                  >
+                    {en.ENTER_BUSINESS_NAME}
+                  </Text>
+                  <Input
+                    placeholder={en.ENTER_BUSINESS_NAME}
+                    onChangeText={(text) => setBusinessName(text)}
+                    value={businessName}
+                    size="2xl"
+                    onFocus={() => setErrorText(null)}
+                  />
+                </View>
+                <View style={styles.businessInput}>
+                  <Text
+                    style={{
+                      ...appStyles.textMaxi,
+                      paddingVertical: width(2),
+                      color: appColors.appDarkAsh,
+                    }}
+                  >
+                    {en.AMOUNT_IN_HAND}
+                  </Text>
+                  <Input
+                    placeholder={en.AMOUNT_IN_HAND}
+                    onChangeText={(text) => setAmountInHand(parseFloat(text))}
+                    value={amountInHand}
+                    keyboardType="numeric"
+                    size="2xl"
+                  />
+                </View>
+
+                <View style={styles.businessInput}>
+                  <Text
+                    style={{
+                      ...appStyles.textMaxi,
+                      paddingVertical: width(2),
+                      color: appColors.appDarkAsh,
+                    }}
+                  >
+                    {en.BUSINESS_ADDRESS}
+                  </Text>
+                  <Input
+                    placeholder={en.BUSINESS_ADDRESS}
+                    onChangeText={(text) => setBusinessAddress(text)}
+                    value={businessAddress}
+                    size="2xl"
+                    onFocus={() => setErrorText(null)}
+                  />
+                </View>
+
+                <View style={styles.businessInput}>
+                  <Text
+                    style={{
+                      ...appStyles.textMaxi,
+                      paddingVertical: width(2),
+                      color: appColors.appDarkAsh,
+                    }}
+                  >
+                    {en.CHOOSE_COUNTRY}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setShowCountrySelector(true)}
+                    style={{
+                      flexDirection: 'row',
+                      borderWidth: 0.3,
+                      borderColor: appColors.appDarkAsh,
+                      paddingVertical: height(1),
+                      paddingLeft: width(2),
+                      borderRadius: 3,
+                    }}
+                  >
+                    <CountryPicker
+                      {...{
+                        countryCode,
+                      }}
+                      visible={showCountrySelector}
+                      onSelect={(c) => {
+                        setCountry(c)
+                        setCountryCode(c.cca2)
+                        setShowCountrySelector(false)
+                        // console.log(c)
+                      }}
+                      onClose={() => setShowCountrySelector(false)}
+                    />
+                    <View
+                      style={{
+                        borderLeftWidth: 1,
+                        borderLeftColor: appColors.appDarkAsh,
+                        paddingLeft: width(2),
+                      }}
+                    >
+                      <Text
+                        style={{
+                          ...appStyles.textMaxi,
+                          color: appColors.appDarkAsh,
+                        }}
+                      >
+                        {country.name ? country.name : 'Ghana'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={{ marginVertical: height(2), marginBottom: height(10) }}
+              >
+                <Button
+                  onPress={() => {
+                    setSavingBusiness(true)
+                    businessSetupHandler()
+                  }}
+                  size="lg"
+                  style={{
+                    backgroundColor: appColors.appBase,
+                    padding: height(2),
+                  }}
+                  height={height(5)}
+                  isLoading={savingBusiness}
+                  isLoadingText={en.SUBMITTING}
+                >
+                  {en.SUBMIT}
+                </Button>
+              </View>
+            </ScrollView>
+          </Modal>
+
+          {attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 

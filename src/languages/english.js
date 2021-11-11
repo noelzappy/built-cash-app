@@ -3,6 +3,7 @@ export const Setting = 'Settings'
 export const Profile = 'Profile'
 
 const en = {
+  LANGUAGE_CODE: 'English',
   CASHBOOK: 'Cash Book',
   REPORTS: 'Reports',
   CASH_IN_HAND: 'Cash in Hand',
@@ -65,6 +66,9 @@ const en = {
   YEAR_AGO: 'A  Year Ago',
   THIS_MONTH: 'This Month',
   CUSTOMER: 'Customer',
+  SUBMIT: 'Submit',
+  SUBMITTING: 'Submitting',
+  SIGN_IN: 'Sign In',
 }
 
 export default en
