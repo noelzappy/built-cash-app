@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
   View,
   Dimensions,
@@ -9,13 +9,6 @@ import {
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import { width, height as pHeight } from 'react-native-dimension'
-import BottomSheet from '@gorhom/bottom-sheet'
-import {
-  FontAwesome,
-  Entypo,
-  MaterialIcons,
-  MaterialCommunityIcons,
-} from '@expo/vector-icons'
 import moment from 'moment'
 import BalanceCard from '../../components/BalanceCard/BalanceCard'
 import CashTable from '../../components/CashTable/CashTable'
@@ -30,18 +23,13 @@ import {
 import { appColors, appStyles } from '../../theme/globalStyle'
 import NotFound from '../../../assets/images/not_found.svg'
 import en from '../../languages/english'
-import CustomCard from '../../components/CustomCard/CustomCard'
-import DetailsCard from '../../components/DetailsCard'
 import DetailBottomSheet from '../../components/DetailBottomSheet/DetailBottomSheet'
 
 const { height } = Dimensions.get('window')
 
 export default function CashBook({ navigation, route }) {
-  const { allTransactions, totalAmountInHand, businessDetails } = useSelector(
-    (state) => state.mainReducer,
-  )
-
-  const bottomSheetRef = useRef(null)
+  const { allTransactions, totalAmountInHand, businessDetails, todaysBalance } =
+    useSelector((state) => state.mainReducer)
 
   const dispatch = useDispatch()
   const [localData, setLocalData] = useState([])
@@ -53,7 +41,6 @@ export default function CashBook({ navigation, route }) {
   const [totalOUTPaidOffline, setTotalOUTPaidOffline] = useState(0)
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
 
-  const snapPoints = useMemo(() => ['30%', '90%'], [])
   const today = moment().format('DD-MM-YYYY')
 
   const handleSheetChanges = useCallback((index) => {
@@ -67,7 +54,7 @@ export default function CashBook({ navigation, route }) {
     let total_in = 0
     let total_out = 0
     let paidOnlineIN = 0
-    let paidOflineIN = 0
+    let paidOfflineIN = 0
     let paidOnlineOUT = 0
     let paidOfflineOUT = 0
     if (!_.isEmpty(allTransactions) && !_.isEmpty(allTransactions[today])) {
@@ -79,13 +66,14 @@ export default function CashBook({ navigation, route }) {
             [item[1].entryType]: item[1].amount,
             itemDate: today,
           })
+
           if (item[1].entryType === 'cashIn') {
             total_in += parseFloat(item[1].amount)
 
             if (item[1].paymentMethod === 'cash') {
-              paidOflineIN += parseFloat(item[1].amount)
+              paidOfflineIN += parseFloat(item[1].amount)
             } else {
-              paidOfflineOUT += parseFloat(item[1].amount)
+              paidOnlineIN += parseFloat(item[1].amount)
             }
           } else {
             total_out += parseFloat(item[1].amount)
@@ -106,7 +94,7 @@ export default function CashBook({ navigation, route }) {
     setTotalOut(total_out)
     setTotalOUTPaidOffline(paidOfflineOUT)
     setTotalOUTPaidOnline(paidOnlineOUT)
-    setTotalINPaidOffline(paidOflineIN)
+    setTotalINPaidOffline(paidOfflineIN)
     setTotalINPaidOnline(paidOnlineIN)
     setLocalData(tempArray.reverse())
     dispatch(setTodaysBalance(totalIn - totalOut))
@@ -133,7 +121,14 @@ export default function CashBook({ navigation, route }) {
           setOpenBottomSheet(!openBottomSheet)
         }}
       >
-        <BalanceCard />
+        <BalanceCard
+          businessDetails={businessDetails}
+          totalAmountInHand={totalAmountInHand}
+          todaysBalance={todaysBalance}
+          currency={
+            businessDetails ? businessDetails.country.currency[0] : 'GHS'
+          }
+        />
       </TouchableOpacity>
       <View
         style={{

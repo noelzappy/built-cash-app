@@ -17,7 +17,7 @@ import {
 import { width, height } from 'react-native-dimension'
 import CountryPicker from 'react-native-country-picker-modal'
 import * as firebase from 'firebase'
-import { Input, Button } from 'native-base'
+import { Input, Button, AlertDialog } from 'native-base'
 import Modal from 'react-native-modal'
 import PhoneInput from 'react-native-phone-number-input'
 import firebaseApp from '../../constants/firebaseConfig'
@@ -84,8 +84,11 @@ const styles = StyleSheet.create({
 
 const AuthScreen = ({ navigation }) => {
   const db = firebase.database()
+
   const recaptchaVerifier = useRef(null)
   const phoneInput = useRef(null)
+  const errorDialogCancelRef = useRef(null)
+
   const [phoneNumber, setPhoneNumber] = useState()
   const [verificationId, setVerificationId] = useState()
   const [verificationCode, setVerificationCode] = useState()
@@ -110,6 +113,8 @@ const AuthScreen = ({ navigation }) => {
   const [showCountrySelector, setShowCountrySelector] = useState(false)
   const [businessAddress, setBusinessAddress] = useState('')
   const [savingBusiness, setSavingBusiness] = useState(false)
+  const [showErrorDialog, setShowErrorDialog] = useState(false)
+  const [_err, setErr] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -119,7 +124,7 @@ const AuthScreen = ({ navigation }) => {
 
   const attemptInvisibleVerification = true
 
-  function businessSetupHandler() {
+  async function businessSetupHandler() {
     if (businessName === '' && businessAddress === '') {
       setErrorText(en.BUSINESS_SETUP_ERROR)
       return
@@ -127,39 +132,45 @@ const AuthScreen = ({ navigation }) => {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        firebase
-          .database()
-          .ref(user.uid)
-          .on('value', (snapshot) => {
-            if (snapshot.exists()) {
-              dispatch(fetchBusinessDetails())
-              dispatch(fetchTransactions())
-            } else {
-              firebase
-                .database()
-                .ref(`${user.uid}/businessDetails`)
-                .set({
-                  businessName,
-                  country,
-                  phoneNumber: formattedPhoneNumber,
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-              db.ref(`${user.uid}/transactions/totalAmount`).set({
-                offlineBalance: amountInHand,
-                onlineBalance: 0,
-              })
-            }
-          })
+        try {
+          firebase
+            .database()
+            .ref(user.uid)
+            .on('value', (snapshot) => {
+              if (snapshot.exists()) {
+                dispatch(fetchBusinessDetails())
+                dispatch(fetchTransactions())
+              } else {
+                firebase
+                  .database()
+                  .ref(`${user.uid}/businessDetails`)
+                  .set({
+                    businessName,
+                    country,
+                    phoneNumber: formattedPhoneNumber,
+                  })
+                  .then(() => {
+                    dispatch(fetchBusinessDetails())
+                  })
 
-        // console.log(user)
-        dispatch(fetchBusinessDetails())
-        dispatch(fetchTransactions())
-        setTimeout(() => {
-          dispatch(loginUser(user))
-        }, 3000)
-        // dispatch(logoutUser())
+                firebase
+                  .database()
+                  .ref(`${user.uid}/transactions/totalAmount`)
+                  .set({
+                    offlineBalance: amountInHand,
+                    onlineBalance: 0,
+                  })
+                  .then(() => {
+                    dispatch(fetchTransactions())
+                  })
+
+                dispatch(loginUser(user))
+              }
+            })
+        } catch (err) {
+          setErr(err)
+          setShowErrorDialog(true)
+        }
       }
     })
   }
@@ -510,7 +521,7 @@ const AuthScreen = ({ navigation }) => {
                     padding: height(2),
                   }}
                   height={height(5)}
-                  isLoading={savingBusiness}
+                  isLoading={false}
                   isLoadingText={en.SUBMITTING}
                 >
                   {en.SUBMIT}
@@ -522,6 +533,41 @@ const AuthScreen = ({ navigation }) => {
           {attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
         </View>
       </ScrollView>
+      <AlertDialog
+        leastDestructiveRef={errorDialogCancelRef}
+        isOpen={showErrorDialog}
+        onClose={() => {
+          setSavingBusiness(false)
+          setShowErrorDialog(false)
+        }}
+      >
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>
+            <Text
+              style={{
+                ...appStyles.headMaxi,
+                color: appColors.appRed,
+                textAlign: 'center',
+              }}
+            >
+              Error
+            </Text>
+          </AlertDialog.Header>
+          <AlertDialog.Body>
+            <Text
+              style={{
+                ...appStyles.textMaxi,
+                color: appColors.appDarkAsh,
+                textAlign: 'center',
+              }}
+            >
+              {' '}
+              {_err ? _err.message : ' '}
+            </Text>
+          </AlertDialog.Body>
+        </AlertDialog.Content>
+      </AlertDialog>
     </KeyboardAvoidingView>
   )
 }

@@ -29,13 +29,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function DownloadReportButton() {
+export default function DownloadReportButton({ exportReport }) {
   return (
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.9}
       onPress={() => {
-        console.log('Download Clicked')
+        exportReport()
       }}
     >
       <Text style={styles.txtStyle}>{en.DOWNLOAD_REPORTS}</Text>

@@ -1,21 +1,11 @@
 import React, { useState } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Button, TextArea } from 'native-base'
-import * as Contacts from 'expo-contacts'
-import { AntDesign } from '@expo/vector-icons'
 import moment from 'moment'
 import { width, height as pHeight } from 'react-native-dimension'
-import { colors, globalStyles } from '../../theme'
+import { colors } from '../../theme'
 import en from '../../languages/english'
 import {
   saveTransaction,
@@ -145,7 +135,7 @@ export default function EntryScreen({ route, navigation }) {
     dispatch(updateCashInHand({ totalAmountInHand, entry }))
 
     showMessage({
-      type: 'success',
+      backgroundColor: appColors.appGreen,
       message: en.SUCCESS,
       description: en.TRANSACTION_SAVED,
       hideOnPress: true,
@@ -154,7 +144,6 @@ export default function EntryScreen({ route, navigation }) {
     setDescription('')
     setSelectedCustomer(null)
     setDate(today)
-    setIsSaving(false)
     navigation.navigate('Home')
   }
 

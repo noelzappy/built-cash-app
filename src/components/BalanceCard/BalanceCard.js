@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { useSelector } from 'react-redux'
 import { width, height } from 'react-native-dimension'
 import { Card } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
@@ -13,10 +12,8 @@ const styles = StyleSheet.create({
   balanceRed: { color: appColors.appRed, fontSize: 22 },
 })
 
-export default function BalanceCard() {
-  const { totalAmountInHand, todaysBalance, businessDetails } = useSelector(
-    (state) => state.mainReducer,
-  )
+export default function BalanceCard(props) {
+  const { totalAmountInHand, todaysBalance, businessDetails, currency } = props
 
   return (
     <Card
@@ -31,14 +28,14 @@ export default function BalanceCard() {
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.balances}>
-          {`${businessDetails.country.currency[0]} ${totalAmountInHand.offlineBalance}`}
+          {`${currency} ${totalAmountInHand.offlineBalance}`}
         </Text>
         <Text style={styles.balanceDescription}>{en.CASH_IN_HAND}</Text>
       </View>
 
       <View style={{ flex: 1 }}>
         <Text style={todaysBalance < 0 ? styles.balanceRed : styles.balances}>
-          {`${businessDetails.country.currency[0]} ${todaysBalance}`}
+          {`${currency} ${todaysBalance}`}
         </Text>
         <Text style={styles.balanceDescription}>{en.TODAYS_BALANCE}</Text>
       </View>
