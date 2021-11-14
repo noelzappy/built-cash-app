@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import {
-  View,
-  Dimensions,
-  StatusBar,
-  TouchableOpacity,
-  Text,
-} from 'react-native'
+import { View, Dimensions, TouchableOpacity, Text } from 'react-native'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import { width, height as pHeight } from 'react-native-dimension'
@@ -152,12 +146,7 @@ export default function CashBook({ navigation, route }) {
           </View>
         )}
       </View>
-      <StatusBar
-        style={appStyles.statusBar}
-        animated
-        backgroundColor={appColors.appBase}
-        barStyle="light-content"
-      />
+
       {openBottomSheet ? (
         <TouchableOpacity
           style={{

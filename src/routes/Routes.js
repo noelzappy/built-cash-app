@@ -1,41 +1,48 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import firebase from 'firebase'
+
 import Navigation from './navigation'
-import { AuthNavigator } from './navigation/stacks/Stacks'
+
 import {
   fetchBusinessDetails,
   fetchTransactions,
   logoutUser,
 } from '../utils/actions'
+import { AuthNavigator } from './navigation/stacks/Stacks'
 
 const Routes = () => {
   const loggedIn = useSelector((state) => state.mainReducer.loggedIn)
 
   const dispatch = useDispatch()
-  // TODO: switch router by loggedIn state
-  console.log('[##] loggedIn', loggedIn)
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (!user) {
-      dispatch(logoutUser())
-    }
-  })
+  console.log(`###LoggedIn ${loggedIn}`)
 
   if (loggedIn) {
     dispatch(fetchBusinessDetails())
     dispatch(fetchTransactions())
   }
 
+  useEffect(() => {
+    console.log(`##LoggedIn ${loggedIn}`)
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        dispatch(logoutUser())
+      }
+    })
+  }, [])
+
   // rendering
-  return !loggedIn ? (
-    <NavigationContainer>
-      <AuthNavigator />
-    </NavigationContainer>
-  ) : (
-    <Navigation />
-  )
+  if (!loggedIn) {
+    return (
+      <NavigationContainer>
+        <AuthNavigator />
+      </NavigationContainer>
+    )
+  }
+
+  return <Navigation />
 }
 
 export default Routes

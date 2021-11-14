@@ -1,5 +1,5 @@
-import { StyleSheet, Platform } from 'react-native'
-import { width, height, totalSize } from 'react-native-dimension'
+import { StyleSheet, Platform, } from 'react-native'
+import { width, height, totalSize, } from 'react-native-dimension'
 import Constants from 'expo-constants'
 import colors from './colors'
 
@@ -16,6 +16,11 @@ export const appColors = {
   appDirtyWhite: '#F0F3FA',
   appBase: '#2F5794',
   _appBase: '#00BFA6',
+  appTBlue: 'rgba(47, 87, 148, 0.4)',
+  appTGreen: 'rgba(14, 152, 115, 0.4)',
+  appTGold: 'rgba(241, 201, 68, 0.3)',
+  appTRed: 'rgba(240, 113, 103, 0.4)',
+  appTBase: 'rgba(0, 191, 166, 0.4)',
 }
 
 export const fontSizes = {

@@ -4,6 +4,7 @@ import moment from 'moment'
 import { TouchableOpacity } from 'react-native'
 import Settings from 'screens/settings'
 import { width } from 'react-native-dimension'
+import * as SecureStore from 'expo-secure-store'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useDispatch } from 'react-redux'
 import { deleteEntry } from 'utils/actions'
@@ -12,6 +13,7 @@ import CashBook from '../../../screens/CashBook/CashBook'
 import TopTabs from '../TopTabs/TopTabs'
 import HeaderRight from './HeaderRight'
 import HeaderTitle from './HeaderTitle'
+import OnboardingScreen from '../../../screens/Onboarding'
 import EntryScreen from '../../../screens/EntryScreen/EntryScreen'
 import AuthScreen from '../../../screens/Auth/AuthScreen'
 import SingleReport from '../../../screens/SingleReport/SingleReport'
@@ -34,15 +36,43 @@ const navigationProps = {
 // Navigators
 // ------------------------------------
 
-export const AuthNavigator = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="AuthScreen" component={AuthScreen} />
-  </Stack.Navigator>
-)
+export const AuthNavigator = () => {
+  try {
+    SecureStore.getItemAsync('initialLaunch').then((val) => {
+      if (val) {
+        console.log(val)
+      } else {
+        SecureStore.setItemAsync('initialLaunch', 'yes').catch((err) =>
+          console.log(err),
+        )
+
+        return (
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          </Stack.Navigator>
+        )
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      {/* <Stack.Screen name="Onboarding" component={OnboardingScreen} /> */}
+      <Stack.Screen name="AuthScreen" component={AuthScreen} />
+    </Stack.Navigator>
+  )
+}
 
 export const CashTab = () => (
   <Stack.Navigator
