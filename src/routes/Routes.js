@@ -17,15 +17,12 @@ const Routes = () => {
 
   const dispatch = useDispatch()
 
-  console.log(`###LoggedIn ${loggedIn}`)
-
   if (loggedIn) {
     dispatch(fetchBusinessDetails())
     dispatch(fetchTransactions())
   }
 
   useEffect(() => {
-    console.log(`##LoggedIn ${loggedIn}`)
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         dispatch(logoutUser())

@@ -18,7 +18,7 @@ import { appColors } from 'theme/globalStyle'
 import en from '../../languages/english'
 
 export default function Reports({ navigation, route }) {
-  const { allTransactions, totalAmountInHand } = useSelector(
+  const { allTransactions, totalAmountInHand, businessDetails } = useSelector(
     (state) => state.mainReducer,
   )
 
@@ -136,6 +136,7 @@ export default function Reports({ navigation, route }) {
     setTotalIn(tempIn)
     setTotalOut(tempOut)
   }
+
   const htmlToPrint = `
 <html lang="en">
   <head>
@@ -240,7 +241,7 @@ export default function Reports({ navigation, route }) {
     <section class="container-fluid bg-light">
       <header class="row bg-primary header-container">
         <h2 class="business-name" id="business-name">
-          My Business
+          ${businessDetails.businessName}
           <span class="d-btn">
             <img
               src="https://builtaccounting.com/wp-content/uploads/2020/01/Built_logo_home.png"
@@ -252,19 +253,33 @@ export default function Reports({ navigation, route }) {
       <div class="row summary-container">
         <div class="col">
           <p id="totalin-label">TOTAL IN</p>
-          <p id="totalin-amount">10</p>
-          <p id="paid-in-online">ONLINE: 10</p>
-          <p id="paid-in-offline">OFFLINE: 10</p>
+          <p id="totalin-amount">${
+            businessDetails.country.currency[0]
+          } ${totalIn}</p>
+          <p id="paid-in-online">ONLINE: ${
+            businessDetails.country.currency[0]
+          } ${totalINPaidOnline}</p>
+          <p id="paid-in-offline">OFFLINE: ${
+            businessDetails.country.currency[0]
+          } ${totalINPaidOffline}</p>
         </div>
         <div class="col">
           <p id="totalout-label">TOTAL OUT</p>
-          <p id="totalout-amount">10</p>
-          <p id="paid-out-online">ONLINE: 10</p>
-          <p id="paid-out-offline">OFFLINE: 10</p>
+          <p id="totalout-amount">${
+            businessDetails.country.currency[0]
+          } ${totalOut}</p>
+          <p id="paid-out-online">ONLINE: ${
+            businessDetails.country.currency[0]
+          } ${totalOUTPaidOnline}</p>
+          <p id="paid-out-offline">OFFLINE: ${
+            businessDetails.country.currency[0]
+          } ${totalOUTPaidOffline}</p>
         </div>
         <div class="col">
           <p id="net-balance-label">NET BALANCE</p>
-          <p id="net-balance">10</p>
+          <p id="net-balance">${businessDetails.country.currency[0]} ${
+    parseFloat(totalIn) - parseFloat(totalOut)
+  }</p>
         </div>
       </div>
 
@@ -287,7 +302,7 @@ export default function Reports({ navigation, route }) {
 
       <footer class="row footer-container bg-primary">
         <div>
-          <span class="main-footer-text">Start Using Built Cash BookNow</span>
+          <span class="main-footer-text">Start Using Built Cash Book Now</span>
           <span class="footer-btn"
             ><a href="#" class="btn btn btn-light">Install</a></span
           >
@@ -353,6 +368,7 @@ export default function Reports({ navigation, route }) {
 
   useEffect(() => {
     generatePrintableReport()
+    console.log(businessDetails.businessName)
   }, [])
 
   useEffect(() => {

@@ -7,6 +7,9 @@ export const SAVE_TRANSACTION = 'SAVE_TRANSACTION'
 export const SET_ERROR = 'SET_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
 export const FETCH_BUSINESS_DETAILS = 'FETCH_BUSINESS_DETAILS'
+export const FETCH_BUSINESS_DETAILS_SUCCESSFUL =
+  'FETCH_BUSINESS_DETAILS_SUCCESSFUL'
+export const FETCH_BUSINESS_DETAILS_FAIL = 'FETCH_BUSINESS_DETAILS_FAIL'
 export const SET_BUSINESS_DETAILS = 'SET_BUSINESS_DETAILS'
 export const UPDATE_CASH_IN_HAND = 'UPDATE_CASH_IN_HAND'
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
@@ -76,13 +79,16 @@ export function fetchBusinessDetails() {
                 })
               } else {
                 dispatch({
-                  type: FETCH_BUSINESS_DETAILS,
-                  payload: {},
+                  type: FETCH_BUSINESS_DETAILS_FAIL,
+                  payload: 'Your business profile does not exist',
                 })
               }
             },
             (error) => {
-              console.log(error)
+              dispatch({
+                type: FETCH_BUSINESS_DETAILS_FAIL,
+                payload: error,
+              })
             },
           )
       } else {

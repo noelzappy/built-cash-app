@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View } from 'react-native'
+import { View, StatusBar } from 'react-native'
 import { Provider } from 'react-redux'
 import 'utils/ignore'
 import FlashMessage from 'react-native-flash-message'
@@ -11,6 +11,7 @@ import { fontAssets } from 'theme/fonts'
 import { NativeBaseProvider } from 'native-base'
 import Routes from './routes'
 import { store, persistor } from './utils/store'
+import { appColors } from './theme/globalStyle'
 
 const App = () => {
   const [didLoad, setDidLoad] = useState(false)
@@ -32,6 +33,10 @@ const App = () => {
       <PersistGate loading={null} persistor={persistor}>
         <NativeBaseProvider>
           <Routes />
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor={appColors.appBase}
+          />
           <FlashMessage style={{ paddingTop: 20 }} position="top" />
         </NativeBaseProvider>
       </PersistGate>

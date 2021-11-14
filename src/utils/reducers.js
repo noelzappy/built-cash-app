@@ -3,6 +3,8 @@ import firebase from 'firebase'
 import {
   BALANCE_OF_DAY,
   FETCH_BUSINESS_DETAILS,
+  FETCH_BUSINESS_DETAILS_FAIL,
+  FETCH_BUSINESS_DETAILS_SUCCESSFUL,
   FETCH_CASH_IN_HAND,
   FETCH_TRANSACTIONS,
   LOGIN_USER,
@@ -17,7 +19,10 @@ const initialState = {
   totalAmountInHand: {},
   transfers: {},
   todaysTransfers: {},
-  businessDetails: {},
+  businessDetails: null,
+  fetchBusinessDetailFail: false,
+  fetchBusinessDetailSuccess: false,
+  fetchBusinessDetailFailError: null,
   error: '',
   allTransactions: {},
   todaysBalance: 0,
@@ -27,11 +32,22 @@ const initialState = {
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_BUSINESS_DETAILS: {
-      return { ...state, businessDetails: action.payload }
+      return {
+        ...state,
+        businessDetails: action.payload,
+        fetchBusinessDetailFail: false,
+        fetchBusinessDetailSuccess: true,
+        fetchBusinessDetailFailError: null,
+      }
     }
-    case SET_BUSINESS_DETAILS: {
-      return state
-    }
+    case FETCH_BUSINESS_DETAILS_FAIL:
+      return {
+        ...state,
+        fetchBusinessDetailFail: true,
+        fetchBusinessDetailSuccess: false,
+        fetchBusinessDetailFailError: action.payload,
+        businessDetails: null,
+      }
     case FETCH_TRANSACTIONS: {
       return {
         ...state,

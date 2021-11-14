@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import {
   Text,
   View,
@@ -83,7 +83,12 @@ const styles = StyleSheet.create({
 })
 
 const AuthScreen = ({ navigation }) => {
-  const db = firebase.database()
+  const {
+    businessDetails,
+    fetchBusinessDetailFail,
+    fetchBusinessDetailSuccess,
+    fetchBusinessDetailFailError,
+  } = useSelector((state) => state.mainReducer)
 
   const recaptchaVerifier = useRef(null)
   const phoneInput = useRef(null)
@@ -115,8 +120,27 @@ const AuthScreen = ({ navigation }) => {
   const [savingBusiness, setSavingBusiness] = useState(false)
   const [showErrorDialog, setShowErrorDialog] = useState(false)
   const [_err, setErr] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (
+      businessDetails &&
+      fetchBusinessDetailFail === false &&
+      fetchBusinessDetailSuccess === true &&
+      !fetchBusinessDetailFailError &&
+      currentUser
+    ) {
+      dispatch(loginUser(currentUser))
+    }
+  }, [
+    businessDetails,
+    fetchBusinessDetailFail,
+    fetchBusinessDetailSuccess,
+    fetchBusinessDetailFailError,
+    currentUser,
+  ])
 
   const firebaseConfig = firebase.apps.length
     ? firebase.app().options
@@ -132,6 +156,7 @@ const AuthScreen = ({ navigation }) => {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        setCurrentUser(user)
         try {
           firebase
             .database()
@@ -163,8 +188,6 @@ const AuthScreen = ({ navigation }) => {
                   .then(() => {
                     dispatch(fetchTransactions())
                   })
-
-                dispatch(loginUser(user))
               }
             })
         } catch (err) {
@@ -183,14 +206,9 @@ const AuthScreen = ({ navigation }) => {
       )
       await firebase.auth().signInWithCredential(credential)
 
-      showMessage({
-        message: 'Authentication Successful',
-        description: 'You have successfully authenticated',
-        color: appColors.appGreen,
-      })
-
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
+          setCurrentUser(user)
           firebase
             .database()
             .ref(user.uid)
@@ -198,7 +216,6 @@ const AuthScreen = ({ navigation }) => {
               if (snapshot.exists()) {
                 dispatch(fetchBusinessDetails())
                 dispatch(fetchTransactions())
-                dispatch(loginUser(user))
               } else {
                 setBusinessModal(true)
               }
@@ -206,6 +223,7 @@ const AuthScreen = ({ navigation }) => {
         }
       })
     } catch (err) {
+      setShowModal(false)
       showMessage({
         message: 'Verification Error',
         description: `Error: ${err.message}`,
@@ -240,12 +258,11 @@ const AuthScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View
           style={{
             ...appStyles.mainCard,
             ...styles.container,
-            // marginTop: height(20),
             justifyContent: 'center',
             alignSelf: 'center',
             backgroundColor: appColors.appWhite,
@@ -305,15 +322,14 @@ const AuthScreen = ({ navigation }) => {
                   })
                   setShowModal(true)
                 } catch (err) {
+                  setShowModal(false)
                   showMessage({
                     message: 'Verification Failed',
                     description: `Error: ${err.message}`,
                     type: 'danger',
                     color: appColors.appGreen,
                   })
-                  setIsLoading(true)
-                } finally {
-                  setIsLoading(true)
+                  setIsLoading(false)
                 }
               } else {
                 showMessage({
@@ -521,7 +537,7 @@ const AuthScreen = ({ navigation }) => {
                     padding: height(2),
                   }}
                   height={height(5)}
-                  isLoading={false}
+                  isLoading={savingBusiness}
                   isLoadingText={en.SUBMITTING}
                 >
                   {en.SUBMIT}

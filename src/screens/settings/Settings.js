@@ -1,26 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Card, Button } from 'native-base'
 import { colors } from 'theme'
 import { width, height } from 'react-native-dimension'
 import { appStyles, appColors } from 'theme/globalStyle'
 import { logoutUser } from '../../utils/actions'
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.lightGrayPurple,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-})
 
 const Settings = ({ route, navigation }) => {
   const dispatch = useDispatch()
@@ -29,52 +15,89 @@ const Settings = ({ route, navigation }) => {
     (state) => state.mainReducer,
   )
 
+  const { businessName } = businessDetails
+
+  const iconGenerator = () => {
+    const tempArray = businessName.split(' ')
+    if (tempArray.length < 2) {
+      return businessName.charAt(0).toUpperCase()
+    }
+
+    return `${tempArray[0].charAt(0).toUpperCase()}${tempArray[1]
+      .charAt(0)
+      .toUpperCase()}`
+  }
   return (
     <View style={{ backgroundColor: appColors.appDirtyWhite }}>
-      <Card
+      <View
         style={{
-          ...appStyles.mainCard,
+          flexDirection: 'row',
           backgroundColor: appColors.appWhite,
-          paddingTop: height(2),
-          paddingBottom: height(2),
+          paddingVertical: height(2),
+          marginVertical: height(2),
+          paddingHorizontal: width(3),
+          alignItems: 'center',
         }}
       >
-        <Text
+        <View
           style={{
-            ...appStyles.textMaxi,
-            color: appColors.appDarkAsh,
-            paddingVertical: height(1),
+            backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
+              16,
+            )}`, // appColors.appBase,
+            padding: width(2),
+            borderRadius: width(50),
+            justifyContent: 'flex-start',
+            marginRight: width(5),
+            alignItems: 'center',
+            alignContent: 'center',
+            width: width(12),
           }}
         >
-          {businessDetails.businessName}
-        </Text>
-        <Text
+          <Text style={{ ...appStyles.headHuge, textAlign: 'center' }}>
+            {iconGenerator()}
+          </Text>
+        </View>
+        <View style={{ marginLeft: width(3) }}>
+          <Text style={{ ...appStyles.headMaxi, color: appColors.appDarkAsh }}>
+            {businessName}
+          </Text>
+          <Text style={{ ...appStyles.regular, color: appColors.appDarkAsh }}>
+            Your Name
+          </Text>
+        </View>
+        {/* <View
           style={{
-            ...appStyles.textMaxi,
-            color: appColors.appDarkAsh,
-            paddingVertical: height(1),
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginLeft: width(20),
           }}
         >
-          {`Total Amount In Hand: ${
-            totalAmountInHand.offlineBalance + totalAmountInHand.onlineBalance
-          }`}
-        </Text>
-        <Button
-          onPress={() => {
-            dispatch(logoutUser())
-          }}
-          style={{
-            backgroundColor: appColors.appBase,
-            marginHorizontal: width(3),
-            height: height(5.5),
-            elevation: 1,
-            marginVertical: height(2),
-          }}
-          size="lg"
-        >
-          Logout
-        </Button>
-      </Card>
+          <Button
+            style={{
+              backgroundColor: appColors.appBase,
+              elevation: 1,
+            }}
+            size="lg"
+          >
+            Edit
+          </Button>
+        </View> */}
+      </View>
+      <Button
+        onPress={() => {
+          dispatch(logoutUser())
+        }}
+        style={{
+          backgroundColor: appColors.appBase,
+          marginHorizontal: width(3),
+          height: height(5.5),
+          elevation: 1,
+          marginVertical: height(2),
+        }}
+        size="lg"
+      >
+        Logout
+      </Button>
     </View>
   )
 }
