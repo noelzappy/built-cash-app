@@ -87,17 +87,6 @@ export default function EntryScreen({ route, navigation }) {
   const [selectedCustomer, setSelectedCustomer] = useState(null)
 
   useEffect(() => {
-    // showMessage({
-    //   backgroundColor: appColors.appGreen,
-    //   message: en.SUCCESS,
-    //   description: en.TRANSACTION_SAVED,
-    //   hideOnPress: true,
-    // })
-    // setEntryAmount('')
-    // setDescription('')
-    // setSelectedCustomer(null)
-    // setDate(today)
-    // navigation.navigate('Home')
     if (
       !fetchTotalAmountInHandFailed &&
       fetchTotalAmountInHandFailedError == null &&
@@ -109,19 +98,29 @@ export default function EntryScreen({ route, navigation }) {
       !fetchBalanceOfDayFailedError &&
       fetchBalanceOfDaySuccess
     ) {
-      console.log(
-        fetchTotalAmountInHandFailed,
-        fetchTotalAmountInHandFailedError,
-        fetchTotalAmountInHandSuccess,
-
-        fetchTransactionsFailed,
-        fetchTransactionsFailedError,
-        fetchTransactionsSuccess,
-
-        fetchBalanceOfDayFailed,
-        fetchBalanceOfDayFailedError,
-        fetchBalanceOfDaySuccess,
-      )
+      showMessage({
+        backgroundColor: appColors.appGreen,
+        message: en.SUCCESS,
+        description: en.TRANSACTION_SAVED,
+        hideOnPress: true,
+      })
+      setEntryAmount('')
+      setDescription('')
+      setSelectedCustomer(null)
+      setDate(today)
+      navigation.navigate('Home')
+    } else {
+      showMessage({
+        backgroundColor: appColors.appRed,
+        message: 'FAILED',
+        description: 'Transaction could  not be saved',
+        hideOnPress: true,
+      })
+      setEntryAmount('')
+      setDescription('')
+      setSelectedCustomer(null)
+      setDate(today)
+      navigation.navigate('Home')
     }
   }, [
     totalAmountInHand,
