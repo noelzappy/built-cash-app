@@ -114,18 +114,6 @@ export default function EntryScreen({ route, navigation }) {
       setSelectedCustomer(null)
       setDate(today)
       navigation.navigate('Home')
-    } else {
-      showMessage({
-        backgroundColor: appColors.appRed,
-        message: 'FAILED',
-        description: 'Transaction could  not be saved',
-        hideOnPress: true,
-      })
-      setEntryAmount('')
-      setDescription('')
-      setSelectedCustomer(null)
-      setDate(today)
-      navigation.navigate('Home')
     }
   }, [
     totalAmountInHand,

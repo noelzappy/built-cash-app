@@ -13,6 +13,7 @@ import {
   setTodaysBalance,
   watchCashInHand,
   fetchCashInHand,
+  disableHandlers,
 } from '../../utils/actions'
 import { appColors, appStyles } from '../../theme/globalStyle'
 import NotFound from '../../../assets/images/not_found.svg'
@@ -100,10 +101,12 @@ export default function CashBook({ navigation, route }) {
     dispatch(watchTransactions())
     dispatch(fetchCashInHand())
     dispatch(watchCashInHand())
+    dispatch(disableHandlers())
   }, [])
 
   useEffect(() => {
     sortLocalData()
+    dispatch(disableHandlers())
   }, [allTransactions])
 
   return (
