@@ -65,23 +65,6 @@ const Settings = ({ route, navigation }) => {
             Your Name
           </Text>
         </View>
-        {/* <View
-          style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginLeft: width(20),
-          }}
-        >
-          <Button
-            style={{
-              backgroundColor: appColors.appBase,
-              elevation: 1,
-            }}
-            size="lg"
-          >
-            Edit
-          </Button>
-        </View> */}
       </View>
       <Button
         onPress={() => {

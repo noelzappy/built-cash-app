@@ -44,7 +44,7 @@ export const AuthNavigator = () => (
     }}
     // initialRouteName="Redirect"
   >
-    {/* <Stack.Screen name="Redirect" component={RedirectScreen} /> */}
+    <Stack.Screen name="Redirect" component={RedirectScreen} />
     <Stack.Screen name="Onboarding" component={OnboardingScreen} />
     <Stack.Screen name="AuthScreen" component={AuthScreen} />
   </Stack.Navigator>

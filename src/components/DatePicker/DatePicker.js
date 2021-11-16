@@ -10,7 +10,7 @@ import { appColors, appStyles } from '../../theme/globalStyle'
 export default function CustomDatePicker(props) {
   const { onDateChange } = props
   const [selectedDate, setSelectedDate] = useState(
-    moment().format('DD-MM-YYYY'),
+    moment().format('MM-DD-YYYY'),
   )
   const [showModal, setShowModal] = useState(false)
 
@@ -47,7 +47,7 @@ export default function CustomDatePicker(props) {
       <Modal isVisible={showModal} transparent animationIn="fadeIn">
         <DatePicker
           onSelectedChange={(d) => {
-            setSelectedDate(moment(d).format('DD-MM-YYYY'))
+            setSelectedDate(moment(d).format('MM-DD-YYYY'))
             onDateChange(d)
             setShowModal(false)
           }}

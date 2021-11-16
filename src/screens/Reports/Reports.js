@@ -59,7 +59,8 @@ export default function Reports({ navigation, route }) {
           `  <tr id="table-inner-container"> <td>${d}</td> <td>${tempIn}</td> <td>${tempOut}</td>  <td>${
             entry.balanceOfDay
           }</td>  <td>${
-            totalAmountInHand.onlineBalance + totalAmountInHand.offlineBalance
+            parseFloat(totalAmountInHand.offlineBalance) +
+            parseFloat(totalAmountInHand.onlineBalance)
           }</td>  </tr>`,
         )
       })
@@ -338,27 +339,12 @@ export default function Reports({ navigation, route }) {
         to: pdfName,
       })
 
-      // FileSystem.downloadAsync(
-      //   pdfName,
-      //   `${FileSystem.documentDirectory}BUILT-CASH`,
-      // ).then(({ uri }) => {
-      //   console.log('Finished downloading to ', uri)
-      // })
-      // console.log(FileSystem.documentDirectory)
-
-      // await FileSystem.copyAsync({
-      //   from: pdfName,
-      //   to: FileSystem.documentDirectory,
-      // })
-
       await shareAsync(pdfName, {
         UTI: '.pdf',
         mimeType: 'application/pdf',
       })
     } catch (error) {
       Alert.alert('ERROR', error.message, [{ text: 'OK', onPress: () => {} }])
-
-      console.log(error)
     }
   }
 
@@ -368,7 +354,6 @@ export default function Reports({ navigation, route }) {
 
   useEffect(() => {
     generatePrintableReport()
-    console.log(businessDetails.businessName)
   }, [])
 
   useEffect(() => {
@@ -385,7 +370,7 @@ export default function Reports({ navigation, route }) {
 
   return (
     <View style={{ backgroundColor: appColors.appDirtyWhite, flex: 1 }}>
-      <ReportFilter getFilterDate={getFilterDate} />
+      {/* <ReportFilter getFilterDate={getFilterDate} /> */}
       <TouchableOpacity
         onPress={() => {
           setOpenSheet(true)

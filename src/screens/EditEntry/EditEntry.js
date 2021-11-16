@@ -72,7 +72,7 @@ const { height } = Dimensions.get('window')
 
 export default function EditEntry({ route, navigation }) {
   const { itemId, entryItem, itemDate } = route.params
-  const today = moment().format('DD-MM-YYYY')
+  const today = moment().format('MM-DD-YYYY')
   const { totalAmountInHand, businessDetails } = useSelector(
     (state) => state.mainReducer,
   )
@@ -205,7 +205,7 @@ export default function EditEntry({ route, navigation }) {
   }
 
   const onDateChange = (d) => {
-    setDate(moment(d).format('DD-MM-YYYY'))
+    setDate(moment(d).format('MM-DD-YYYY'))
   }
   const contactsHandler = (contact) => {
     setSelectedCustomer(contact)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { useDispatch, useSelector } from 'react-redux'
@@ -61,18 +61,83 @@ const styles = StyleSheet.create({
 export default function EntryScreen({ route, navigation }) {
   const { entryType } = route.params
 
-  const today = moment().format('DD-MM-YYYY')
+  const today = moment().format('MM-DD-YYYY')
 
-  const { totalAmountInHand, businessDetails } = useSelector(
-    (state) => state.mainReducer,
-  )
+  const {
+    totalAmountInHand,
+    businessDetails,
+    fetchTotalAmountInHandFailed,
+    fetchTotalAmountInHandFailedError,
+    fetchTotalAmountInHandSuccess,
+    allTransactions,
+    fetchTransactionsFailed,
+    fetchTransactionsFailedError,
+    fetchTransactionsSuccess,
+    balanceOfDay,
+    fetchBalanceOfDayFailed,
+    fetchBalanceOfDayFailedError,
+    fetchBalanceOfDaySuccess,
+  } = useSelector((state) => state.mainReducer)
   const dispatch = useDispatch()
   const [entryAmount, setEntryAmount] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('cash')
+  const [paymentMethod, setPaymentMethod] = useState('offline')
   const [isSaving, setIsSaving] = useState(false)
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+
+  useEffect(() => {
+    // showMessage({
+    //   backgroundColor: appColors.appGreen,
+    //   message: en.SUCCESS,
+    //   description: en.TRANSACTION_SAVED,
+    //   hideOnPress: true,
+    // })
+    // setEntryAmount('')
+    // setDescription('')
+    // setSelectedCustomer(null)
+    // setDate(today)
+    // navigation.navigate('Home')
+    if (
+      !fetchTotalAmountInHandFailed &&
+      fetchTotalAmountInHandFailedError == null &&
+      fetchTotalAmountInHandSuccess &&
+      !fetchTransactionsFailed &&
+      !fetchTransactionsFailedError &&
+      fetchTransactionsSuccess &&
+      !fetchBalanceOfDayFailed &&
+      !fetchBalanceOfDayFailedError &&
+      fetchBalanceOfDaySuccess
+    ) {
+      console.log(
+        fetchTotalAmountInHandFailed,
+        fetchTotalAmountInHandFailedError,
+        fetchTotalAmountInHandSuccess,
+
+        fetchTransactionsFailed,
+        fetchTransactionsFailedError,
+        fetchTransactionsSuccess,
+
+        fetchBalanceOfDayFailed,
+        fetchBalanceOfDayFailedError,
+        fetchBalanceOfDaySuccess,
+      )
+    }
+  }, [
+    totalAmountInHand,
+    fetchTotalAmountInHandFailed,
+    fetchTotalAmountInHandFailedError,
+    fetchTotalAmountInHandSuccess,
+
+    balanceOfDay,
+    fetchTransactionsFailed,
+    fetchTransactionsFailedError,
+    fetchTransactionsSuccess,
+    allTransactions,
+    fetchBalanceOfDayFailed,
+    fetchBalanceOfDayFailedError,
+    fetchBalanceOfDaySuccess,
+  ])
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -83,7 +148,7 @@ export default function EntryScreen({ route, navigation }) {
     setPaymentMethod('online')
   }
   const onOfflinePress = () => {
-    setPaymentMethod('cash')
+    setPaymentMethod('offline')
   }
   const handleSaveEntry = () => {
     const d = new Date()
@@ -131,24 +196,13 @@ export default function EntryScreen({ route, navigation }) {
     }
 
     dispatch(updateBalanceOfDay(finalAmount))
-    dispatch(saveTransaction(entry))
     dispatch(updateCashInHand({ totalAmountInHand, entry }))
-
-    showMessage({
-      backgroundColor: appColors.appGreen,
-      message: en.SUCCESS,
-      description: en.TRANSACTION_SAVED,
-      hideOnPress: true,
-    })
-    setEntryAmount('')
-    setDescription('')
-    setSelectedCustomer(null)
-    setDate(today)
-    navigation.navigate('Home')
+    dispatch(saveTransaction(entry))
+    dispatch(fetchTransactions())
   }
 
   const onDateChange = (d) => {
-    setDate(moment(d).format('DD-MM-YYYY'))
+    setDate(moment(d).format('MM-DD-YYYY'))
   }
   const contactsHandler = (contact) => {
     setSelectedCustomer(contact)
@@ -205,7 +259,7 @@ export default function EntryScreen({ route, navigation }) {
         >
           <TouchableOpacity
             style={
-              paymentMethod === 'cash'
+              paymentMethod === 'offline'
                 ? styles.paymentMethodActive
                 : styles.paymentMethodInActive
             }
@@ -272,7 +326,6 @@ export default function EntryScreen({ route, navigation }) {
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
-            dispatch(fetchTransactions())
           }}
           isLoading={isSaving}
           isLoadingText=" Saving Data"

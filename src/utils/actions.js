@@ -2,23 +2,33 @@ import firebase from 'firebase'
 import moment from 'moment'
 
 export const LOGIN_USER = 'LOGIN_USER'
+export const LOGIN_USER_FAILED = 'LOGIN_USER_FAILED'
 export const LOGOUT_USER = 'LOGOUT_USER'
 export const SAVE_TRANSACTION = 'SAVE_TRANSACTION'
+export const SAVE_TRANSACTION_FAILED = ' SAVE_TRANSACTION_FAILED'
+export const UPDATE_BALANCE_OF_DAY_FAIL = 'UPDATE_BALANCE_OF_DAY_FAIL'
 export const SET_ERROR = 'SET_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
 export const FETCH_BUSINESS_DETAILS = 'FETCH_BUSINESS_DETAILS'
-export const FETCH_BUSINESS_DETAILS_SUCCESSFUL =
-  'FETCH_BUSINESS_DETAILS_SUCCESSFUL'
 export const FETCH_BUSINESS_DETAILS_FAIL = 'FETCH_BUSINESS_DETAILS_FAIL'
 export const SET_BUSINESS_DETAILS = 'SET_BUSINESS_DETAILS'
+export const SET_BUSINESS_DETAILS_FAILED = 'SET_BUSINESS_DETAILS_FAILED'
 export const UPDATE_CASH_IN_HAND = 'UPDATE_CASH_IN_HAND'
+export const UPDATE_CASH_IN_HAND_FAIL = 'UPDATE_CASH_IN_HAND_FAIL'
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS'
+export const FETCH_TRANSACTIONS_FAILED = 'FETCH_TRANSACTIONS_FAILED'
 export const FETCH_TODAYS_TRANSACTION = 'FETCH_TODAYS_TRANSACTIONS'
+export const FETCH_TODAYS_TRANSACTION_FAILED = 'FETCH_TODAYS_TRANSACTION_FAILED'
 export const FETCH_CASH_IN_HAND = 'FETCH_CASH_IN_HAND'
+export const FETCH_CASH_IN_HAND_FAILED = 'FETCH_CASH_IN_HAND_FAILED'
 export const SET_TODAYS_BALANCE = 'SET_TODAYS_BALANCE'
+export const SET_TODAYS_BALANCE_FAILED = 'SET_TODAYS_BALANCE_FAILED'
 export const BALANCE_OF_DAY = 'BALANCE_OF_DAY'
+export const GET_BALANCE_OF_DAY_FAILED = 'GET_BALANCE_OF_DAY_FAILED'
 export const UPDATE_ENTRY = 'UPDATE_ENTRY'
+export const UPDATE_ENTRY_FAILED = 'UPDATE_ENTRY_FAILED'
 export const DELETE_ENTRY = 'DELETE_ENTRY'
+export const DELETE_ENTRY_FAILED = 'DELETE_ENTRY_FAILED'
 
 export const loginUser = (user) => ({
   type: LOGIN_USER,
@@ -55,7 +65,9 @@ export const updateEntry =
           .ref(`${user.uid}/transactions/transfers/${itemDate}`)
           .child(itemId)
           .update(entry)
-          .catch((error) => console.log(error))
+          .catch((error) => {
+            dispatch({ type: UPDATE_ENTRY_FAILED, payload: error })
+          })
       } else {
         dispatch({ type: LOGOUT_USER })
       }
@@ -112,7 +124,7 @@ export const setBusinessDetails = (data) => {
             dispatch(fetchBusinessDetails())
           })
           .catch((err) => {
-            console.log(err)
+            dispatch({ type: SET_BUSINESS_DETAILS_FAILED, payload: err })
           })
       } else {
         dispatch({ type: LOGOUT_USER })
@@ -122,7 +134,7 @@ export const setBusinessDetails = (data) => {
 }
 
 export const saveTransaction = (data) => (dispatch) => {
-  const today = moment().format('DD-MM-YYYY')
+  const today = moment().format('MM-DD-YYYY')
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -134,7 +146,7 @@ export const saveTransaction = (data) => (dispatch) => {
           dispatch(fetchTransactions())
         })
         .catch((error) => {
-          console.log(error)
+          dispatch({ type: SAVE_TRANSACTION_FAILED, payload: error })
         })
     } else {
       dispatch({ type: LOGOUT_USER })
@@ -143,7 +155,7 @@ export const saveTransaction = (data) => (dispatch) => {
 }
 
 export const updateBalanceOfDay = (balance) => (dispatch) => {
-  const today = moment().format('DD-MM-YYYY')
+  const today = moment().format('MM-DD-YYYY')
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -155,7 +167,7 @@ export const updateBalanceOfDay = (balance) => (dispatch) => {
           dispatch(fetchTransactions())
         })
         .catch((error) => {
-          console.log(error)
+          dispatch({ type: UPDATE_BALANCE_OF_DAY_FAIL, payload: error })
         })
     } else {
       dispatch({ type: LOGOUT_USER })
@@ -174,7 +186,7 @@ export const getBalanceOfDay = (day) => (dispatch) => {
           dispatch({ type: BALANCE_OF_DAY, payload: snapshot.val() })
         })
         .catch((error) => {
-          console.log(error)
+          dispatch({ type: GET_BALANCE_OF_DAY_FAILED, payload: error })
         })
     } else {
       dispatch({ type: LOGOUT_USER })
@@ -200,6 +212,9 @@ export const fetchCashInHand = () => (dispatch) => {
             })
           }
         })
+        .catch((error) =>
+          dispatch({ type: FETCH_CASH_IN_HAND_FAILED, payload: error }),
+        )
     } else {
       dispatch({ type: LOGOUT_USER })
     }
@@ -213,17 +228,9 @@ export const updateCashInHand = (data) => (dispatch) => {
 
       let tempAmount = 0
 
-      if (
-        data.entry.entryType === 'cashIn' &&
-        data.entry.paymentMethod === 'online'
-      ) {
+      if (data.entry.entryType === 'cashIn') {
         tempAmount = parseFloat(data.entry.amount)
-      }
-
-      if (
-        data.entry.entryType === 'cashOut' &&
-        data.entry.paymentMethod === 'offline'
-      ) {
+      } else {
         tempAmount = -Math.abs(parseFloat(data.entry.amount))
       }
 
@@ -239,10 +246,14 @@ export const updateCashInHand = (data) => (dispatch) => {
             }
 
       // console.log(finalAmount)
-      firebase
-        .database()
-        .ref(`${user.uid}/transactions/totalAmount`)
-        .set(finalAmount)
+      try {
+        firebase
+          .database()
+          .ref(`${user.uid}/transactions/totalAmount`)
+          .set(finalAmount)
+      } catch (error) {
+        dispatch({ type: UPDATE_CASH_IN_HAND_FAIL, payload: error })
+      }
     } else {
       dispatch({ type: LOGOUT_USER })
     }
@@ -255,14 +266,20 @@ export const watchCashInHand = () => (dispatch) => {
       firebase
         .database()
         .ref(`${user.uid}/transactions/totalAmount`)
-        .on('value', (snapshot) => {
-          if (snapshot.exists()) {
-            dispatch({
-              type: FETCH_CASH_IN_HAND,
-              payload: snapshot.val(),
-            })
-          }
-        })
+        .on(
+          'value',
+          (snapshot) => {
+            if (snapshot.exists()) {
+              dispatch({
+                type: FETCH_CASH_IN_HAND,
+                payload: snapshot.val(),
+              })
+            }
+          },
+          (err) => {
+            dispatch({ type: FETCH_CASH_IN_HAND_FAILED, payload: err })
+          },
+        )
     } else {
       dispatch({ type: LOGOUT_USER })
     }
@@ -292,7 +309,7 @@ export const fetchTransactions = () => (dispatch) => {
             }
           },
           (err) => {
-            console.log(err)
+            dispatch({ type: FETCH_TODAYS_TRANSACTION_FAILED, payload: err })
           },
         )
     } else {
@@ -316,7 +333,7 @@ export function watchTransactions() {
               }
             },
             (err) => {
-              console.log(err)
+              dispatch({ type: FETCH_TODAYS_TRANSACTION_FAILED, payload: err })
             },
           )
       } else {

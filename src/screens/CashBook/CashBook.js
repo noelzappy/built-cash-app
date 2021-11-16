@@ -35,7 +35,7 @@ export default function CashBook({ navigation, route }) {
   const [totalOUTPaidOffline, setTotalOUTPaidOffline] = useState(0)
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
 
-  const today = moment().format('DD-MM-YYYY')
+  const today = moment().format('MM-DD-YYYY')
 
   const handleSheetChanges = useCallback((index) => {
     if (index == -1) {
