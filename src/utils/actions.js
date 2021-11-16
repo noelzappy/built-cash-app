@@ -29,11 +29,15 @@ export const UPDATE_ENTRY = 'UPDATE_ENTRY'
 export const UPDATE_ENTRY_FAILED = 'UPDATE_ENTRY_FAILED'
 export const DELETE_ENTRY = 'DELETE_ENTRY'
 export const DELETE_ENTRY_FAILED = 'DELETE_ENTRY_FAILED'
+export const DISABLE_HANDLERS = 'DISABLE_HANDLERS'
 
 export const loginUser = (user) => ({
   type: LOGIN_USER,
   payload: user,
 })
+
+export const disableHandlers = () => (dispatch) =>
+  dispatch({ type: DISABLE_HANDLERS })
 
 export const logoutUser = () => ({ type: LOGOUT_USER })
 

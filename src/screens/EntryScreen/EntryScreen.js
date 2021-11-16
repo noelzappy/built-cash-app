@@ -12,6 +12,7 @@ import {
   fetchTransactions,
   updateCashInHand,
   updateBalanceOfDay,
+  disableHandlers,
 } from '../../utils/actions'
 import { appColors, appStyles } from '../../theme/globalStyle'
 import CustomDatePicker from '../../components/DatePicker'
@@ -85,6 +86,10 @@ export default function EntryScreen({ route, navigation }) {
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+
+  useEffect(() => {
+    dispatch(disableHandlers())
+  }, [])
 
   useEffect(() => {
     if (

@@ -2,6 +2,7 @@ import firebase from 'firebase'
 
 import {
   BALANCE_OF_DAY,
+  DISABLE_HANDLERS,
   FETCH_BUSINESS_DETAILS,
   FETCH_BUSINESS_DETAILS_FAIL,
   FETCH_CASH_IN_HAND,
@@ -125,7 +126,25 @@ const mainReducer = (state = initialState, action) => {
     case LOGOUT_USER:
       firebase.auth().signOut()
       return initialState
+    case DISABLE_HANDLERS:
+      return {
+        ...state,
+        fetchTotalAmountInHandFailed: false,
+        fetchTotalAmountInHandFailedError: null,
+        fetchTotalAmountInHandSuccess: false,
 
+        fetchBusinessDetailFail: false,
+        fetchBusinessDetailSuccess: false,
+        fetchBusinessDetailFailError: null,
+
+        fetchTransactionsFailed: false,
+        fetchTransactionsFailedError: null,
+        fetchTransactionsSuccess: false,
+
+        fetchBalanceOfDayFailed: false,
+        fetchBalanceOfDayFailedError: null,
+        fetchBalanceOfDaySuccess: false,
+      }
     default:
       return state
   }
