@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { useDispatch, useSelector } from 'react-redux'
-import { Input, Button, TextArea } from 'native-base'
+import { Input, TextArea } from 'native-base'
+import { Button } from 'react-native-elements'
 import moment from 'moment'
 import { width, height as pHeight } from 'react-native-dimension'
 import { colors } from '../../theme'
@@ -87,20 +88,14 @@ export default function EntryScreen({ route, navigation }) {
   const [description, setDescription] = useState('')
   const [selectedCustomer, setSelectedCustomer] = useState(null)
 
-  useEffect(() => {
-    dispatch(disableHandlers())
-  }, [])
+  // useEffect(() => {
+  //   dispatch(disableHandlers())
+  // }, [])
 
   useEffect(() => {
     if (
-      !fetchTotalAmountInHandFailed &&
-      fetchTotalAmountInHandFailedError == null &&
-      fetchTotalAmountInHandSuccess &&
-      !fetchTransactionsFailed &&
-      !fetchTransactionsFailedError &&
-      fetchTransactionsSuccess &&
-      !fetchBalanceOfDayFailed &&
-      !fetchBalanceOfDayFailedError &&
+      fetchTotalAmountInHandSuccess ||
+      fetchTransactionsSuccess ||
       fetchBalanceOfDaySuccess
     ) {
       showMessage({
@@ -109,25 +104,22 @@ export default function EntryScreen({ route, navigation }) {
         description: en.TRANSACTION_SAVED,
         hideOnPress: true,
       })
+      setIsSaving(false)
       setEntryAmount('')
       setDescription('')
       setSelectedCustomer(null)
       setDate(today)
+      dispatch(disableHandlers())
       navigation.navigate('Home')
     }
   }, [
     totalAmountInHand,
-    fetchTotalAmountInHandFailed,
-    fetchTotalAmountInHandFailedError,
     fetchTotalAmountInHandSuccess,
 
     balanceOfDay,
-    fetchTransactionsFailed,
-    fetchTransactionsFailedError,
     fetchTransactionsSuccess,
+
     allTransactions,
-    fetchBalanceOfDayFailed,
-    fetchBalanceOfDayFailedError,
     fetchBalanceOfDaySuccess,
   ])
 
@@ -308,23 +300,19 @@ export default function EntryScreen({ route, navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          style={{
+          title={en.SAVE_ENTRY}
+          buttonStyle={{
             backgroundColor:
               entryType === 'cashIn' ? appColors.appGreen : appColors.appRed,
             marginHorizontal: width(3),
             height: pHeight(5.5),
-            elevation: 1,
           }}
+          loading={isSaving}
           onPress={() => {
             setIsSaving(true)
             handleSaveEntry()
           }}
-          isLoading={isSaving}
-          isLoadingText=" Saving Data"
-          size="lg"
-        >
-          {en.SAVE_ENTRY}
-        </Button>
+        />
       </View>
     </View>
   )

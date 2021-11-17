@@ -47,6 +47,7 @@
     "react-native-date-picker": "^4.0.0",
     "react-native-datepicker": "^1.7.2",
     "react-native-dimension": "^1.0.6",
+    "react-native-elements": "^3.4.2",
     "react-native-flash-message": "^0.2.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-loading-spinner-overlay": "^2.0.0",

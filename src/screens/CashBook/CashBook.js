@@ -106,7 +106,6 @@ export default function CashBook({ navigation, route }) {
 
   useEffect(() => {
     sortLocalData()
-    dispatch(disableHandlers())
   }, [allTransactions])
 
   return (
