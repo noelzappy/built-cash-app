@@ -36,9 +36,14 @@ export default function CashTable(props) {
               backgroundColor: appColors.appWhite,
               paddingTop: height(2),
               paddingBottom: height(5),
+              // marginVertical: height(1),
+              // justifyContent: 'center',
+              // alignItems: 'center',
+              // alignContent: 'center',
             }}
+            // sortDirection="descending"
           >
-            <DataTable.Title>
+            <DataTable.Title numberOfLines={1}>
               <View>
                 <Text
                   style={{

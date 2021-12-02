@@ -92,36 +92,36 @@ export default function EntryScreen({ route, navigation }) {
   //   dispatch(disableHandlers())
   // }, [])
 
-  useEffect(() => {
-    if (
-      fetchTotalAmountInHandSuccess ||
-      fetchTransactionsSuccess ||
-      fetchBalanceOfDaySuccess
-    ) {
-      showMessage({
-        backgroundColor: appColors.appGreen,
-        message: en.SUCCESS,
-        description: en.TRANSACTION_SAVED,
-        hideOnPress: true,
-      })
-      setIsSaving(false)
-      setEntryAmount('')
-      setDescription('')
-      setSelectedCustomer(null)
-      setDate(today)
-      dispatch(disableHandlers())
-      navigation.navigate('Home')
-    }
-  }, [
-    totalAmountInHand,
-    fetchTotalAmountInHandSuccess,
+  // useEffect(() => {
+  //   if (
+  //     fetchTotalAmountInHandSuccess ||
+  //     fetchTransactionsSuccess ||
+  //     fetchBalanceOfDaySuccess
+  //   ) {
+  //     showMessage({
+  //       backgroundColor: appColors.appGreen,
+  //       message: en.SUCCESS,
+  //       description: en.TRANSACTION_SAVED,
+  //       hideOnPress: true,
+  //     })
+  //     setIsSaving(false)
+  //     setEntryAmount('')
+  //     setDescription('')
+  //     setSelectedCustomer(null)
+  //     setDate(today)
+  //     dispatch(disableHandlers())
+  //     navigation.navigate('Home')
+  //   }
+  // }, [
+  //   totalAmountInHand,
+  //   fetchTotalAmountInHandSuccess,
 
-    balanceOfDay,
-    fetchTransactionsSuccess,
+  //   balanceOfDay,
+  //   fetchTransactionsSuccess,
 
-    allTransactions,
-    fetchBalanceOfDaySuccess,
-  ])
+  //   allTransactions,
+  //   fetchBalanceOfDaySuccess,
+  // ])
 
   const onAmountValueChange = (num) => {
     const newNumber = num.replace(/[^\d.-]/g, '')
@@ -183,6 +183,22 @@ export default function EntryScreen({ route, navigation }) {
     dispatch(updateCashInHand({ totalAmountInHand, entry }))
     dispatch(saveTransaction(entry))
     dispatch(fetchTransactions())
+
+    showMessage({
+      backgroundColor: appColors.appGreen,
+      message: en.SUCCESS,
+      description: en.TRANSACTION_SAVED,
+      hideOnPress: true,
+    })
+
+    setEntryAmount('')
+    setDescription('')
+    setSelectedCustomer(null)
+    setDate(today)
+    dispatch(disableHandlers())
+
+    setIsSaving(false)
+    navigation.navigate('Home')
   }
 
   const onDateChange = (d) => {

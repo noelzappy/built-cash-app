@@ -129,7 +129,7 @@ export default function CashBook({ navigation, route }) {
       <View
         style={{
           flex: 1,
-          marginBottom: height - (height - 200),
+          marginBottom: height - (height - 230),
         }}
       >
         {localData.length > 0 ? (
